@@ -1,0 +1,51 @@
+body,
+html {
+    background: rgba(0, 0, 0, 0);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#root {
+    color: white;
+    position: relative;
+    background-color: #14243d;
+    background: radial-gradient(ellipse at center, #14243d 0%, #030611 100%);
+    height: 100vh;
+    min-height: 100vh;
+}
+
+.content {
+    position: relative;
+    min-height: calc(100% - 44px);
+    height: calc(100% - 40px);
+    overflow-y: auto;
+    padding-top: 5px;
+}
+
+
+/*************************Scrollbar Style********************************/
+
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 123, 255, 0.95);
+    box-shadow: inset 0 0 6px rgba(15, 1, 228, 0.9);
+}
+
+@media screen and (max-width: 450px) {
+     ::-webkit-scrollbar {
+        width: 0;
+    }
+    .content {
+        padding-bottom: 40px;
+    }
+}
+
+
+/************************* End ********************************/

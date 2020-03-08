@@ -2,13 +2,16 @@
 
 # dependencies
 /node_modules
-/build
+/react-client/node_modules
+/covers
 
 # testing
 /coverage
 
 # production
-/build
+/react-client/build
+/react-client/public/covers
+
 
 # misc
 .DS_Store

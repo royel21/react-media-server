@@ -1,0 +1,12 @@
+{
+    "development": {
+        "dialect": "sqlite",
+        "storage": "files.db",
+        "operatprAliases": false
+    },
+    "production": {
+        "dialect": "sqlite",
+        "storage": "files.db",
+        "operatprAliases": false
+    }
+}

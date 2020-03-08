@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 
-class Mangas extends Component {
+class Main extends Component {
   render() {
     return (
       <React.Fragment>
-        <h1>All Mangas</h1>
+        <h1>Main</h1>
       </React.Fragment>
     );
   }
 }
 
-export default Mangas;
+export default Main;

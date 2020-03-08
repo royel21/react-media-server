@@ -1,39 +1,38 @@
 {
-  "name": "first-react",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.27",
-    "@fortawesome/free-solid-svg-icons": "^5.12.1",
-    "@fortawesome/react-fontawesome": "^0.1.9",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "bootstrap": "^4.4.1",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.0",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.0"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+    "name": "react-media-server",
+    "version": "1.0.0",
+    "description": "A react Multimedia Server",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "nodemon": "nodemon ./app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/royel21/react-media-server.git"
+    },
+    "keywords": [
+        "video",
+        "manga",
+        "music",
+        "react",
+        "express",
+        "nodejs"
     ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+    "author": "rcstudio",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/royel21/react-media-server/issues"
+    },
+    "homepage": "https://github.com/royel21/react-media-server#readme",
+    "dependencies": {
+        "axios": "^0.19.2",
+        "bcrypt": "^4.0.1",
+        "express": "^4.17.1",
+        "nodemon": "^2.0.2",
+        "sequelize": "^5.21.5",
+        "sharp": "^0.25.0",
+        "socketio": "^1.0.0",
+        "sqlite3": "^4.1.1"
+    }
 }

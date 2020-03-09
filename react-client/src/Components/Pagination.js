@@ -6,6 +6,11 @@ const pagerClick = (e, page, totalPages, goToPage) => {
 
   if (["prev-page", "next-page"].includes(span.id)) {
     page += span.id === "prev-page" ? -1 : 1;
+    if (page > totalPages) {
+      page = totalPages;
+    } else if (page < 1) {
+      page = 1;
+    }
     goToPage(page);
   } else if (e.target.id.includes("current-page")) {
     let input = span.querySelector("input");
@@ -28,6 +33,8 @@ const pagerClick = (e, page, totalPages, goToPage) => {
 
           if (page > totalPages) {
             page = totalPages;
+          } else if (page < 0) {
+            page = 1;
           }
           newInput = null;
           goToPage(page);

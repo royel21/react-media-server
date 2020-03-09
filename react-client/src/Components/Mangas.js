@@ -7,44 +7,57 @@ import FileFilter from "./FileFilter";
 import Pagination from "./Pagination";
 import FileOrder from "./FileOrder";
 
-const Mangas = ({ history }) => {
+const Mangas = ({ history, type }) => {
   let params = useParams();
   const [orderby, setOrderBy] = useState(params.order || "nu");
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState(params.filter || "");
+  const [fileType, setFileType] = useState(type || "");
   const [pagedata, setPageData] = useState({
     files: [],
     totalPages: 0,
     totalFiles: 0
   });
-
-  if ((params.page || page > 1) && page !== params.page) {
-    setPage(params.page || 1);
+  if (fileType !== type) {
+    setFileType(type);
+    console.log(page, filter, fileType);
   }
+  const pushHistory = (pg, odr, fltr) => {
+    setFilter(fltr);
+    setPage(pg);
+    setOrderBy(odr);
+    let url = `/${type}/${odr}/${pg}/${fltr || ""}`;
+    history.push(url);
+  };
+  // if ((params.page || page > 1) && page !== params.page) {
+  //   setPage(params.page || 1);
+  //   setFilter("");
+  // }
 
   const goToPage = pg => {
-    if (pg > 0 && pg !== page && pg < pagedata.totalPages) {
-      setPage(pg);
-      let url = `/mangas/${orderby}/${pg}/${filter || ""}`;
-      //console.log(url, pg);
-      history.push(url);
+    if (pg !== page) {
+      pushHistory(pg, orderby, filter);
     }
   };
 
   const fileFilter = filter => {
-    setFilter(filter);
+    console.log(filter);
+    let input = document.getElementById("filter-file");
+
+    let filter2 = input && input.value;
+    pushHistory(page, orderby, filter2);
   };
 
   const changeOrder = e => {
-    setOrderBy(e.target.value);
+    pushHistory(1, e.target.value, "");
   };
 
   useEffect(() => {
-    loadFiles(page, orderby, "mangas").then(data => {
+    console.log("load file");
+    loadFiles(page, orderby, fileType, filter).then(data => {
       setPageData(data);
     });
-    document.title = "Mangas - " + page;
-  }, [page, filter, orderby]);
+  }, [page, filter, fileType, orderby]);
 
   useEffect(() => {
     let firstEl = document.querySelector(".file");
@@ -52,14 +65,17 @@ const Mangas = ({ history }) => {
       firstEl.focus();
       firstEl.classList.add("active");
     }
+    document.title = type.includes("mangas") ? "Mangas" : "Videos";
   });
+
+  console.log("render", page);
   return (
     <React.Fragment>
       <div id="files-list">
         {pagedata.files.length === 0 ? (
           <div></div>
         ) : (
-          <Files files={pagedata.files} type="mangas" />
+          <Files files={pagedata.files} type={fileType} />
         )}
       </div>
       <div className="controls">

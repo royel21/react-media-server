@@ -7,10 +7,10 @@
     display: flex;
     justify-content: space-between;
     padding: 0;
+    user-select: none;
 }
 
-#menu i.fa-user-cog,
-#menu i.fa-user {
+#menu i.fa-user-cog, #menu i.fa-user {
     margin-right: 8px;
     color: #007bff;
 }
@@ -30,8 +30,7 @@
     border-bottom: 1px solid;
 }
 
-#nav-menu input,
-#nav-menu button {
+#nav-menu input, #nav-menu button {
     font-size: 12px;
 }
 

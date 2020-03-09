@@ -1,21 +1,19 @@
-import React, { Component } from "react";
+import React from "react";
 
-class Home extends Component {
+const Home = ({ history }) => {
   addHistory = () => {
     console.log(this.props.history);
   };
 
-  render() {
-    document.title = "Home";
-    return (
-      <React.Fragment>
-        <h1>Main</h1>
-        <div>
-          <button onClick={this.addHistory}>add history</button>
-        </div>
-      </React.Fragment>
-    );
-  }
-}
+  document.title = "Home";
+  return (
+    <React.Fragment>
+      <h1>Main</h1>
+      <div>
+        <button onClick={this.addHistory}>add history</button>
+      </div>
+    </React.Fragment>
+  );
+};
 
 export default Home;

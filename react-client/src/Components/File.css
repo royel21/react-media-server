@@ -1,7 +1,7 @@
 #files-list {
     display: flex;
     flex-wrap: wrap;
-    min-height: calc(100% - 46px);
+    min-height: calc(100% - 39px);
     align-content: flex-start;
 }
 
@@ -94,8 +94,7 @@
     user-select: text;
 }
 
-.file-name:hover,
-.file-info:hover>.file-name {
+.file-name:hover, .file-info:hover>.file-name {
     display: inline-block;
     z-index: 999;
     top: 5px;

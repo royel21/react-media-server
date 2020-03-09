@@ -1,10 +1,6 @@
 import axios from "axios";
 
-const loadFiles = async (page, order, type) => {
-  let input = document.getElementById("filter-file");
-
-  let filter = input && input.value;
-
+const loadFiles = async (page, order, type, filter) => {
   let itemsperpage = Math.floor(window.innerWidth / 200) * 3;
 
   let res = await axios.get(

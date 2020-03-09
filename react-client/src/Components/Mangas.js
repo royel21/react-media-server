@@ -18,8 +18,8 @@ const Mangas = ({ history }) => {
     totalFiles: 0
   });
 
-  if (page !== params.page) {
-    setPage(params.page);
+  if ((params.page || page > 1) && page !== params.page) {
+    setPage(params.page || 1);
   }
 
   const goToPage = pg => {

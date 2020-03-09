@@ -47,15 +47,15 @@ const Pagination = props => {
       id="pager"
       className="input-group-text"
       onClick={e => {
-        pagerClick(e, page, totalPages, goToPage);
+        pagerClick(e, parseInt(page), totalPages, goToPage);
       }}
     >
       <span id="prev-page">
-        <i className="fas fa-chevron-circle-left"></i>
+        <i className="fas fa-chevron-left"></i>
       </span>
       <span id="current-page">{page + "/" + totalPages}</span>
       <span id="next-page">
-        <i className="fas fa-chevron-circle-right"></i>
+        <i className="fas fa-chevron-right"></i>
       </span>
     </div>
   ) : (

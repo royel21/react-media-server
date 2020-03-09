@@ -24,14 +24,15 @@ const Videos = () => {
   const fileFilter = filter => {
     setFilter(filter);
   };
-  const changeOrder = order => {
-    setOrderBy(order);
+  const changeOrder = e => {
+    setOrderBy(e.target.value);
   };
   useEffect(() => {
     console.log("file changes");
     loadFiles(page, orderby, "videos").then(data => {
       setPageData(data);
     });
+    document.title = "Videos";
   }, [page, orderby, filter]);
 
   useEffect(() => {

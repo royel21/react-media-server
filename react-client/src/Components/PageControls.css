@@ -64,6 +64,24 @@
     font-size: 16px;
 }
 
+#ordering {
+    max-width: 140px;
+}
+
+#order-select {
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+#ordering * {
+    font-family: "Font Awesome 5 Free", "sans-serif";
+    font-weight: 600;
+}
+
+.controls span.input-group-tex {
+    padding: 0 6px;
+}
+
 @media screen and (max-width: 700px) {
     .controls {
         position: fixed;

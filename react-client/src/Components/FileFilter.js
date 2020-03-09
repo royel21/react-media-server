@@ -7,13 +7,11 @@ const clearSearch = fileFilter => {
 
 const submitFilter = (e, fileFilter) => {
   if (e.keyCode === 13) {
-    fileFilter("");
+    fileFilter(e.target.value);
   }
 };
 
-const FileFilter = props => {
-  let { fileFilter } = props.fileFilter;
-
+const FileFilter = ({ fileFilter }) => {
   return (
     <div id="filter-control" className="input-group">
       <div className="input-group-prepend">

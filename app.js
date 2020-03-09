@@ -6,7 +6,7 @@ const { getFiles } = require("./query-helper");
 
 const app = express();
 
-app.use(express.static(__dirname + "/covers"));
+app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/react-client/build"));
 
 const getFileList = async (res, type, params) => {
@@ -40,14 +40,6 @@ app.get("/api/getvideos/:order/:page?/:itemsperpage?/:search?", (req, res) => {
     console.log(err);
   });
 });
-app.use((req, res, next) => {
-  if (req.url.includes("/covers")) {
-    let f = path.join(__dirname + req.url);
-    return res.sendFile(f);
-  } else {
-    next();
-  }
-});
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/react-client/build/index.html"));
@@ -70,8 +62,5 @@ db.init().then(() => {
 
   // return require("./modules/socketio-server")(server, app);
 });
-
-// app.listen(port);
-// console.log("Node server is running.. at http://localhost:" + port);
 
 console.log(process.env.NODE_ENV);

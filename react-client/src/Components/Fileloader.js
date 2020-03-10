@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const loadFiles = async (page, order, type, filter) => {
+const loadFiles = async (page, order, filter, type) => {
   let itemsperpage = Math.floor(window.innerWidth / 200) * 3;
 
   let res = await axios.get(

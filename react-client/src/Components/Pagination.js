@@ -1,47 +1,58 @@
 import React from "react";
 import "./PageControls.css";
 
-const pagerClick = (e, page, totalPages, goToPage) => {
-  let span = e.target;
+const paginationInput = (li, page, totalPages, goToPage) => {
+  let input = li.querySelector("input");
+  if (!input) {
+    li.textContent = "";
 
-  if (["prev-page", "next-page"].includes(span.id)) {
-    page += span.id === "prev-page" ? -1 : 1;
-    if (page > totalPages) {
-      page = totalPages;
-    } else if (page < 1) {
-      page = 1;
-    }
-    goToPage(page);
-  } else if (e.target.id.includes("current-page")) {
-    let input = span.querySelector("input");
-    if (!input) {
-      span.textContent = "";
-
-      span.innerHTML = `<input type="text" value=${page} class="form-control"
-                       style="width:50px; height: 24px; padding: 0 0 0 4px; font-size:15px; color: black;" min=1 
+    li.innerHTML = `<input type="text" value=${page} class="form-control" min=1 
                        max=${totalPages}>`;
 
-      let newInput = span.querySelector("input");
+    let newInput = li.querySelector("input");
 
-      newInput.addEventListener("focusout", e => {
-        span.textContent = page + "/" + totalPages;
-      });
+    newInput.addEventListener("focusout", e => {
+      li.textContent = page + "/" + totalPages;
+    });
 
-      newInput.onkeydown = event => {
-        if (event.keyCode === 13) {
-          page = parseInt(newInput.value);
+    newInput.onkeydown = event => {
+      if (event.keyCode === 13) {
+        page = parseInt(newInput.value);
+        newInput = null;
+        goToPage(page);
+        li.textContent = page + "/" + totalPages;
+      }
+    };
+    newInput.focus();
+    newInput.setSelectionRange(newInput.value.length, newInput.value.length);
+  }
+};
 
-          if (page > totalPages) {
-            page = totalPages;
-          } else if (page < 0) {
-            page = 1;
-          }
-          newInput = null;
-          goToPage(page);
-          span.textContent = page + "/" + totalPages;
-        }
-      };
-      newInput.focus();
+const pagerClick = (e, page, totalPages, goToPage) => {
+  let li = e.target;
+  console.log(li.id);
+  switch (e.target.id) {
+    case "prev-page": {
+      goToPage(page - 1);
+      break;
+    }
+    case "next-page": {
+      goToPage(page + 1);
+      break;
+    }
+    case "first-page": {
+      goToPage(1);
+      break;
+    }
+    case "last-page": {
+      goToPage(totalPages);
+      break;
+    }
+    case "current-page": {
+      paginationInput(li, page, totalPages, goToPage);
+      break;
+    }
+    default: {
     }
   }
 };
@@ -52,18 +63,35 @@ const Pagination = props => {
   return totalPages > 1 ? (
     <div
       id="pager"
-      className="input-group-text"
       onClick={e => {
         pagerClick(e, parseInt(page), totalPages, goToPage);
       }}
     >
-      <span id="prev-page">
-        <i className="fas fa-chevron-left"></i>
-      </span>
-      <span id="current-page">{page + "/" + totalPages}</span>
-      <span id="next-page">
-        <i className="fas fa-chevron-right"></i>
-      </span>
+      <ul className="pagination">
+        {window.innerWidth > 700 && page > 1 ? (
+          <li id="first-page" className="page-link">
+            <i className="fas fa-angle-double-left"></i>
+          </li>
+        ) : (
+          ""
+        )}
+        <li id="prev-page" className="page-link">
+          <i className="fas fa-angle-left"></i>
+        </li>
+        <li id="current-page" className="page-link">
+          {page + "/" + totalPages}
+        </li>
+        <li id="next-page" className="page-link">
+          <i className="fas fa-angle-right"></i>
+        </li>
+        {window.innerWidth > 700 && page < totalPages ? (
+          <li id="last-page" className="page-link">
+            <i className="fas fa-angle-double-right"></i>
+          </li>
+        ) : (
+          ""
+        )}
+      </ul>
     </div>
   ) : (
     <span></span>

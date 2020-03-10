@@ -26,12 +26,6 @@ const Navbar = () => {
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/categories/nu" className="nav-link">
-            <i className="fas fa-tags" />
-            <span> Categories</span>
-          </NavLink>
-        </li>
-        <li className="nav-item">
           <NavLink to="/favorities/nu" className="nav-link">
             <i className="fas fa-heart" />
             <span> Favorities</span>

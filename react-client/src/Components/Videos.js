@@ -1,55 +1,27 @@
-import React, { useState, useEffect } from "react";
-
+import React from "react";
 import Files from "./Files";
 import FileFilter from "./FileFilter";
 import Pagination from "./Pagination";
 import FileOrder from "./FileOrder";
+import FileListHooks from "./FileListHooks";
 
-import { loadFiles } from "./Fileloader";
-
-const Videos = () => {
-  const [page, setPage] = useState(1);
-  const [filter, setFilter] = useState("");
-  const [orderby, setOrderBy] = useState("nu");
-  const [pagedata, setPageData] = useState({
-    files: [],
-    totalPages: 0,
-    totalFiles: 0
-  });
-
-  const goToPage = pg => {
-    if (pg > 0 && pg !== page && pg < pagedata.totalPages) setPage(pg);
-  };
-
-  const fileFilter = filter => {
-    setFilter(filter);
-  };
-  const changeOrder = e => {
-    setOrderBy(e.target.value);
-  };
-  useEffect(() => {
-    console.log("file changes");
-    loadFiles(page, orderby, "videos").then(data => {
-      setPageData(data);
-    });
-    document.title = "Videos";
-  }, [page, orderby, filter]);
-
-  useEffect(() => {
-    let firstEl = document.querySelector(".file");
-    if (firstEl) {
-      firstEl.focus();
-      firstEl.classList.add("active");
-    }
-  });
-
+const Videos = ({ history, type }) => {
+  const {
+    orderby,
+    page,
+    filter,
+    goToPage,
+    fileFilter,
+    changeOrder,
+    pagedata
+  } = FileListHooks(history, "videos");
   return (
     <React.Fragment>
       <div id="files-list">
         {pagedata.files.length === 0 ? (
           <div></div>
         ) : (
-          <Files files={pagedata.files} type="videos" />
+          <Files files={pagedata.files} type={"videos"} />
         )}
       </div>
       <div className="controls">

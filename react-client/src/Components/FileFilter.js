@@ -11,7 +11,7 @@ const submitFilter = (e, fileFilter) => {
   }
 };
 
-const FileFilter = ({ fileFilter }) => {
+const FileFilter = ({ fileFilter, filter }) => {
   return (
     <div id="filter-control" className="input-group">
       <div className="input-group-prepend">
@@ -24,6 +24,7 @@ const FileFilter = ({ fileFilter }) => {
         type="text"
         className="form-control"
         placeholder="Filter"
+        defaultValue={filter.filter || ""}
         onKeyDown={e => {
           submitFilter(e, fileFilter);
         }}

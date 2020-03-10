@@ -27,6 +27,7 @@ const getFileList = async (res, type, params) => {
 
 app.get("/api/getmangas/:order/:page?/:itemsperpage?/:search?", (req, res) => {
   console.time("start");
+  console.log(req.url);
   getFileList(res, "Manga", req.params).catch(err => {
     console.timeEnd("start");
     console.log(err);
@@ -35,6 +36,7 @@ app.get("/api/getmangas/:order/:page?/:itemsperpage?/:search?", (req, res) => {
 
 app.get("/api/getvideos/:order/:page?/:itemsperpage?/:search?", (req, res) => {
   console.time("start");
+  console.log(req.url);
   getFileList(res, "Video", req.params).catch(err => {
     console.timeEnd("start");
     console.log(err);

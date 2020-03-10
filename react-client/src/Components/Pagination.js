@@ -30,7 +30,6 @@ const paginationInput = (li, page, totalPages, goToPage) => {
 
 const pagerClick = (e, page, totalPages, goToPage) => {
   let li = e.target;
-  console.log(li.id);
   switch (e.target.id) {
     case "prev-page": {
       goToPage(page - 1);

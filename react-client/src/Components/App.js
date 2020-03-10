@@ -21,8 +21,10 @@ function App() {
         onKeyDown={fileNavKeydown}
       >
         <Switch>
-          <Route path="/mangas/:order/:page?/:filter?" component={Mangas} />} />
-          <Route path="/videos/:order/:page?/:filter?" component={Videos} />} />
+          <Route path="/mangas/:order?/:page?/:filter?" component={Mangas} />}
+          />
+          <Route path="/videos/:order?/:page?/:filter?" component={Videos} />}
+          />
           <Route path="/" component={Home} />
         </Switch>
       </div>

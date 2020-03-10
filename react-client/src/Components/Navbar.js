@@ -14,19 +14,19 @@ const Navbar = () => {
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/mangas/nu" className="nav-link">
+          <NavLink to="/mangas" className="nav-link">
             <i className="fas fa-book" />
             <span> Mangas</span>
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/videos/nu" className="nav-link">
+          <NavLink to="/videos" className="nav-link">
             <i className="fas fa-film" />
             <span> Videos</span>
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/favorities/nu" className="nav-link">
+          <NavLink to="/favorities" className="nav-link">
             <i className="fas fa-heart" />
             <span> Favorities</span>
           </NavLink>

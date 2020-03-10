@@ -5,6 +5,9 @@ import { loadFiles } from "./Fileloader";
 const FileListHooks = (history, type) => {
   let { page, order, filter } = useParams();
 
+  let [filterState, setFilter] = useState("");
+  let [orderState, setOrder] = useState("nu");
+
   const [pagedata, setPageData] = useState({
     files: [],
     totalPages: 0,
@@ -12,7 +15,9 @@ const FileListHooks = (history, type) => {
   });
 
   const pushHistory = (pg, odr, fltr) => {
-    let url = `/${type}/${odr}/${pg}/${fltr || ""}`;
+    let url = `/${type}/${odr || "nu"}/${pg}/${fltr || ""}`;
+    setFilter(fltr);
+    setOrder(odr || "nu");
     history.push(url);
   };
 
@@ -30,18 +35,19 @@ const FileListHooks = (history, type) => {
   const fileFilter = () => {
     let input = document.getElementById("filter-file");
 
-    let filter = input && input.value;
-    pushHistory(1, order, filter);
+    let fltr = input && input.value;
+    pushHistory(1, orderState, fltr);
   };
 
   const changeOrder = e => {
-    pushHistory(1, e.target.value, "");
+    pushHistory(page, e.target.value, filterState);
   };
 
   useEffect(() => {
     loadFiles(page, order, filter, type).then(data => {
       setPageData(data);
     });
+    console.log("");
   }, [page, order, filter, type]);
 
   useEffect(() => {
@@ -52,6 +58,7 @@ const FileListHooks = (history, type) => {
     }
     document.title = type.includes("mangas") ? "Mangas" : "Videos";
   });
+  console.log("render");
   return {
     order,
     page: page || 1,

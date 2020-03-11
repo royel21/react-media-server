@@ -9,7 +9,7 @@ const Navbar = () => {
       <ul className="navbar-nav">
         <li className="nav-item">
           <NavLink exact to="/" className="nav-link">
-            <i className="fas fa-clipboard-list" />
+            <i className="fas fa-home" />
             <span> Home</span>
           </NavLink>
         </li>

@@ -3,6 +3,7 @@
     flex-wrap: wrap;
     min-height: calc(100% - 39px);
     align-content: flex-start;
+    padding-bottom: 50px;
 }
 
 .file {

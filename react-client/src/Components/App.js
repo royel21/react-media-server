@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 import Home from "./Home";
 import Mangas from "./Mangas";
 import Videos from "./Videos";
+import Favorities from "./Favorities";
 
 import { fileNavClick, fileNavKeydown } from "./KeyboardNav";
 import "./PageControls.css";
@@ -25,6 +26,11 @@ function App() {
           />
           <Route path="/videos/:order?/:page?/:filter?" component={Videos} />}
           />
+          <Route
+            path="/favorities/:order?/:favvorite?/:page?/:filter?"
+            component={Favorities}
+          />
+          } />
           <Route path="/" component={Home} />
         </Switch>
       </div>

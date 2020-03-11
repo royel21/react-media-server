@@ -22,21 +22,25 @@ const getElementIndex = element => {
 };
 
 const selectItem = index => {
+  let scrollElement = document.querySelector(".content");
+  let itemContainer = document.getElementById("files-list");
   selectedIndex = index;
   let nextEl = getElByIndex(index);
-  let scrollElement = document.querySelector(".content");
   if (nextEl !== undefined) {
     let scroll = scrollElement.scrollTop,
       elofft = nextEl.offsetTop;
 
     if (elofft - scroll + 1 < -1) {
-      scroll = elofft === 50 ? 0 : elofft;
+      scroll = elofft < 60 ? 0 : elofft;
     }
 
     let top = elofft + nextEl.offsetHeight;
     let sctop = scroll + scrollElement.offsetHeight;
     if (top - sctop + 1 > 0) {
-      scroll = scroll + (top - sctop);
+      scroll =
+        top > itemContainer.offsetHeight
+          ? itemContainer.offsetHeight + 50
+          : scroll + (top - sctop);
     }
 
     scrollElement.scroll({

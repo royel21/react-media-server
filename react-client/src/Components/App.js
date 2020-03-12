@@ -6,14 +6,18 @@ import Home from "./Home";
 import Mangas from "./Mangas";
 import Videos from "./Videos";
 import Favorities from "./Favorities";
+import Login from "./Login";
 
 import { fileNavClick, fileNavKeydown } from "./KeyboardNav";
 import "./PageControls.css";
 
 import history from "./history";
+const user = { isAutenticate: true };
 
 function App() {
-  return (
+  return user.isAutenticate ? (
+    <Login />
+  ) : (
     <Router history={history}>
       <Navbar />
       <div

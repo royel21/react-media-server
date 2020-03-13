@@ -1,11 +1,6 @@
 import React from "react";
 
-const Favorities = ({ history }) => {
-  const addHistory = () => {
-    console.log(history);
-  };
-  console.log(window.location.pathname);
-
+const Favorities = () => {
   document.title = "Favorities";
   return (
     <React.Fragment>

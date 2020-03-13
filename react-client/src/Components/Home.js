@@ -4,7 +4,6 @@ const Home = ({ history }) => {
   const addHistory = () => {
     console.log(history);
   };
-  console.log(window.location.pathname);
 
   document.title = "Home";
   return (

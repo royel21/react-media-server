@@ -61,7 +61,7 @@ const fileNavClick = e => {
 };
 
 const fileNavKeydown = e => {
-  if (!e.target.closest(".controls")) {
+  if (document.querySelector(".file")) {
     let wasProcesed = false;
     let colNum = calCol();
     let totalitem = document.querySelectorAll(".file").length;

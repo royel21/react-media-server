@@ -1,6 +1,6 @@
 import React from "react";
 
-const FileOrder = props => {
+const FileOrder = ({ order, changeOrder }) => {
   return (
     <div id="ordering" className="input-group">
       <div className="input-group-prepend">
@@ -12,8 +12,8 @@ const FileOrder = props => {
         name="orderby"
         id="order-select"
         className="form-control"
-        onChange={props.changeOrder}
-        value={props.order}
+        onChange={changeOrder}
+        value={order}
       >
         <option value="nu">&#xf15d; Name</option>
         <option value="nd">&#xf15e; Name</option>

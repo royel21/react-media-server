@@ -19,7 +19,7 @@ const paginationInput = (li, page, totalPages, goToPage) => {
       if (event.keyCode === 13) {
         page = parseInt(newInput.value);
         newInput = null;
-        goToPage(page);
+        page = goToPage(page);
         li.textContent = page + "/" + totalPages;
       }
     };

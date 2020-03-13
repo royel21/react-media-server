@@ -4,10 +4,8 @@ import { loadFiles } from "./Fileloader";
 
 const FileListHooks = (history, type) => {
   let { page, order, filter } = useParams();
-
   let [filterState, setFilter] = useState("");
   let [orderState, setOrder] = useState("nu");
-
   const [pagedata, setPageData] = useState({
     files: [],
     totalPages: 0,
@@ -30,6 +28,7 @@ const FileListHooks = (history, type) => {
       }
       pushHistory(pg, order, filter);
     }
+    return pg;
   };
 
   const fileFilter = () => {

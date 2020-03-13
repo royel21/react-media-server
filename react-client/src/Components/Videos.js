@@ -7,7 +7,7 @@ import FileListHooks from "./FileListHooks";
 
 const Videos = ({ history, type }) => {
   const {
-    orderby,
+    order,
     page,
     filter,
     goToPage,
@@ -34,7 +34,7 @@ const Videos = ({ history, type }) => {
             totalPages: pagedata.totalPages
           }}
         />
-        <FileOrder order={orderby} changeOrder={changeOrder} />
+        <FileOrder order={order} changeOrder={changeOrder} />
       </div>
     </React.Fragment>
   );

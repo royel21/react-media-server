@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Router, Switch, Route } from "react-router-dom";
 import axios from "axios";
 
@@ -15,45 +15,57 @@ import "./PageControls.css";
 import history from "./history";
 
 function App() {
-  const [User, setUser] = useState({ username: "", isAutenticated: false });
-  const [showLogin, setShowLogin] = useState(false);
+  const [User, setUser] = useState({
+    username: "",
+    isAutenticated: false
+  });
+  console.log(User);
   useEffect(() => {
-    axios.get("/api/user/getuser").then(resp => {
-      if (resp.data.isAutenticated) {
-        setUser(resp.data);
-      } else {
-        setShowLogin(true);
-      }
-    });
-  }, [User.isAutenticated, showLogin]);
+    if (!User.isAutenticated) {
+      axios.get("/api/users/getuser").then(resp => {
+        if (resp.data.isAutenticated) {
+          setUser(resp.data);
+          console.log("axio-getuser");
+        }
+      });
+    }
+    console.log("axio-getuser");
+  }, [User.isAutenticated]);
+  console.log("user", User);
 
-  return !User.isAutenticated ? (
-    showLogin ? (
-      <Login setUser={setUser} history={history} />
-    ) : (
-      <div></div>
-    )
-  ) : (
+  return (
     <Router history={history}>
-      <Navbar setUser={setUser} />
-      <div
-        className="content"
-        onClick={fileNavClick}
-        onKeyDown={fileNavKeydown}
-      >
-        <Switch>
-          <Route path="/mangas/:order?/:page?/:filter?" component={Mangas} />}
-          />
-          <Route path="/videos/:order?/:page?/:filter?" component={Videos} />}
-          />
-          <Route
-            path="/favorities/:order?/:favvorite?/:page?/:filter?"
-            component={Favorities}
-          />
-          } />
-          <Route path="/" component={Home} />
-        </Switch>
-      </div>
+      {User.isAutenticated ? (
+        <Fragment>
+          <Navbar setUser={setUser} history={history} />
+          <div
+            className="content"
+            onClick={fileNavClick}
+            onKeyDown={fileNavKeydown}
+          >
+            <Switch>
+              <Route
+                path="/mangas/:order?/:page?/:filter?"
+                component={Mangas}
+              />
+              <Route
+                path="/videos/:order?/:page?/:filter?"
+                component={Videos}
+              />
+              <Route
+                path="/favorities/:order?/:favvorite?/:page?/:filter?"
+                component={Favorities}
+              />
+              <Route path="/" component={Home} />
+            </Switch>
+          </div>
+        </Fragment>
+      ) : (
+        <Route
+          path="/"
+          render={props => <Login {...props} setUser={setUser} />}
+        />
+      )}
     </Router>
   );
 }

@@ -3,7 +3,7 @@ import axios from "axios";
 
 import "./Login.css";
 
-const Login = ({ setUser, history }) => {
+const Login = ({ setUser }) => {
   const [error, setError] = useState({ type: "", message: "" });
 
   const handleSubmit = e => {
@@ -14,13 +14,15 @@ const Login = ({ setUser, history }) => {
 
     if (name && password) {
       setError(err);
-      axios.post("/api/user/login", { username: name, password }).then(resp => {
-        if (resp.data.isAutenticated) {
-          setUser(resp.data);
-        } else {
-          setError(resp.data);
-        }
-      });
+      axios
+        .post("/api/users/login", { username: name, password })
+        .then(resp => {
+          if (resp.data.isAutenticated) {
+            setUser(resp.data);
+          } else {
+            setError(resp.data);
+          }
+        });
     } else {
       if (!name) {
         err.type = "user";

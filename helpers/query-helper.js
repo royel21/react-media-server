@@ -1,4 +1,4 @@
-const db = require("./models");
+const db = require("../models");
 
 const getOrderBy = orderby => {
   let order = [];
@@ -26,7 +26,7 @@ exports.getFiles = async (user, data, model) => {
   let files = { count: 0, rows: [] };
   let searchs = [];
   let search = data.search || "";
-  console.log(data);
+
   for (let s of search.split("|")) {
     searchs.push({
       Name: {

@@ -7,7 +7,7 @@ import FileListHooks from "./FileListHooks";
 
 const Mangas = ({ history }) => {
   const {
-    orderby,
+    order,
     page,
     filter,
     goToPage,
@@ -34,7 +34,11 @@ const Mangas = ({ history }) => {
             totalPages: pagedata.totalPages
           }}
         />
-        <FileOrder order={orderby} changeOrder={changeOrder} />
+        {pagedata.totalPages > 0 ? (
+          <FileOrder order={order} changeOrder={changeOrder} />
+        ) : (
+          ""
+        )}
       </div>
     </React.Fragment>
   );

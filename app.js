@@ -6,9 +6,7 @@ const session = require("express-session");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-
-const mypassport = require("./passport")(passport);
-const { getFiles } = require("./query-helper");
+require("./helpers/passport")(passport);
 
 const app = express();
 app.use(cors());
@@ -19,11 +17,14 @@ app.use(cookieParser());
 app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/react-client/build"));
 
+const userRoutes = require("./routes/UserRoutes");
+const filesRoutes = require("./routes/FilesRoutes");
+
 app.use(
   session({
     secret: "2491eb2c-595d-4dc8-8427",
     resave: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
     maxAge: 60000
   })
 );
@@ -31,66 +32,22 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-const getFileList = async (res, type, params) => {
-  let user = await db.user.findOne({
-    where: { Name: "Administrator" },
-    include: { model: db.recent }
-  });
+app.use("/api/users", userRoutes);
+app.use("/api/files", filesRoutes);
 
-  let data = await getFiles(user, { type, ...params }, null, "nu");
-
-  res.json({
-    files: data.rows,
-    totalFiles: data.count,
-    totalPages: Math.ceil(data.count / params.itemsperpage)
-  });
-  console.timeEnd("start");
+const isAuth = (req, res, next) => {
+  if (req.user) return next();
+  return res.redirect("/notfound");
 };
 
-const userIsautenticated = (req, res) => {
-  let user = {};
+app.use("/api", isAuth);
 
-  if (req.user) {
-    user.username = req.user.Name;
-    user.isAutenticated = true;
-  } else {
-    user.username = "";
-    user.isAutenticated = false;
-  }
-  console.log(user, user);
-  return res.json(user);
-};
-app.get("/api/user/getuser", userIsautenticated);
-
-app.post("/api/user/login", passport.authenticate("local"), userIsautenticated);
-
-app.post("/api/user/logout", (req, res) => {
-  if (req.user) {
-    req.session.destroy();
-  }
-  return res.send("ok");
-});
-
-app.get("/api/getmangas/:order/:page?/:itemsperpage?/:search?", (req, res) => {
-  console.time("start");
-  console.log(req.url);
-  getFileList(res, "Manga", req.params).catch(err => {
-    console.timeEnd("start");
-    console.log(err);
-  });
-});
-
-app.get("/api/getvideos/:order/:page?/:itemsperpage?/:search?", (req, res) => {
-  console.time("start");
-  console.log(req.url);
-  getFileList(res, "Video", req.params).catch(err => {
-    console.timeEnd("start");
-    console.log(err);
-  });
+app.use("/notfound", (req, res) => {
+  return res.sendFile(path.join(__dirname + "/notfound.html"));
 });
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/react-client/build/index.html"));
+  return res.sendFile(path.join(__dirname + "/react-client/build/index.html"));
 });
 
 const port = 3001;

@@ -22,7 +22,6 @@ function App() {
       if (resp.data.isAutenticated) {
         setUser(resp.data);
       } else {
-        console.log(showLogin);
         setShowLogin(true);
       }
     });

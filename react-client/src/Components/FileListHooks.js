@@ -15,7 +15,7 @@ const FileListHooks = (history, type) => {
   });
 
   const pushHistory = (pg, odr, fltr) => {
-    let url = `/${type}/${odr || "nu"}/${pg}/${fltr || ""}`;
+    let url = `/${type}/${odr || "nu"}/${pg || 1}/${fltr || ""}`;
     setFilter(fltr);
     setOrder(odr || "nu");
     history.push(url);

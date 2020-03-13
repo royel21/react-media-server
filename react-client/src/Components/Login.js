@@ -73,6 +73,7 @@ const Login = ({ setUser, history }) => {
               className="form-control"
               name="password"
               placeholder="Password"
+              autoComplete="on"
               tabIndex="2"
             />
           </div>

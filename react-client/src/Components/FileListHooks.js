@@ -47,7 +47,6 @@ const FileListHooks = (history, type) => {
     loadFiles(page, order, filter, type).then(data => {
       setPageData(data);
     });
-    console.log("");
   }, [page, order, filter, type]);
 
   useEffect(() => {
@@ -58,7 +57,7 @@ const FileListHooks = (history, type) => {
     }
     document.title = type.includes("mangas") ? "Mangas" : "Videos";
   });
-  console.log("render");
+
   return {
     order,
     page: page || 1,

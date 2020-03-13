@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Router, Switch, Route } from "react-router-dom";
+import axios from "axios";
 
 import Navbar from "./Navbar";
 import Home from "./Home";
@@ -12,14 +13,30 @@ import { fileNavClick, fileNavKeydown } from "./KeyboardNav";
 import "./PageControls.css";
 
 import history from "./history";
-const user = { isAutenticate: true };
 
 function App() {
-  return user.isAutenticate ? (
-    <Login />
+  const [User, setUser] = useState({ username: "", isAutenticated: false });
+  const [showLogin, setShowLogin] = useState(false);
+  useEffect(() => {
+    axios.get("/api/user/getuser").then(resp => {
+      if (resp.data.isAutenticated) {
+        setUser(resp.data);
+      } else {
+        console.log(showLogin);
+        setShowLogin(true);
+      }
+    });
+  }, [User.isAutenticated, showLogin]);
+
+  return !User.isAutenticated ? (
+    showLogin ? (
+      <Login setUser={setUser} history={history} />
+    ) : (
+      <div></div>
+    )
   ) : (
     <Router history={history}>
-      <Navbar />
+      <Navbar setUser={setUser} />
       <div
         className="content"
         onClick={fileNavClick}

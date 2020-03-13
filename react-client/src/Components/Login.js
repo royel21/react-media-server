@@ -1,12 +1,9 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState } from "react";
+import axios from "axios";
+
 import "./Login.css";
 
-const Login = () => {
-  const [user, setUser] = useState({
-    name: "",
-    password: ""
-  });
-
+const Login = ({ setUser, history }) => {
   const [error, setError] = useState({ type: "", message: "" });
 
   const handleSubmit = e => {
@@ -16,7 +13,14 @@ const Login = () => {
     let err = { type: "", name: "" };
 
     if (name && password) {
-      setUser({ name, password });
+      setError(err);
+      axios.post("/api/user/login", { username: name, password }).then(resp => {
+        if (resp.data.isAutenticated) {
+          setUser(resp.data);
+        } else {
+          setError(resp.data);
+        }
+      });
     } else {
       if (!name) {
         err.type = "user";
@@ -28,7 +32,7 @@ const Login = () => {
       setError(err);
     }
   };
-  useEffect(() => {}, [error, user]);
+
   document.title = "Login";
   return (
     <Fragment>
@@ -40,11 +44,16 @@ const Login = () => {
         >
           <h3 className="mb-4">Login</h3>
           <div className="input-group">
+            <div className="input-group-prepend">
+              <label htmlFor="" className="input-group-text">
+                <i className="fas fa-user"></i>
+              </label>
+            </div>
             <input
               id="name"
               type="text"
               className="form-control"
-              name="Name"
+              name="username"
               placeholder="Name"
               tabIndex="1"
             />
@@ -53,11 +62,16 @@ const Login = () => {
             {error.type.includes("user") ? error.message : ""}
           </div>
           <div className="input-group">
+            <div className="input-group-prepend">
+              <label htmlFor="" className="input-group-text">
+                <i className="fas fa-key"></i>
+              </label>
+            </div>
             <input
               id="password"
               type="password"
               className="form-control"
-              name="Password"
+              name="password"
               placeholder="Password"
               tabIndex="2"
             />
@@ -68,7 +82,7 @@ const Login = () => {
           </div>
           <div className="form-footer">
             <button className="btn" tabIndex="3">
-              Login
+              Submit
             </button>
           </div>
         </form>

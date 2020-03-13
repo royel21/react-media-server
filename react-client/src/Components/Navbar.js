@@ -1,9 +1,17 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
 
 import "./Navbar.css";
 
-const Navbar = () => {
+const Navbar = ({ setUser }) => {
+  const logOut = () => {
+    axios.post("/api/user/logout").then(resp => {
+      if (resp.status === 200) {
+        setUser({ username: "", isAutenticated: false });
+      }
+    });
+  };
   return (
     <nav id="menu" className="navbar navbar-expand navbar-dark bg-dark">
       <ul className="navbar-nav">
@@ -40,7 +48,7 @@ const Navbar = () => {
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/logout" className="nav-link">
+          <NavLink to="/" className="nav-link" onClick={logOut}>
             <i className="fas fa-sign-out-alt" />
           </NavLink>
         </li>

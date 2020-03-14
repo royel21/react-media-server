@@ -39,7 +39,7 @@ exports.getFiles = async (user, data, model) => {
   let query = {
     attributes: {
       include: [
-        [db.sqlze.literal("REPLACE(Name, '[','0')"), "N"],
+        [db.sqlze.literal("REPLACE(`File`.`Name`, '[','0')"), "N"],
         [
           db.sqlze.literal(
             "(Select LastPos from RecentFiles where FileId == File.Id and RecentId == '" +
@@ -62,12 +62,13 @@ exports.getFiles = async (user, data, model) => {
     offset: (data.page - 1) * data.itemsperpage,
     limit: data.itemsperpage,
     where: {
-      [db.Op.or]: searchs,
-      Type: {
-        [db.Op.like]: "%" + (data.type || "") + "%"
-      }
+      [db.Op.or]: searchs
     }
   };
+  if (data.type !== "Any")
+    query.where.Type = {
+      [db.Op.like]: `%${data.type || ""}%`
+    };
 
   if (model) {
     query.include = [
@@ -91,18 +92,47 @@ exports.getFiles = async (user, data, model) => {
     ]);
 
   files = await db.file.findAndCountAll(query);
-  files.rows = files.rows.map(f => {
-    let d = f.dataValues;
-    return {
-      Id: d.Id,
-      Name: d.Name,
-      Duration: d.Duration,
-      Type: d.Type,
-      isFav: d.isFav || false,
-      CurrentPos: d.CurrentPos || 0,
-      DirectoryId: d.DirectoryId || "",
-      LastRead: d.LastRead || 0
-    };
-  });
+  files.rows.map(f => f.dataValues);
   return files;
+};
+
+exports.getFolders = async req => {
+  const { order, page, itemsperpage, search } = req.params;
+
+  let result = await db.folder.findAndCountAll({
+    where: {
+      Name: {
+        [db.Op.like]: `%${search || ""}%`
+      }
+    },
+    order: [["Name", order === "nu" ? "ASC" : "DESC"]],
+    offset: (page - 1) * itemsperpage,
+    limit: itemsperpage
+  });
+  return {
+    files: result.rows,
+    totalFiles: result.count,
+    totalPages: Math.ceil(result.count / itemsperpage)
+  };
+};
+
+exports.getFolderContent = async req => {
+  const { id, order, page, itemsperpage, search } = req.params;
+
+  let result = await db.folder.findAndCountAll({
+    where: {
+      Id: id,
+      Name: {
+        [db.Op.like]: `%${search || ""}%`
+      }
+    },
+    order: [["Name", order === "nu" ? "ASC" : "DESC"]],
+    offset: (page - 1) * itemsperpage,
+    limit: itemsperpage
+  });
+  return {
+    files: result.rows,
+    totalFiles: result.count,
+    totalPages: result.count / itemsperpage
+  };
 };

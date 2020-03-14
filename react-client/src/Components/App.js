@@ -4,35 +4,31 @@ import axios from "axios";
 
 import Navbar from "./Navbar";
 import Home from "./Home";
+import Folders from "./Folders";
 import Mangas from "./Mangas";
-import Videos from "./Videos";
 import Favorities from "./Favorities";
 import Login from "./Login";
+import Videos from "./Videos";
+import NotFoundError from "./NotFoundError.js";
 
 import { fileNavClick, fileNavKeydown } from "./KeyboardNav";
-import "./PageControls.css";
+import "./Files/PageControls.css";
 
 import history from "./history";
 
 function App() {
   const [User, setUser] = useState({
     username: "",
-    isAutenticated: false
+    isAutenticated: false,
+    isAutenticating: true
   });
-  console.log(User);
   useEffect(() => {
     if (!User.isAutenticated) {
       axios.get("/api/users/getuser").then(resp => {
-        if (resp.data.isAutenticated) {
-          setUser(resp.data);
-          console.log("axio-getuser");
-        }
+        setUser({ ...resp.data, isAutenticating: false });
       });
     }
-    console.log("axio-getuser");
   }, [User.isAutenticated]);
-  console.log("user", User);
-
   return (
     <Router history={history}>
       {User.isAutenticated ? (
@@ -45,6 +41,13 @@ function App() {
           >
             <Switch>
               <Route
+                path={[
+                  "/folders/:order?/:page?/:filter?",
+                  "/folder-content/:id/:order?/:page?/:filter?"
+                ]}
+                component={Folders}
+              />
+              <Route
                 path="/mangas/:order?/:page?/:filter?"
                 component={Mangas}
               />
@@ -56,14 +59,21 @@ function App() {
                 path="/favorities/:order?/:favvorite?/:page?/:filter?"
                 component={Favorities}
               />
-              <Route path="/" component={Home} />
+              <Route exact path="/" component={Home} />
+              <Route path="/" component={NotFoundError} />
             </Switch>
           </div>
         </Fragment>
       ) : (
         <Route
           path="/"
-          render={props => <Login {...props} setUser={setUser} />}
+          render={props =>
+            User.isAutenticating ? (
+              <div></div>
+            ) : (
+              <Login {...props} setUser={setUser} />
+            )
+          }
         />
       )}
     </Router>

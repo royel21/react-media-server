@@ -1,11 +1,12 @@
 {
     "verbose": true,
     "ignore": [
-        "react-client/*",
-        "files.db/*",
         "files.db",
         "files.db-journal",
-        "node_modules/*"
+        "public/covers/videos",
+        "public/covers/mangas",
+        "public/covers/folders",
+        "react-client"
     ],
     "env": {
         "NODE_ENV": "development"

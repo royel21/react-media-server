@@ -12,6 +12,7 @@
 # production
 /react-client/build
 /react-client/public/covers
+/public/covers/
 files.db
 
 # misc

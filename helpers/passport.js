@@ -11,7 +11,7 @@ module.exports = passport => {
         where: {
           Name: username
         },
-        include: { model: db.userConfig }
+        include: [{ model: db.userConfig }, { model: db.recent }]
       })
       .then(user => {
         if (user) {
@@ -40,8 +40,7 @@ module.exports = passport => {
           .findOne({
             where: {
               Name: username
-            },
-            include: { model: db.userConfig }
+            }
           })
           .then(user => {
             if (user) {

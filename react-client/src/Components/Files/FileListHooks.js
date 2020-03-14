@@ -1,11 +1,30 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { loadFiles } from "./Fileloader";
+import axios from "axios";
+
+const toUpper = {
+  mangas: "Mangas",
+  videos: "Videos",
+  folders: "Folders",
+  "folder-content": "Folder-content"
+};
+
+const genUrl = (page, order, filter, type, notApi, id) => {
+  let itemsperpage = Math.floor(window.innerWidth / 200) * 3;
+  let api = notApi ? "/" : "/api/files/";
+  let hasItems = notApi ? "" : `${itemsperpage}/`;
+  return (
+    api +
+    (id ? `folder-content/${id}` : type) +
+    `/${order || "nu"}/${page || 1}/${hasItems}${filter || ""}`
+  );
+};
 
 const FileListHooks = (history, type) => {
-  let { page, order, filter } = useParams();
+  let { id, page, order, filter } = useParams();
   let [filterState, setFilter] = useState("");
   let [orderState, setOrder] = useState("nu");
+
   const [pagedata, setPageData] = useState({
     files: [],
     totalPages: 0,
@@ -13,10 +32,9 @@ const FileListHooks = (history, type) => {
   });
 
   const pushHistory = (pg, odr, fltr) => {
-    let url = `/${type}/${odr || "nu"}/${pg || 1}/${fltr || ""}`;
     setFilter(fltr);
     setOrder(odr || "nu");
-    history.push(url);
+    history.push(genUrl(pg, odr, fltr, type, true, id));
   };
 
   const goToPage = pg => {
@@ -42,11 +60,15 @@ const FileListHooks = (history, type) => {
     pushHistory(page, e.target.value, filterState);
   };
 
+  const processFile = e => {
+    console.log(e.target);
+  };
+
   useEffect(() => {
-    loadFiles(page, order, filter, type).then(data => {
+    axios(genUrl(page, order, filter, type, false, id)).then(({ data }) => {
       setPageData(data);
     });
-  }, [page, order, filter, type]);
+  }, [page, order, filter, type, id]);
 
   useEffect(() => {
     let firstEl = document.querySelector(".file");
@@ -54,7 +76,8 @@ const FileListHooks = (history, type) => {
       firstEl.focus();
       firstEl.classList.add("active");
     }
-    document.title = type.includes("mangas") ? "Mangas" : "Videos";
+    document.title =
+      toUpper[type] + (page > 1 ? ` ${page} of ${pagedata.totalPages}` : "");
   });
 
   return {

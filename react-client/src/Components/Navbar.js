@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, Redirect } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import axios from "axios";
 
 import "./Navbar.css";
@@ -21,6 +21,12 @@ const Navbar = ({ setUser, history }) => {
           <NavLink exact to="/" className="nav-link">
             <i className="fas fa-home" />
             <span> Home</span>
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink to="/folders" className="nav-link">
+            <i className="fas fa-folder" />
+            <span> Folders</span>
           </NavLink>
         </li>
         <li className="nav-item">

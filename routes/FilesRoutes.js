@@ -1,20 +1,10 @@
 const Router = require("express").Router();
 
 const db = require("../models");
-const { getFiles } = require("../helpers/query-helper");
+const { getFiles, getFolders } = require("../helpers/query-helper");
 
-const isAuth = (req, res, next) => {
-  if (req.user) return next();
-  return res.redirect("/notfound");
-};
-
-const getFileList = async (res, type, params) => {
-  let user = await db.user.findOne({
-    where: { Name: "Administrator" },
-    include: { model: db.recent }
-  });
-
-  let data = await getFiles(user, { type, ...params }, null, "nu");
+const getFileList = async (user, res, type, params, model) => {
+  let data = await getFiles(user, { type, ...params }, model);
 
   console.timeEnd("start");
   return res.json({
@@ -24,21 +14,40 @@ const getFileList = async (res, type, params) => {
   });
 };
 
-Router.get(
-  "/mangas/:order/:page?/:itemsperpage?/:search?",
-  isAuth,
-  (req, res) => {
-    console.time("start");
-    return getFileList(res, "Manga", req.params);
-  }
-);
+Router.get("/mangas/:order/:page?/:itemsperpage?/:search?", (req, res) => {
+  console.time("start");
+  return getFileList(req.user, res, "Manga", req.params).catch(err => {
+    console.log(err);
+  });
+});
+
+Router.get("/videos/:order/:page?/:itemsperpage?/:search?", (req, res) => {
+  console.time("start");
+  return getFileList(req.user, res, "Video", req.params).catch(err => {
+    console.log(err);
+  });
+});
+
+Router.get("/folders/:order/:page?/:itemsperpage?/:search?", (req, res) => {
+  return getFolders(req)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
 
 Router.get(
-  "/videos/:order/:page?/:itemsperpage?/:search?",
-  isAuth,
+  "/folder-content/:id/:order/:page?/:itemsperpage?/:search?",
   (req, res) => {
     console.time("start");
-    return getFileList(res, "Video", req.params);
+    console.log(req.url);
+    return getFileList(req.user, res, null, req.params, db.folder).catch(
+      err => {
+        console.log(err);
+      }
+    );
   }
 );
 

@@ -33,20 +33,25 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/api/users", userRoutes);
+
+app.use("/api/*", (req, res, next) => {
+  console.log(req.url);
+  next();
+  // if (req.user) return next();
+  //return res.redirect("/notfound");
+});
+
 app.use("/api/files", filesRoutes);
-
-const isAuth = (req, res, next) => {
-  if (req.user) return next();
-  return res.redirect("/notfound");
-};
-
-app.use("/api", isAuth);
 
 app.use("/notfound", (req, res) => {
   return res.sendFile(path.join(__dirname + "/notfound.html"));
 });
 
-app.get("*", (req, res) => {
+app.get("*", (req, res, next) => {
+  return req.user ? next() : res.redirect("/");
+});
+
+app.get("/*", (req, res) => {
   return res.sendFile(path.join(__dirname + "/react-client/build/index.html"));
 });
 

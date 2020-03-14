@@ -31,10 +31,10 @@ const FileListHooks = (history, type) => {
     totalFiles: 0
   });
 
-  const pushHistory = (pg, odr, fltr) => {
+  const pushHistory = (pg, odr, fltr, tid) => {
     setFilter(fltr);
     setOrder(odr || "nu");
-    history.push(genUrl(pg, odr, fltr, type, true, id));
+    history.push(genUrl(pg, odr, fltr, type, true, tid || id));
   };
 
   const goToPage = pg => {
@@ -61,7 +61,20 @@ const FileListHooks = (history, type) => {
   };
 
   const processFile = e => {
-    console.log(e.target);
+    let file = e.target.closest(".file");
+    switch (file.dataset.type) {
+      case "Manga": {
+        break;
+      }
+      case "Video": {
+        break;
+      }
+      default: {
+        let url = genUrl(1, "nu", "", "", false, file.id);
+        console.log(url);
+        pushHistory(1, "nu", "", file.id);
+      }
+    }
   };
 
   useEffect(() => {
@@ -84,10 +97,11 @@ const FileListHooks = (history, type) => {
     order,
     page: page || 1,
     filter: filter || "",
+    pagedata,
     goToPage,
     fileFilter,
     changeOrder,
-    pagedata
+    processFile
   };
 };
 

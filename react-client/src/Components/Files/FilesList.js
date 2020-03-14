@@ -13,7 +13,8 @@ const FilesList = ({ history, type }) => {
     goToPage,
     fileFilter,
     changeOrder,
-    pagedata
+    pagedata,
+    processFile
   } = FileListHooks(history, type);
   return (
     <React.Fragment>
@@ -21,7 +22,7 @@ const FilesList = ({ history, type }) => {
         {pagedata.files.length === 0 ? (
           <div></div>
         ) : (
-          <Files files={pagedata.files} />
+          <Files files={pagedata.files} processFile={processFile} />
         )}
       </div>
       <div className="controls">

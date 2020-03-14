@@ -23,7 +23,7 @@ const fileTypes = {
   }
 };
 
-const File = ({ files }) => {
+const File = ({ files, processFile }) => {
   return files.map(({ Id, Name, Type, isFav, CurrentPos, Duration }) => {
     let ftype = Type ? Type.toLowerCase() + "s" : "folders";
     let t = fileTypes[ftype];
@@ -38,7 +38,7 @@ const File = ({ files }) => {
       >
         <div className="file-info">
           <div className="file-btns">
-            <i className={"fas fa-" + t.class} />
+            <i className={"fas fa-" + t.class} onClick={processFile} />
             <span className="file-progress">
               {t.formatter(CurrentPos || 0, Duration)}
             </span>

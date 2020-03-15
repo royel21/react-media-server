@@ -29,6 +29,7 @@ const paginationInput = (li, page, totalPages, goToPage) => {
 };
 
 const pagerClick = (e, page, totalPages, goToPage) => {
+  window.local.setItem("selected", 0);
   let li = e.target;
   switch (e.target.id) {
     case "prev-page": {

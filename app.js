@@ -22,6 +22,7 @@ const filesRoutes = require("./routes/FilesRoutes");
 
 app.use(
   session({
+    name: "rcm",
     secret: "2491eb2c-595d-4dc8-8427",
     resave: true,
     saveUninitialized: false,

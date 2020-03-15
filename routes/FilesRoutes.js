@@ -16,38 +16,28 @@ const getFileList = async (user, res, type, params, model) => {
 
 Router.get("/mangas/:order/:page?/:itemsperpage?/:search?", (req, res) => {
   console.time("start");
-  return getFileList(req.user, res, "Manga", req.params).catch(err => {
-    console.log(err);
-  });
+  getFileList(req.user, res, "Manga", req.params);
 });
 
 Router.get("/videos/:order/:page?/:itemsperpage?/:search?", (req, res) => {
   console.time("start");
-  return getFileList(req.user, res, "Video", req.params).catch(err => {
-    console.log(err);
-  });
+  return getFileList(req.user, res, "Video", req.params);
 });
 
-Router.get("/folders/:order/:page?/:itemsperpage?/:search?", (req, res) => {
-  return getFolders(req)
-    .then(result => {
-      res.json(result);
-    })
-    .catch(err => {
-      console.log(err);
-    });
-});
+Router.get("/folders/:order/:page?/:itemsperpage?/:search?", getFolders);
 
 Router.get(
   "/folder-content/:id/:order/:page?/:itemsperpage?/:search?",
   (req, res) => {
     console.time("start");
     console.log(req.url);
-    return getFileList(req.user, res, null, req.params, db.folder).catch(
-      err => {
+    getFileList(req.user, res, null, req.params, db.folder)
+      .then(() => {
+        return null;
+      })
+      .catch(err => {
         console.log(err);
-      }
-    );
+      });
   }
 );
 

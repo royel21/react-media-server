@@ -1,5 +1,5 @@
 import React from "react";
-import formatTime from "../../modules/time-utils";
+import utils from "../../modules/utils";
 
 import "./File.css";
 const fileTypes = {
@@ -12,12 +12,12 @@ const fileTypes = {
   videos: {
     class: "play-circle",
     formatter(a, b) {
-      return `${formatTime(a)}/${formatTime(b)}`;
+      return `${utils.formatTime(a)}/${utils.formatTime(b)}`;
     }
   },
   folders: {
     class: "folder-open",
-    formatter(a, b) {
+    formatter() {
       return "";
     }
   }

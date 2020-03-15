@@ -8,9 +8,9 @@ const toUpper = {
   folders: "Folders",
   "folder-content": "Folder-content"
 };
-
+var itemsperpage = 0;
 const genUrl = (page, order, filter, type, notApi, id) => {
-  let itemsperpage = Math.floor(window.innerWidth / 200) * 3;
+  itemsperpage = Math.floor(window.innerWidth / 200) * 3;
   let api = notApi ? "/" : "/api/files/";
   let hasItems = notApi ? "" : `${itemsperpage}/`;
   return (
@@ -20,7 +20,7 @@ const genUrl = (page, order, filter, type, notApi, id) => {
   );
 };
 
-const FileListHooks = (history, type) => {
+const FileListHooks = ({ history, type }) => {
   let { id, page, order, filter } = useParams();
   let [filterState, setFilter] = useState("");
   let [orderState, setOrder] = useState("nu");
@@ -31,19 +31,22 @@ const FileListHooks = (history, type) => {
     totalFiles: 0
   });
 
+  useEffect(() => {
+    let url = genUrl(page, order, filter, type, false, id);
+    axios(url).then(({ data }) => {
+      setPageData(data);
+    });
+  }, [page, order, filter, type, id]);
+
   const pushHistory = (pg, odr, fltr, tid) => {
     setFilter(fltr);
     setOrder(odr || "nu");
     history.push(genUrl(pg, odr, fltr, type, true, tid || id));
+    if (type.includes("folders")) window.local.removeItem("folder");
   };
 
   const goToPage = pg => {
-    if (pg !== page) {
-      if (pg > pagedata.totalPages) {
-        pg = pagedata.totalPages;
-      } else if (pg < 1) {
-        pg = 1;
-      }
+    if (pg !== page && pg > 0 && pg < pagedata.totalPages + 1) {
       pushHistory(pg, order, filter);
     }
     return pg;
@@ -70,34 +73,35 @@ const FileListHooks = (history, type) => {
         break;
       }
       default: {
-        let url = genUrl(1, "nu", "", "", false, file.id);
-        console.log(url);
         pushHistory(1, "nu", "", file.id);
+        window.local.setItem("folder", file.id);
       }
     }
   };
 
   useEffect(() => {
-    axios(genUrl(page, order, filter, type, false, id)).then(({ data }) => {
-      setPageData(data);
-    });
-  }, [page, order, filter, type, id]);
+    if (pagedata.files.length) {
+      let folder = window.local.getItem("folder");
+      let selected = parseInt(window.local.getItem("selected"));
 
-  useEffect(() => {
-    let firstEl = document.querySelector(".file");
-    if (firstEl) {
-      firstEl.focus();
-      firstEl.classList.add("active");
+      let firstEl =
+        document.getElementById(folder) ||
+        document.querySelectorAll(".file")[selected || 0];
+
+      if (firstEl) {
+        firstEl.focus();
+        firstEl.classList.add("active");
+      }
     }
     document.title =
       toUpper[type] + (page > 1 ? ` ${page} of ${pagedata.totalPages}` : "");
   });
-
   return {
     order,
     page: page || 1,
     filter: filter || "",
     pagedata,
+    itemsperpage,
     goToPage,
     fileFilter,
     changeOrder,

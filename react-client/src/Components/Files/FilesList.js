@@ -4,26 +4,30 @@ import FileFilter from "./FileFilter";
 import Pagination from "./Pagination";
 import FileOrder from "./FileOrder";
 import FileListHooks from "./FileListHooks";
+import { fileNavKeydown, fileNavClick } from "../KeyboardNav";
 
-const FilesList = ({ history, type }) => {
+const FilesList = props => {
   const {
     order,
     page,
     filter,
+    itemsperpage,
     goToPage,
     fileFilter,
     changeOrder,
     pagedata,
     processFile
-  } = FileListHooks(history, type);
+  } = FileListHooks(props);
   return (
     <React.Fragment>
-      <div id="files-list">
-        {pagedata.files.length === 0 ? (
-          <div></div>
-        ) : (
-          <Files files={pagedata.files} processFile={processFile} />
-        )}
+      <div
+        id="files-list"
+        onClick={fileNavClick}
+        onKeyDown={e => {
+          fileNavKeydown(e, page, itemsperpage, goToPage);
+        }}
+      >
+        <Files files={pagedata.files} processFile={processFile} />
       </div>
       <div className="controls">
         <FileFilter fileFilter={fileFilter} filter={filter} />
@@ -35,11 +39,7 @@ const FilesList = ({ history, type }) => {
             totalPages: pagedata.totalPages
           }}
         />
-        {pagedata.totalPages > 0 ? (
-          <FileOrder order={order} changeOrder={changeOrder} />
-        ) : (
-          ""
-        )}
+        <FileOrder order={order} changeOrder={changeOrder} />
       </div>
     </React.Fragment>
   );

@@ -26,7 +26,7 @@ const selectItem = index => {
   let itemContainer = document.getElementById("files-list");
   selectedIndex = index;
   let nextEl = getElByIndex(index);
-  if (nextEl !== undefined) {
+  if (nextEl) {
     let scroll = scrollElement.scrollTop,
       elofft = nextEl.offsetTop;
 
@@ -52,6 +52,10 @@ const selectItem = index => {
     if (activeEl) activeEl.classList.remove("active");
     nextEl.classList.add("active");
     nextEl.focus();
+
+    if (nextEl.dataset.type.includes("Folder"))
+      window.local.setItem("folder", nextEl.id);
+    window.local.setItem("selected", index);
   }
   return nextEl;
 };
@@ -60,11 +64,14 @@ const fileNavClick = e => {
   selectItem(getElementIndex(e.target.closest(".file")));
 };
 
-const fileNavKeydown = e => {
+const fileNavKeydown = (e, page, itemsperpage, goToPage) => {
   if (document.querySelector(".file")) {
     let wasProcesed = false;
     let colNum = calCol();
     let totalitem = document.querySelectorAll(".file").length;
+    selectedIndex = getElementIndex(
+      document.querySelector("#files-list .active")
+    );
     switch (e.keyCode) {
       case ENTER: {
         break;
@@ -72,14 +79,10 @@ const fileNavKeydown = e => {
       case LEFT: {
         if (selectedIndex > 0) {
           selectItem(selectedIndex - 1);
+        } else {
+          window.local.setItem("selected", itemsperpage - 1);
+          goToPage(page - 1);
         }
-        // if (currentPage > 1 || e.ctrlKey && currentPage > 1) {
-
-        //     let url = genUrl(currentPage - 1);
-        //     loadPartialPage(url, () => {
-        //         selectItem($('.items').length - 1);
-        //     });
-        // }
 
         wasProcesed = true;
         break;
@@ -96,14 +99,10 @@ const fileNavKeydown = e => {
       case RIGHT: {
         if (selectedIndex < totalitem - 1) {
           selectItem(selectedIndex + 1);
+        } else {
+          window.local.setItem("selected", 0);
+          goToPage(parseInt(page) + 1);
         }
-        // if (currentPage < totalPage || e.ctrlKey && currentPage < totalPage) {
-
-        //     let url = genUrl(currentPage + 1);
-        //     loadPartialPage(url, () => {
-        //         selectItem(0);
-        //     });
-        // }
 
         wasProcesed = true;
         break;

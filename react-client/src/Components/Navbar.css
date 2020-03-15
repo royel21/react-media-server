@@ -10,10 +10,9 @@
   user-select: none;
 }
 
-#menu i.fa-user-cog,
-#menu i.fa-user {
+#menu i.fa-user-cog {
   margin-right: 8px;
-  color: #007bff;
+  color: #6fb5ff;
 }
 
 #menu label {
@@ -44,6 +43,10 @@
 
 #menu .nav-item {
   padding: 0;
+}
+
+#menu a:active .fas {
+  transform: scale(1.2);
 }
 
 @media screen and (max-width: 700px) {

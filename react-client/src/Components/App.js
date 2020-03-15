@@ -11,7 +11,6 @@ import Login from "./Login";
 import Videos from "./Videos";
 import NotFoundError from "./NotFoundError.js";
 
-import { fileNavClick, fileNavKeydown } from "./KeyboardNav";
 import "./Files/PageControls.css";
 
 import history from "./history";
@@ -33,12 +32,8 @@ function App() {
     <Router history={history}>
       {User.isAutenticated ? (
         <Fragment>
-          <Navbar setUser={setUser} history={history} />
-          <div
-            className="content"
-            onClick={fileNavClick}
-            onKeyDown={fileNavKeydown}
-          >
+          <Navbar setUser={setUser} User={User} />
+          <div className="content">
             <Switch>
               <Route
                 path={[
@@ -79,9 +74,5 @@ function App() {
     </Router>
   );
 }
-
-window.addEventListener("popstate", e => {
-  console.log(e.state);
-});
 
 export default App;

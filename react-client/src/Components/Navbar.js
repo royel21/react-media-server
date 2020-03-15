@@ -1,10 +1,10 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink, withRouter } from "react-router-dom";
 import axios from "axios";
 
 import "./Navbar.css";
 
-const Navbar = ({ setUser, history }) => {
+const Navbar = ({ User, setUser, history }) => {
   const logOut = e => {
     e.preventDefault();
     axios.post("/api/users/logout").then(resp => {
@@ -50,19 +50,19 @@ const Navbar = ({ setUser, history }) => {
       </ul>
       <ul className="navbar-nav">
         <li className="nav-item">
-          <NavLink to="#" className="nav-link">
-            <i className="fas fa-user-alt" />
-            <span> Royel Consoro</span>
-          </NavLink>
+          <Link to="#" className="nav-link">
+            <i className="fas fa-user-cog" />
+            <span>{User.username}</span>
+          </Link>
         </li>
         <li id="logout" className="nav-item active">
-          <NavLink to="/login" className="nav-link" onClick={logOut}>
+          <Link to="/login" className="nav-link" onClick={logOut}>
             <i className="fas fa-sign-out-alt" />
-          </NavLink>
+          </Link>
         </li>
       </ul>
     </nav>
   );
 };
 
-export default Navbar;
+export default withRouter(Navbar);

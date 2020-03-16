@@ -1,4 +1,4 @@
-import React, { useContext, Fragment } from "react";
+import React, { useContext } from "react";
 
 import { PageConfigContext } from "../../Context/PageConfigContext";
 
@@ -14,12 +14,17 @@ import { genUrl } from "./utils";
 
 const FilesList = props => {
   let { id } = useParams();
+
   const { pageConfig } = useContext(PageConfigContext);
   const { page, filter, itemsperpage, pagedata, goToPage, fileFilter, processFile } = FileListHooks(
     props,
     pageConfig
   );
 
+  const setFavorite = e => {
+    console.log(e.target.value);
+    props.history.push(genUrl(page, pageConfig, filter, "favorities", true, e.target.value));
+  };
   return (
     <React.Fragment>
       <div
@@ -33,34 +38,7 @@ const FilesList = props => {
       </div>
       <div className="controls">
         {props.type.includes("favorities") ? (
-          <Fragment>
-            <FavoritiesManager favorities={pagedata.favorities} />
-            <div id="all-favs" className="input-group">
-              <div className="input-group-prepend">
-                <label htmlFor="show-fav" className="input-group-text">
-                  <i className="fas fa-star "></i>
-                </label>
-              </div>
-              <select
-                id="favs"
-                className="form-control"
-                defaultValue={id}
-                onChange={e => {
-                  props.history.push(
-                    genUrl(page, pageConfig, filter, "favorities", true, e.target.value)
-                  );
-                }}
-              >
-                {pagedata.favorities.map(({ Id, Name }) => {
-                  return (
-                    <option key={Id} value={Name}>
-                      {Name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          </Fragment>
+          <FavoritiesManager favorities={pagedata.favorities} fav={id} setFavorite={setFavorite} />
         ) : (
           ""
         )}

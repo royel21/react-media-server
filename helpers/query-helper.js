@@ -22,7 +22,7 @@ const getOrderBy = orderby => {
   return order;
 };
 
-exports.getFiles = async (user, data, model) => {
+const getFiles = async (user, data, model) => {
   let files = { count: 0, rows: [] };
   let searchs = [];
   let search = data.search || "";
@@ -34,16 +34,11 @@ exports.getFiles = async (user, data, model) => {
       }
     });
   }
-  user = user
-    ? user
-    : await db.user.findOne({ where: { Name: "Royel" }, include: db.recent });
+  user = user ? user : await db.user.findOne({ where: { Name: "Royel" }, include: db.recent });
 
-  let favs = (await user.getFavorites({ attributes: ["Id", "Name"] })).map(
-    f => f.dataValues
-  );
+  let favs = (await user.getFavorites({ attributes: ["Id", "Name"] })).map(f => f.dataValues);
 
   let query = {
-    raw: true,
     attributes: [
       "Id",
       "Name",
@@ -51,9 +46,7 @@ exports.getFiles = async (user, data, model) => {
       "Duration",
       [
         db.sqlze.literal(
-          "(Select LastPos from RecentFiles where FileId == File.Id and RecentId == '" +
-            user.Recent.Id +
-            "')"
+          "(Select LastPos from RecentFiles where FileId == File.Id and RecentId == '" + user.Recent.Id + "')"
         ),
         "CurrentPos"
       ],
@@ -90,7 +83,7 @@ exports.getFiles = async (user, data, model) => {
     ]);
   } else {
     let fav = favs.find(f => f.Name.includes(data.id)) || favs[0];
-    data.id = (fav && fav.Name) || "";
+    data.id = fav.Id;
   }
   // if we are getting files from a model (favorite or folder-content)
   if (model) {
@@ -98,10 +91,7 @@ exports.getFiles = async (user, data, model) => {
       {
         model,
         where: {
-          [db.Op.or]: {
-            Id: data.id || "",
-            Name: data.id || ""
-          }
+          Id: data.id || ""
         }
       }
     ];
@@ -111,6 +101,21 @@ exports.getFiles = async (user, data, model) => {
   files.rows.map(f => f.dataValues);
   files.favorities = model === db.favorite ? favs : [];
   return files;
+};
+
+exports.getFilesList = async (user, res, type, params, model) => {
+  let data = {};
+  try {
+    data = await getFiles(user, { type, ...params }, model);
+  } catch (err) {
+    console.log(err);
+  }
+  return res.json({
+    files: data.rows,
+    totalFiles: data.count,
+    totalPages: Math.ceil(data.count / params.items),
+    favorities: data.favorities
+  });
 };
 
 exports.getFolders = async (req, res) => {

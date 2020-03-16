@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Router, Switch, Route, Redirect } from "react-router-dom";
+import { Router, Switch, Route } from "react-router-dom";
 import axios from "axios";
 
 import Navbar from "./Navbar";
@@ -9,7 +9,6 @@ import Mangas from "./Mangas";
 import Favorities from "./Favorities";
 import Login from "./Login";
 import Videos from "./Videos";
-import NotFoundError from "./NotFoundError.js";
 
 import "./Files/PageControls.css";
 
@@ -30,13 +29,13 @@ function App() {
       });
     }
   }, [User.isAutenticated]);
-  console.log(history.location);
+
   return (
     <Router history={history}>
       {User.isAutenticated ? (
         <PageConfigContextProvider>
           <Navbar setUser={setUser} User={User} />
-          <div className="content">
+          <div id="content">
             <Switch>
               <Route
                 path={["/folders/:page?/:filter?", "/folder-content/:id/:page?/:filter?"]}
@@ -52,9 +51,7 @@ function App() {
       ) : (
         <Route
           path="/"
-          render={props =>
-            User.isAutenticating ? <div></div> : <Login {...props} setUser={setUser} />
-          }
+          render={props => (User.isAutenticating ? <div></div> : <Login {...props} setUser={setUser} />)}
         />
       )}
     </Router>

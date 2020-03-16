@@ -1,5 +1,4 @@
-body,
-html {
+body, html {
   background: rgba(0, 0, 0, 0);
   position: absolute;
   top: 0;
@@ -18,7 +17,7 @@ html {
   min-height: 100vh;
 }
 
-.content {
+#content {
   position: relative;
   min-height: calc(100% - 32px);
   height: calc(100% - 32px);
@@ -41,7 +40,7 @@ html {
   ::-webkit-scrollbar {
     width: 0;
   }
-  .content {
+  #content {
     padding-bottom: 40px;
   }
 }
@@ -77,4 +76,19 @@ html {
 .btn:hover {
   color: white;
   background-image: linear-gradient(-160deg, #888888, #555555, #444444);
+}
+
+/* Clear input text icon*/
+
+input[type="text"]+span {
+  display: none !important;
+  position: absolute;
+  right: 4px;
+  z-index: 99;
+  color: darkgray;
+  font-size: 20px;
+}
+
+input[type="text"]:not(:placeholder-shown)+span {
+  display: initial !important;
 }

@@ -19,6 +19,7 @@ app.use(express.static(__dirname + "/react-client/build"));
 
 const userRoutes = require("./routes/UserRoutes");
 const filesRoutes = require("./routes/FilesRoutes");
+const favoriteRoutes = require("./routes/FavoriteRoutes");
 
 app.use(
   session({
@@ -35,8 +36,6 @@ app.use(passport.session());
 
 app.use("/api/users", userRoutes);
 
-app.use("/api/files", filesRoutes);
-
 app.use("/api/*", (req, res, next) => {
   console.log(req.url);
   // next();
@@ -44,9 +43,13 @@ app.use("/api/*", (req, res, next) => {
   return res.redirect("/notfound");
 });
 
-// app.get("/notfound", (req, res) => {
-//   return res.sendFile(path.join(__dirname + "/notfound.html"));
-// });
+app.use("/api/files/favorities", favoriteRoutes);
+
+app.use("/api/files", filesRoutes);
+
+app.get("/notfound", (req, res) => {
+  return res.sendFile(path.join(__dirname + "/notfound.html"));
+});
 
 app.get("/*", (req, res) => {
   return res.sendFile(path.join(__dirname + "/react-client/build/index.html"));

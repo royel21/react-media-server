@@ -69,7 +69,7 @@ const Navbar = ({ User, setUser, history }) => {
             <span>{User.username}</span>
           </label>
           <input type="checkbox" name="" id="show-config" />
-          <div id="user-config" className="bg-dark">
+          <div id="user-config">
             <h4>Page Config</h4>
             <div id="config-content">
               <div className="page-control">

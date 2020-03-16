@@ -1,14 +1,14 @@
 {
-    "verbose": true,
-    "ignore": [
-        "files.db",
-        "files.db-journal",
-        "public/covers/videos",
-        "public/covers/mangas",
-        "public/covers/folders",
-        "react-client"
-    ],
-    "env": {
-        "NODE_ENV": "development"
-    }
+  "verbose": true,
+  "ignore": [
+    "files.db",
+    "files.db-journal",
+    "public/covers/videos",
+    "public/covers/mangas",
+    "public/covers/folders",
+    "react-client"
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }

@@ -11,9 +11,26 @@ const submitFilter = (e, fileFilter) => {
   }
 };
 
-const FileFilter = ({ fileFilter, filter }) => {
+const backFromFolderContent = history => {
+  let pathname = window.local.getObject("folder").pathname || "/folders";
+  history.push(pathname);
+};
+
+const FileFilter = ({ fileFilter, filter, showback, history }) => {
   return (
     <div id="filter-control" className="input-group">
+      {showback ? (
+        <span
+          className="badge badge-secondary mx-2"
+          onClick={e => {
+            backFromFolderContent(history);
+          }}
+        >
+          <i className="fas fa-arrow-circle-left"></i>
+        </span>
+      ) : (
+        ""
+      )}
       <div className="input-group-prepend">
         <span className="btn-search input-group-text" onClick={fileFilter}>
           <i className="fa fa-search" />

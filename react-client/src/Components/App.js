@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { Router, Switch, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Router, Switch, Route, Redirect } from "react-router-dom";
 import axios from "axios";
 
 import Navbar from "./Navbar";
@@ -14,6 +14,7 @@ import NotFoundError from "./NotFoundError.js";
 import "./Files/PageControls.css";
 
 import history from "./history";
+import PageConfigContextProvider from "../Context/PageConfigContext";
 
 function App() {
   const [User, setUser] = useState({
@@ -21,6 +22,7 @@ function App() {
     isAutenticated: false,
     isAutenticating: true
   });
+
   useEffect(() => {
     if (!User.isAutenticated) {
       axios.get("/api/users/getuser").then(resp => {
@@ -28,46 +30,30 @@ function App() {
       });
     }
   }, [User.isAutenticated]);
+  console.log(history.location);
   return (
     <Router history={history}>
       {User.isAutenticated ? (
-        <Fragment>
+        <PageConfigContextProvider>
           <Navbar setUser={setUser} User={User} />
           <div className="content">
             <Switch>
               <Route
-                path={[
-                  "/folders/:order?/:page?/:filter?",
-                  "/folder-content/:id/:order?/:page?/:filter?"
-                ]}
+                path={["/folders/:page?/:filter?", "/folder-content/:id/:page?/:filter?"]}
                 component={Folders}
               />
-              <Route
-                path="/mangas/:order?/:page?/:filter?"
-                component={Mangas}
-              />
-              <Route
-                path="/videos/:order?/:page?/:filter?"
-                component={Videos}
-              />
-              <Route
-                path="/favorities/:order?/:favvorite?/:page?/:filter?"
-                component={Favorities}
-              />
+              <Route path="/mangas/:page?/:filter?" component={Mangas} />
+              <Route path="/videos/:page?/:filter?" component={Videos} />
+              <Route path="/favorities/:id?/:page?/:filter?" component={Favorities} />
               <Route exact path="/" component={Home} />
-              <Route path="/" component={NotFoundError} />
             </Switch>
           </div>
-        </Fragment>
+        </PageConfigContextProvider>
       ) : (
         <Route
           path="/"
           render={props =>
-            User.isAutenticating ? (
-              <div></div>
-            ) : (
-              <Login {...props} setUser={setUser} />
-            )
+            User.isAutenticating ? <div></div> : <Login {...props} setUser={setUser} />
           }
         />
       )}

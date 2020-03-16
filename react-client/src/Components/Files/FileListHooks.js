@@ -1,53 +1,30 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { genUrl, PageTitles } from "./utils";
 
-const toUpper = {
-  mangas: "Mangas",
-  videos: "Videos",
-  folders: "Folders",
-  "folder-content": "Folder-content"
-};
-var itemsperpage = 0;
-const genUrl = (page, order, filter, type, notApi, id) => {
-  itemsperpage = Math.floor(window.innerWidth / 200) * 3;
-  let api = notApi ? "/" : "/api/files/";
-  let hasItems = notApi ? "" : `${itemsperpage}/`;
-  return (
-    api +
-    (id ? `folder-content/${id}` : type) +
-    `/${order || "nu"}/${page || 1}/${hasItems}${filter || ""}`
-  );
-};
-
-const FileListHooks = ({ history, type }) => {
-  let { id, page, order, filter } = useParams();
-  let [filterState, setFilter] = useState("");
-  let [orderState, setOrder] = useState("nu");
-
+const FileListHooks = ({ history, type }, pageConfig) => {
+  let { id, page, filter } = useParams();
   const [pagedata, setPageData] = useState({
     files: [],
     totalPages: 0,
-    totalFiles: 0
+    totalFiles: 0,
+    favorities: []
   });
 
   useEffect(() => {
-    let url = genUrl(page, order, filter, type, false, id);
-    axios(url).then(({ data }) => {
+    axios(genUrl(page, pageConfig, filter, type, false, id)).then(({ data }) => {
       setPageData(data);
     });
-  }, [page, order, filter, type, id]);
+  }, [page, pageConfig, filter, type, id]);
 
-  const pushHistory = (pg, odr, fltr, tid) => {
-    setFilter(fltr);
-    setOrder(odr || "nu");
-    history.push(genUrl(pg, odr, fltr, type, true, tid || id));
-    if (type.includes("folders")) window.local.removeItem("folder");
+  const pushHistory = (pg, fltr, tid) => {
+    history.push(genUrl(pg, pageConfig, fltr, type, true, tid));
   };
 
   const goToPage = pg => {
     if (pg !== page && pg > 0 && pg < pagedata.totalPages + 1) {
-      pushHistory(pg, order, filter);
+      pushHistory(pg, filter, id);
     }
     return pg;
   };
@@ -56,11 +33,7 @@ const FileListHooks = ({ history, type }) => {
     let input = document.getElementById("filter-file");
 
     let fltr = input && input.value;
-    pushHistory(1, orderState, fltr);
-  };
-
-  const changeOrder = e => {
-    pushHistory(page, e.target.value, filterState);
+    pushHistory(1, fltr, id);
   };
 
   const processFile = e => {
@@ -73,38 +46,43 @@ const FileListHooks = ({ history, type }) => {
         break;
       }
       default: {
-        pushHistory(1, "nu", "", file.id);
-        window.local.setItem("folder", file.id);
+        window.local.setObject("folder", {
+          folder: file.id,
+          pathname: window.location.pathname
+        });
+        history.push(`/folder-content/${file.id}/1`);
       }
     }
   };
 
   useEffect(() => {
     if (pagedata.files.length) {
-      let folder = window.local.getItem("folder");
+      // get last selected element base on if we was an a folder or refreshing the page
+      let folder = window.local.getObject("folder");
       let selected = parseInt(window.local.getItem("selected"));
 
       let firstEl =
-        document.getElementById(folder) ||
+        document.getElementById(folder ? folder.folder : "") ||
         document.querySelectorAll(".file")[selected || 0];
-
+      /**********************************************************/
       if (firstEl) {
+        let lastActiveEl = document.querySelector("#files-list .active");
+        if (lastActiveEl) firstEl.classList.remove("active");
+
         firstEl.focus();
         firstEl.classList.add("active");
       }
     }
-    document.title =
-      toUpper[type] + (page > 1 ? ` ${page} of ${pagedata.totalPages}` : "");
+    document.title = PageTitles[type] + (page > 1 ? ` ${page} of ${pagedata.totalPages}` : "");
   });
+
   return {
-    order,
     page: page || 1,
     filter: filter || "",
     pagedata,
-    itemsperpage,
+    itemsperpage: pageConfig.fPerPage,
     goToPage,
     fileFilter,
-    changeOrder,
     processFile
   };
 };

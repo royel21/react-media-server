@@ -4,7 +4,6 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  display: flex;
   justify-content: space-between;
   padding: 0;
   user-select: none;
@@ -15,40 +14,143 @@
   color: #6fb5ff;
 }
 
-#menu label {
+#menu label,
+#menu li a {
   margin: 0;
-  padding: 8px 5px;
+  padding: 4px 5px;
   cursor: pointer;
-}
-
-.navbar {
-  padding: 0.1rem 1rem;
-}
-
-.navbar-brand {
-  margin-left: -5px;
-  padding: 0;
-  font-size: 25px;
-}
-
-.navbar img {
-  vertical-align: middle;
-}
-
-.navbar label {
-  line-height: 1;
-  padding: 0.2rem 0.2rem;
-  margin: 5px 0;
+  align-self: center;
 }
 
 #menu .nav-item {
   padding: 0;
 }
-
+#menu label:active .fas,
 #menu a:active .fas {
   transform: scale(1.2);
 }
 
+#menu #show-config {
+  display: none;
+}
+#menu #p-config {
+  position: relative;
+  color: white;
+}
+
+#menu #p-config #user-config {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 40px;
+  right: 50%;
+  width: max-content;
+  border-radius: 0.25rem;
+  border: 1px solid;
+  transition: 0.3s all;
+  z-index: 2;
+}
+#user-config:after {
+  position: absolute;
+  top: -10.6px;
+  right: 14.5px;
+  content: " ";
+  height: 20px;
+  width: 20px;
+  background-color: inherit;
+  transform: rotate(45deg);
+  z-index: -1;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+#user-config h4 {
+  border-bottom: 1px solid;
+  text-align: center;
+  padding-bottom: 10px;
+}
+#user-config input[type="number"],
+#user-config select option,
+#user-config select {
+  background: #343a40;
+  border: none;
+  color: white;
+  outline: none;
+  font-family: "Font Awesome 5 Free", "sans-serif";
+  font-weight: 600;
+  width: 95px;
+  padding: 0 5px 0 10px;
+  margin-right: 5px;
+}
+
+#user-config .page-control {
+  position: relative;
+  border: 1px solid;
+  border-radius: 0.25rem;
+  margin-bottom: 10px;
+}
+#menu .page-control label {
+  border-right: 1px solid;
+  text-align: right;
+  min-width: 105px;
+  cursor: initial;
+}
+
+#user-config #config-content {
+  padding: 5px 10px;
+}
+
+#menu #show-config:checked + #user-config {
+  visibility: visible;
+  opacity: 1;
+}
+
+#menu #fpp-tips {
+  position: absolute;
+  display: none;
+  min-width: max-content;
+  background-color: teal;
+  padding: 2px 5px;
+  border-radius: 0.25rem;
+  right: 10%;
+  top: -35px;
+  z-index: 3;
+  -webkit-appearance: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+#menu #fpp-tips:after {
+  content: " ";
+  position: absolute;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background-color: teal;
+  transform: rotate(45deg);
+  right: 40%;
+  bottom: -7.5px;
+  z-index: -1;
+}
+#menu #fperpage:hover + span {
+  display: inline-block;
+}
+
+#menu .btn {
+  padding: 2px 10px;
+}
+
+.bottom-controls {
+  text-align: center;
+}
 @media screen and (max-width: 700px) {
   #menu .nav-link span {
     display: none;

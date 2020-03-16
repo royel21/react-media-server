@@ -25,13 +25,3 @@
 #login-container .error {
   padding: 8px 0;
 }
-
-#login-container .btn {
-  transition: 0.3s all;
-  background-color: grey;
-  background-image: linear-gradient(-120deg, #888888, #555555, #888888);
-}
-
-#login-container .btn:hover {
-  background-image: linear-gradient(-160deg, #888888, #555555, #444444);
-}

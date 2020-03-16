@@ -35,22 +35,18 @@ app.use(passport.session());
 
 app.use("/api/users", userRoutes);
 
-app.use("/api/*", (req, res, next) => {
-  console.log(req.url);
-  next();
-  // if (req.user) return next();
-  //return res.redirect("/notfound");
-});
-
 app.use("/api/files", filesRoutes);
 
-app.use("/notfound", (req, res) => {
-  return res.sendFile(path.join(__dirname + "/notfound.html"));
+app.use("/api/*", (req, res, next) => {
+  console.log(req.url);
+  // next();
+  if (req.user) return next();
+  return res.redirect("/notfound");
 });
 
-app.get("*", (req, res, next) => {
-  return req.user ? next() : res.redirect("/");
-});
+// app.get("/notfound", (req, res) => {
+//   return res.sendFile(path.join(__dirname + "/notfound.html"));
+// });
 
 app.get("/*", (req, res) => {
   return res.sendFile(path.join(__dirname + "/react-client/build/index.html"));
@@ -72,6 +68,7 @@ db.init().then(() => {
   console.log("Node server is running.. at http://localhost:" + port);
 
   // return require("./modules/socketio-server")(server, app);
+  return server;
 });
 
 console.log(process.env.NODE_ENV);

@@ -5,9 +5,14 @@ Storage.prototype.setObject = function(key, value) {
 };
 
 Storage.prototype.getObject = function(key) {
-  var value = this.getItem(key);
+  let value = this.getItem(key);
   if (value === "undefined") return {};
-  return value && JSON.parse(value);
+  try {
+    value = JSON.parse(value);
+  } catch (err) {
+    console.log(err);
+  }
+  return value;
 };
 
 window.lastEl = null;

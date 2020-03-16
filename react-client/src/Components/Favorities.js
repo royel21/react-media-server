@@ -1,13 +1,6 @@
 import React from "react";
+import FilesList from "./Files/FilesList";
 
-const Favorities = () => {
-  document.title = "Favorities";
-  return (
-    <React.Fragment>
-      <h1>Favorities</h1>
-      <div></div>
-    </React.Fragment>
-  );
-};
+const Favorities = props => <FilesList {...props} type="favorities" />;
 
 export default Favorities;

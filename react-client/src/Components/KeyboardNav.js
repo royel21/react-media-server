@@ -36,11 +36,13 @@ const selectItem = index => {
 
     let top = elofft + nextEl.offsetHeight;
     let sctop = scroll + scrollElement.offsetHeight;
+
     if (top - sctop + 1 > 0) {
       scroll =
-        top > itemContainer.offsetHeight
+        top + 26 > itemContainer.offsetHeight
           ? itemContainer.offsetHeight + 50
           : scroll + (top - sctop);
+      console.log("DOWN", scroll, top, itemContainer.offsetHeight);
     }
 
     scrollElement.scroll({
@@ -50,11 +52,10 @@ const selectItem = index => {
 
     let activeEl = document.querySelector(".file.active");
     if (activeEl) activeEl.classList.remove("active");
+
     nextEl.classList.add("active");
     nextEl.focus();
 
-    if (nextEl.dataset.type.includes("Folder"))
-      window.local.setItem("folder", nextEl.id);
     window.local.setItem("selected", index);
   }
   return nextEl;

@@ -4,7 +4,7 @@ const getOrderBy = orderby => {
   let order = [];
   switch (orderby) {
     case "nd": {
-      order.push([db.sqlze.literal("REPLACE(Name, '[','0')"), "DESC"]);
+      order.push([db.sqlze.literal("REPLACE(File.Name, '[','0')"), "DESC"]);
       break;
     }
     case "du": {
@@ -16,14 +16,13 @@ const getOrderBy = orderby => {
       break;
     }
     default: {
-      order.push(db.sqlze.literal("REPLACE(Name, '[','0')"));
+      order.push(db.sqlze.literal("REPLACE(File.Name, '[','0')"));
     }
   }
   return order;
 };
 
 exports.getFiles = async (user, data, model) => {
-  console.time("test");
   let files = { count: 0, rows: [] };
   let searchs = [];
   let search = data.search || "";
@@ -35,7 +34,13 @@ exports.getFiles = async (user, data, model) => {
       }
     });
   }
-  let favs = (await user.getFavorites()).map(i => i.Id);
+  user = user
+    ? user
+    : await db.user.findOne({ where: { Name: "Royel" }, include: db.recent });
+
+  let favs = (await user.getFavorites({ attributes: ["Id", "Name"] })).map(
+    f => f.dataValues
+  );
 
   let query = {
     raw: true,
@@ -62,49 +67,54 @@ exports.getFiles = async (user, data, model) => {
       ]
     ],
     order: getOrderBy(data.order),
-    offset: (data.page - 1) * data.itemsperpage,
-    limit: data.itemsperpage,
+    offset: (data.page - 1) * data.items,
+    limit: data.items,
     where: {
       [db.Op.or]: searchs
     }
   };
-  if (data.type !== "Any")
+  // by file type manga or video => future audio
+  if (data.type)
     query.where.Type = {
       [db.Op.like]: `%${data.type || ""}%`
     };
-
+  // if we are getting files favorite, if favorite
+  if (model !== db.favorite) {
+    query.attributes.push([
+      db.sqlze.literal(
+        "(Select FileId from FavoriteFiles where FileId == File.Id and FavoriteId IN ('" +
+          favs.map(i => i.Id).join("','") +
+          "'))"
+      ),
+      "isFav"
+    ]);
+  } else {
+    let fav = favs.find(f => f.Name.includes(data.id)) || favs[0];
+    data.id = (fav && fav.Name) || "";
+  }
+  // if we are getting files from a model (favorite or folder-content)
   if (model) {
     query.include = [
       {
         model,
         where: {
-          Id: data.id
+          [db.Op.or]: {
+            Id: data.id || "",
+            Name: data.id || ""
+          }
         }
       }
     ];
   }
 
-  if (model !== db.favorite) {
-    query.attributes.push([
-      db.sqlze.literal(
-        "(Select FileId from FavoriteFiles where FileId == File.Id and FavoriteId IN ('" +
-          favs.join("','") +
-          "'))"
-      ),
-      "isFav"
-    ]);
-  }
-  console.time("test");
   files = await db.file.findAndCountAll(query);
-  console.log(files.rows);
   files.rows.map(f => f.dataValues);
-  console.timeEnd("test");
+  files.favorities = model === db.favorite ? favs : [];
   return files;
 };
 
 exports.getFolders = async (req, res) => {
-  console.time("start");
-  const { order, page, itemsperpage, search } = req.params;
+  const { order, page, items, search } = req.params;
 
   let result = await db.folder.findAndCountAll({
     where: {
@@ -113,19 +123,18 @@ exports.getFolders = async (req, res) => {
       }
     },
     order: [["Name", order === "nu" ? "ASC" : "DESC"]],
-    offset: (page - 1) * itemsperpage,
-    limit: itemsperpage
+    offset: (page - 1) * items,
+    limit: items
   });
-  console.timeEnd("start");
   return res.json({
     files: result.rows,
     totalFiles: result.count,
-    totalPages: Math.ceil(result.count / itemsperpage)
+    totalPages: Math.ceil(result.count / items)
   });
 };
 
 exports.getFolderContent = async req => {
-  const { id, order, page, itemsperpage, search } = req.params;
+  const { id, order, page, items, search } = req.params;
 
   let result = await db.folder.findAndCountAll({
     where: {
@@ -135,12 +144,12 @@ exports.getFolderContent = async req => {
       }
     },
     order: [["Name", order === "nu" ? "ASC" : "DESC"]],
-    offset: (page - 1) * itemsperpage,
-    limit: itemsperpage
+    offset: (page - 1) * items,
+    limit: items
   });
   return {
     files: result.rows,
     totalFiles: result.count,
-    totalPages: result.count / itemsperpage
+    totalPages: result.count / items
   };
 };

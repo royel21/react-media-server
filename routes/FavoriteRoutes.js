@@ -35,20 +35,29 @@ Router.post("/add-edit", (req, res) => {
     });
 });
 const removeFav = async req => {
-  let Id = req.body.id;
-  console.log(req.body);
-  if (!Id) return false;
-  let fav = await db.favorite.findOne({ where: { Id } });
-  if (fav) {
-    let result = await req.user.removeFavorite(fav);
-    return result > 0;
+  let favs = await req.user.getFavorites();
+
+  if (favs.length > 1) {
+    let fav = favs.find(f => f.Id === req.body.Id);
+    if (fav) {
+      await req.user.removeFavorite(fav);
+      result = await fav.destroy();
+      return { removed: result !== null };
+    }
+  } else {
+    return { removed: false, msg: "Can't delete last favorite" };
   }
-  return false;
+  return { removed: false, msg: `Favorite Id:${req.body.Id} not found` };
 };
 Router.delete("/remove", (req, res) => {
-  removeFav(req).then(result => {
-    return res.send(result);
-  });
+  removeFav(req)
+    .then(result => {
+      return res.send(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.send({ removed: true, msg: "Internal Server Error 500" });
+    });
 });
 
 module.exports = Router;

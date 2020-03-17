@@ -13,13 +13,19 @@ import { PageConfigContext } from "../../Context/PageConfigContext";
 
 const FilesList = props => {
   const { pageConfig } = useContext(PageConfigContext);
-  const { page, filter, pagedata, goToPage, fileFilter, processFile } = FileListHooks(
-    props,
-    pageConfig
-  );
+  const {
+    page,
+    filter,
+    pagedata,
+    goToPage,
+    fileFilter,
+    processFile
+  } = FileListHooks(props, pageConfig);
 
   const loadFavorite = fav => {
-    props.history.push(genUrl(page, pageConfig, filter, "favorities", true, fav));
+    props.history.push(
+      genUrl(page, pageConfig, filter, "favorities", true, fav)
+    );
   };
 
   return (
@@ -32,7 +38,11 @@ const FilesList = props => {
             fileNavKeydown(e, page, pageConfig.fPerPage, goToPage);
           }}
         >
-          <Files files={pagedata.files} processFile={processFile} />
+          <Files
+            files={pagedata.files}
+            processFile={processFile}
+            type={props.type}
+          />
         </div>
       ) : (
         <div id="files-list"></div>
@@ -57,7 +67,9 @@ const FilesList = props => {
             totalPages: pagedata.totalPages
           }}
         />
-        <span className="badge badge-primary total-files">{pagedata.totalFiles}</span>
+        <span className="badge badge-primary total-files">
+          {pagedata.totalFiles}
+        </span>
       </div>
     </React.Fragment>
   );

@@ -36,31 +36,36 @@ function App() {
       {User.isAutenticated ? (
         <PageConfigContextProvider>
           <Navbar setUser={setUser} User={User} />
-          <div id="content">
-            <Switch>
-              <Route
-                path={["/folders/:page?/:filter?", "/folder-content/:id/:page?/:filter?"]}
-                component={Folders}
-              />
-              <Route path="/mangas/:page?/:filter?" component={Mangas} />
-              <Route path="/videos/:page?/:filter?" component={Videos} />
-              <Route
-                path="/favorities/:id?/:page?/:filter?"
-                render={props => (
-                  <FavoriteContextProvider favorities={User.favorities}>
-                    <Favorities {...props}></Favorities>
-                  </FavoriteContextProvider>
-                )}
-              />
-              <Route exact path="/" component={Home} />
-            </Switch>
-          </div>
+          <FavoriteContextProvider favorities={User.favorities}>
+            <div id="content">
+              <Switch>
+                <Route
+                  path={[
+                    "/folders/:page?/:filter?",
+                    "/folder-content/:id/:page?/:filter?"
+                  ]}
+                  component={Folders}
+                />
+                <Route path="/mangas/:page?/:filter?" component={Mangas} />
+                <Route path="/videos/:page?/:filter?" component={Videos} />
+                <Route
+                  path="/favorities/:id?/:page?/:filter?"
+                  component={Favorities}
+                />
+                <Route exact path="/" component={Home} />
+              </Switch>
+            </div>
+          </FavoriteContextProvider>
         </PageConfigContextProvider>
       ) : (
         <Route
           path="/"
           render={props =>
-            User.isAutenticating ? <div></div> : <Login {...props} setUser={setUser} />
+            User.isAutenticating ? (
+              <div></div>
+            ) : (
+              <Login {...props} setUser={setUser} />
+            )
           }
         />
       )}

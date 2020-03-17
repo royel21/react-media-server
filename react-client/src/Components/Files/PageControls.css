@@ -124,8 +124,12 @@
 }
 
 .controls label .fa-star {
-  font-size: 20px;
+  font-size: 10px;
   color: rgb(214, 202, 36);
+  pointer-events: none;
+}
+.controls label .fa-cog {
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -220,7 +224,7 @@
 
 #fav-manager label:active i,
 #fav-manager table span:active .fas,
-.controls label:active .fa-star,
+.controls label:active .fa-cog,
 #pager li:active > i,
 #filter-control span:active > i {
   transform: scale(1.3);

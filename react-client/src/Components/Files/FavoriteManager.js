@@ -6,6 +6,7 @@ const FavoritiesManager = ({ id, loadFavorite }) => {
   const { favorities, setFavorities } = useContext(FavoriteContext);
   const [favManager, setFavManager] = useState(false);
   const [currentFav, setCurrentFav] = useState({ Id: "", Name: "" });
+  const [serverError, setServerError] = useState("");
 
   const updateCurrentFav = e => {
     let tr = e.target.closest("tr");
@@ -25,30 +26,39 @@ const FavoritiesManager = ({ id, loadFavorite }) => {
 
   const saveFav = () => {
     if (!currentFav.Name) return;
-    Axios.post("/api/files/favorities/add-edit", currentFav).then(({ data }) => {
-      if (data.Id) {
-        let favs = favorities.filter(f => f.Id !== currentFav.Id);
-        favs.push(data);
-        setFavorities(favs.sort((a, b) => a.Name.localeCompare(b.Name)));
-        setCurrentFav({ Id: "", Name: "" });
-      } else {
-        console.log(data);
+    Axios.post("/api/files/favorities/add-edit", currentFav).then(
+      ({ data }) => {
+        if (data.Id) {
+          let favs = favorities.filter(f => f.Id !== currentFav.Id);
+          favs.push(data);
+          setFavorities(favs.sort((a, b) => a.Name.localeCompare(b.Name)));
+          setCurrentFav({ Id: "", Name: "" });
+        } else {
+          console.log(data);
+        }
       }
-    });
+    );
   };
 
   const clearFav = e => {
     setCurrentFav({ Id: "", Name: "" });
   };
+
   const remove = e => {
     let tr = e.target.closest("tr");
-    Axios.delete("/api/files/favorities/remove", { id: tr.id }).then(({ data }) => {
-      if (data) {
-        let favs = favorities.filter(f => f.Id !== currentFav.Id);
-        setFavorities(favs);
+    Axios.delete("/api/files/favorities/remove", { data: { Id: tr.id } }).then(
+      ({ data }) => {
+        if (data.removed) {
+          let favs = favorities.filter(f => f.Id !== tr.id);
+          setFavorities(favs);
+          setServerError("");
+        } else {
+          setServerError(data.msg);
+        }
       }
-    });
+    );
   };
+
   return (
     <Fragment>
       {favManager ? (
@@ -56,7 +66,11 @@ const FavoritiesManager = ({ id, loadFavorite }) => {
           <div className="modal-title">
             <div id="fav-controls">
               <div className="input-group-prepend">
-                <label id="addfav" className="input-group-text" onClick={saveFav}>
+                <label
+                  id="addfav"
+                  className="input-group-text"
+                  onClick={saveFav}
+                >
                   <i className="fas fa-save"></i>
                 </label>
                 <input
@@ -68,14 +82,21 @@ const FavoritiesManager = ({ id, loadFavorite }) => {
                   onChange={updateCurrentFav}
                   onKeyDown={e => {
                     if (e.keyCode === 13) saveFav();
+                    e.target.focus();
                   }}
                   placeholder="New Favorite"
+                  autoFocus
                 />
                 <span onClick={clearFav}>
                   <i className="fas fa-times"></i>
                 </span>
               </div>
             </div>
+            {serverError ? (
+              <div className="text-danger">{serverError}</div>
+            ) : (
+              ""
+            )}
           </div>
           <div className="modal-body">
             <div className="modal-content">
@@ -112,12 +133,13 @@ const FavoritiesManager = ({ id, loadFavorite }) => {
         <div className="input-group-prepend">
           <label
             htmlFor="show-fav"
-            className="input-group-text"
+            className="input-group-text fa-stack"
             onClick={() => {
               setFavManager(!favManager);
             }}
           >
-            <i className="fas fa-star "></i>
+            <i className="fas fa-cog fa-stack-1x text-success"></i>
+            <i className="fas fa-star fa-stack-1x"></i>
           </label>
         </div>
         <select

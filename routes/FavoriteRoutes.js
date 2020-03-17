@@ -10,20 +10,20 @@ Router.get("/:id/:order/:page/:items/:search?", (req, res) => {
 
 const saveEdit = async (req, res) => {
   let { Id, Name } = req.body;
-  let fav = await db.favorite.findOrCreate({ where: { Id }, defaults: { Name } });
-  console.log(fav);
-  if (fav[1]) {
-    console.log(req.user, fav[0]);
-    await req.user.addFavorite(fav[0]);
+  let fav = await db.favorite.findOne({ where: { Id } });
+
+  if (!fav) {
+    fav = await db.favorite.create({ Name });
+    await req.user.addFavorite(fav);
   } else {
-    await fav[0].update({ Name });
+    await fav.update({ Name });
   }
 
-  res.send({ fav: fav[0], New: fav[1] });
+  res.json({ Id: fav.Id, Name });
 };
 
 Router.post("/add-edit", (req, res) => {
-  if (req.body.Name) return res.send("Name Can't Be Empty");
+  if (!req.body.Name) return res.send(false);
 
   saveEdit(req, res)
     .then(() => {
@@ -31,11 +31,24 @@ Router.post("/add-edit", (req, res) => {
     })
     .catch(err => {
       console.log(err);
+      res.json({ error: "Other error" });
     });
 });
-
-Router.get("/favorite/remove", (req, res) => {
-  res.send("ok");
+const removeFav = async req => {
+  let Id = req.body.id;
+  console.log(req.body);
+  if (!Id) return false;
+  let fav = await db.favorite.findOne({ where: { Id } });
+  if (fav) {
+    let result = await req.user.removeFavorite(fav);
+    return result > 0;
+  }
+  return false;
+};
+Router.delete("/remove", (req, res) => {
+  removeFav(req).then(result => {
+    return res.send(result);
+  });
 });
 
 module.exports = Router;

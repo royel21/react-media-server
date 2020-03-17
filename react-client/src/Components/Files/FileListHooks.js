@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { genUrl, PageTitles } from "./utils";
 
-const FileListHooks = ({ history, type }, pageConfig) => {
-  let { id, page, filter } = useParams();
+const FileListHooks = ({ id, history, type }, pageConfig) => {
+  let { page, filter } = useParams();
   const [pagedata, setPageData] = useState({
     files: [],
     totalPages: 0,
@@ -80,7 +80,6 @@ const FileListHooks = ({ history, type }, pageConfig) => {
     page: page || 1,
     filter: filter || "",
     pagedata,
-    itemsperpage: pageConfig.fPerPage,
     goToPage,
     fileFilter,
     processFile

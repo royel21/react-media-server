@@ -8,10 +8,15 @@ module.exports = passport => {
   passport.deserializeUser((username, done) => {
     db.user
       .findOne({
+        order: [db.sqlze.literal("LOWER(Favorites.Name)")],
         where: {
           Name: username
         },
-        include: [{ model: db.userConfig }, { model: db.recent }]
+        include: [
+          { model: db.userConfig },
+          { model: db.recent },
+          { model: db.favorite, attributes: ["Id", "Name"] }
+        ]
       })
       .then(user => {
         if (user) {
@@ -38,9 +43,11 @@ module.exports = passport => {
       function(username, password, done) {
         return db.user
           .findOne({
+            order: [db.sqlze.literal("LOWER(Favorites.Name)")],
             where: {
               Name: username
-            }
+            },
+            include: { model: db.favorite, attributes: ["Id", "Name"] }
           })
           .then(user => {
             if (user) {

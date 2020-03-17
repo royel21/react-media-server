@@ -9,8 +9,7 @@ var selectedIndex = 0;
 
 const calCol = () => {
   return Math.floor(
-    document.getElementById("files-list").offsetWidth /
-      document.querySelector(".file").offsetWidth
+    document.getElementById("files-list").offsetWidth / document.querySelector(".file").offsetWidth
   );
 };
 const getElByIndex = index => {
@@ -22,7 +21,7 @@ const getElementIndex = element => {
 };
 
 const selectItem = index => {
-  let scrollElement = document.querySelector(".content");
+  let scrollElement = document.querySelector("#content");
   let itemContainer = document.getElementById("files-list");
   selectedIndex = index;
   let nextEl = getElByIndex(index);
@@ -70,9 +69,7 @@ const fileNavKeydown = (e, page, itemsperpage, goToPage) => {
     let wasProcesed = false;
     let colNum = calCol();
     let totalitem = document.querySelectorAll(".file").length;
-    selectedIndex = getElementIndex(
-      document.querySelector("#files-list .active")
-    );
+    selectedIndex = getElementIndex(document.querySelector("#files-list .active"));
     switch (e.keyCode) {
       case ENTER: {
         break;

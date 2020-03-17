@@ -1,9 +1,12 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useContext } from "react";
 import Axios from "axios";
+import { FavoriteContext } from "../../Context/FavoriteContext";
 
-const FavoritiesManager = ({ id, setFavorite, favorities }) => {
+const FavoritiesManager = ({ id, loadFavorite }) => {
+  const { favorities, setFavorities } = useContext(FavoriteContext);
   const [favManager, setFavManager] = useState(false);
   const [currentFav, setCurrentFav] = useState({ Id: "", Name: "" });
+
   const updateCurrentFav = e => {
     let tr = e.target.closest("tr");
     let input = e.target;
@@ -21,19 +24,30 @@ const FavoritiesManager = ({ id, setFavorite, favorities }) => {
   };
 
   const saveFav = () => {
-    console.log(currentFav);
-
     if (!currentFav.Name) return;
-
     Axios.post("/api/files/favorities/add-edit", currentFav).then(({ data }) => {
-      if (currentFav.Id) {
+      if (data.Id) {
+        let favs = favorities.filter(f => f.Id !== currentFav.Id);
+        favs.push(data);
+        setFavorities(favs.sort((a, b) => a.Name.localeCompare(b.Name)));
+        setCurrentFav({ Id: "", Name: "" });
       } else {
+        console.log(data);
       }
-      setCurrentFav({ Id: "", Name: "" });
     });
   };
-  const clearFav = () => {
+
+  const clearFav = e => {
     setCurrentFav({ Id: "", Name: "" });
+  };
+  const remove = e => {
+    let tr = e.target.closest("tr");
+    Axios.delete("/api/files/favorities/remove", { id: tr.id }).then(({ data }) => {
+      if (data) {
+        let favs = favorities.filter(f => f.Id !== currentFav.Id);
+        setFavorities(favs);
+      }
+    });
   };
   return (
     <Fragment>
@@ -50,8 +64,11 @@ const FavoritiesManager = ({ id, setFavorite, favorities }) => {
                   name=""
                   id="fav-box"
                   className="form-control"
-                  defaultValue={currentFav.Name}
-                  onInput={updateCurrentFav}
+                  value={currentFav.Name}
+                  onChange={updateCurrentFav}
+                  onKeyDown={e => {
+                    if (e.keyCode === 13) saveFav();
+                  }}
                   placeholder="New Favorite"
                 />
                 <span onClick={clearFav}>
@@ -77,7 +94,7 @@ const FavoritiesManager = ({ id, setFavorite, favorities }) => {
                         <span onClick={updateCurrentFav}>
                           <i className="fas fa-edit"></i>
                         </span>
-                        <span>
+                        <span onClick={remove}>
                           <i className="fas fa-trash-alt"></i>
                         </span>
                       </td>
@@ -103,10 +120,17 @@ const FavoritiesManager = ({ id, setFavorite, favorities }) => {
             <i className="fas fa-star "></i>
           </label>
         </div>
-        <select id="favs" className="form-control" defaultValue={id} onChange={setFavorite}>
+        <select
+          id="favs"
+          className="form-control"
+          defaultValue={id}
+          onChange={e => {
+            loadFavorite(e.target.value);
+          }}
+        >
           {favorities.map(({ Id, Name }) => {
             return (
-              <option key={Id} value={Name}>
+              <option key={Id} value={Id}>
                 {Name}
               </option>
             );

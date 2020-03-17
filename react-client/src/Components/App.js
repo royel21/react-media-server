@@ -14,12 +14,14 @@ import "./Files/PageControls.css";
 
 import history from "./history";
 import PageConfigContextProvider from "../Context/PageConfigContext";
+import FavoriteContextProvider from "../Context/FavoriteContext";
 
 function App() {
   const [User, setUser] = useState({
     username: "",
     isAutenticated: false,
-    isAutenticating: true
+    isAutenticating: true,
+    favorities: []
   });
 
   useEffect(() => {
@@ -29,7 +31,6 @@ function App() {
       });
     }
   }, [User.isAutenticated]);
-
   return (
     <Router history={history}>
       {User.isAutenticated ? (
@@ -43,7 +44,14 @@ function App() {
               />
               <Route path="/mangas/:page?/:filter?" component={Mangas} />
               <Route path="/videos/:page?/:filter?" component={Videos} />
-              <Route path="/favorities/:id?/:page?/:filter?" component={Favorities} />
+              <Route
+                path="/favorities/:id?/:page?/:filter?"
+                render={props => (
+                  <FavoriteContextProvider favorities={User.favorities}>
+                    <Favorities {...props}></Favorities>
+                  </FavoriteContextProvider>
+                )}
+              />
               <Route exact path="/" component={Home} />
             </Switch>
           </div>
@@ -51,7 +59,9 @@ function App() {
       ) : (
         <Route
           path="/"
-          render={props => (User.isAutenticating ? <div></div> : <Login {...props} setUser={setUser} />)}
+          render={props =>
+            User.isAutenticating ? <div></div> : <Login {...props} setUser={setUser} />
+          }
         />
       )}
     </Router>

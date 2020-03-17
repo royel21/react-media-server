@@ -5,7 +5,8 @@ const passport = require("passport");
 Router.get("/getuser", (req, res) => {
   return res.json({
     username: req.user ? req.user.Name : "",
-    isAutenticated: req.user !== undefined
+    isAutenticated: req.user !== undefined,
+    favorities: req.user ? req.user.Favorites : []
   });
 });
 
@@ -18,7 +19,8 @@ Router.post("/login", (req, res, next) => {
         if (err) return next(err);
         return res.json({
           username: user.Name,
-          isAutenticated: true
+          isAutenticated: true,
+          favorities: user.Favorites
         });
       });
     } else {

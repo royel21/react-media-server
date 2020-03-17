@@ -46,7 +46,9 @@ const getFiles = async (user, data, model) => {
       "Duration",
       [
         db.sqlze.literal(
-          "(Select LastPos from RecentFiles where FileId == File.Id and RecentId == '" + user.Recent.Id + "')"
+          "(Select LastPos from RecentFiles where FileId == File.Id and RecentId == '" +
+            user.Recent.Id +
+            "')"
         ),
         "CurrentPos"
       ],
@@ -81,9 +83,6 @@ const getFiles = async (user, data, model) => {
       ),
       "isFav"
     ]);
-  } else {
-    let fav = favs.find(f => f.Name.includes(data.id)) || favs[0];
-    data.id = fav.Id;
   }
   // if we are getting files from a model (favorite or folder-content)
   if (model) {
@@ -91,7 +90,7 @@ const getFiles = async (user, data, model) => {
       {
         model,
         where: {
-          Id: data.id || ""
+          Id: data.id
         }
       }
     ];
@@ -99,7 +98,6 @@ const getFiles = async (user, data, model) => {
 
   files = await db.file.findAndCountAll(query);
   files.rows.map(f => f.dataValues);
-  files.favorities = model === db.favorite ? favs : [];
   return files;
 };
 
@@ -113,8 +111,7 @@ exports.getFilesList = async (user, res, type, params, model) => {
   return res.json({
     files: data.rows,
     totalFiles: data.count,
-    totalPages: Math.ceil(data.count / params.items),
-    favorities: data.favorities
+    totalPages: Math.ceil(data.count / params.items)
   });
 };
 

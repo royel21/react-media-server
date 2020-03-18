@@ -41,7 +41,7 @@ const FileFilter = ({ fileFilter, filter, showback, history }) => {
         type="text"
         className="form-control"
         placeholder="Filter"
-        defaultValue={filter.filter || ""}
+        defaultValue={filter || ""}
         onKeyDown={e => {
           submitFilter(e, fileFilter);
         }}

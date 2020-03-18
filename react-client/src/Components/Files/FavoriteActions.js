@@ -14,13 +14,15 @@ const FavoriteActions = ({ showAddFav, setShowAddFav }) => {
   };
 
   return (
-    <ul id="fav-list">
-      {favorities.map(f => (
-        <li key={f.Id} id={f.Id} onClick={actions}>
-          {f.Name}
-        </li>
-      ))}
-    </ul>
+    <div id="fav-context">
+      <ul id="fav-list">
+        {favorities.map(f => (
+          <li key={f.Id} id={f.Id} onClick={actions}>
+            {f.Name}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 

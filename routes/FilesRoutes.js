@@ -14,7 +14,7 @@ Router.get("/videos/:order/:page?/:items?/:search?", (req, res) => {
 Router.get("/folders/:order/:page?/:items?/:search?", getFolders);
 
 Router.get("/folder-content/:id/:order/:page?/:items?/:search?", (req, res) => {
-  getFileList(req.user, res, null, req.params, db.folder);
+  getFilesList(req.user, res, null, req.params, db.folder);
 });
 
 module.exports = Router;

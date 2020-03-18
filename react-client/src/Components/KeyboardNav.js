@@ -9,8 +9,7 @@ var selectedIndex = 0;
 
 const calCol = () => {
   return Math.floor(
-    document.getElementById("files-list").offsetWidth /
-      document.querySelector(".file").offsetWidth
+    document.getElementById("files-list").offsetWidth / document.querySelector(".file").offsetWidth
   );
 };
 const getElByIndex = index => {
@@ -54,14 +53,15 @@ const selectItem = index => {
 
     nextEl.classList.add("active");
     nextEl.focus();
-
     window.local.setItem("selected", index);
   }
   return nextEl;
 };
 
 const fileNavClick = e => {
-  selectItem(getElementIndex(e.target.closest(".file")));
+  let el = e.target;
+  if (el.classList.contains("fas") || el.classList.contains("far")) return;
+  selectItem(getElementIndex(el.closest(".file")));
 };
 
 const fileNavKeydown = (e, page, itemsperpage, goToPage) => {
@@ -69,9 +69,7 @@ const fileNavKeydown = (e, page, itemsperpage, goToPage) => {
     let wasProcesed = false;
     let colNum = calCol();
     let totalitem = document.querySelectorAll(".file").length;
-    selectedIndex = getElementIndex(
-      document.querySelector("#files-list .active")
-    );
+    selectedIndex = getElementIndex(document.querySelector("#files-list .active"));
     switch (e.keyCode) {
       case ENTER: {
         break;

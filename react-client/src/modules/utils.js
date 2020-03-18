@@ -1,18 +1,5 @@
-function formatTime(time) {
-  var h = Math.floor(time / 3600);
-  var min = Math.floor((time / 3600 - h) * 60);
-  var sec = Math.floor(time % 60);
-  return (
-    (h === 0 ? "" : h + ":") +
-    String(min).padStart(2, "0") +
-    ":" +
-    String(sec).padStart(2, "0")
-  );
-}
-
 var clockTimer;
-const getFDate = () =>
-  new Date().toLocaleTimeString().replace(/(.*)\D\d+/, "$1");
+const getFDate = () => new Date().toLocaleTimeString().replace(/(.*)\D\d+/, "$1");
 
 function startClock(clock) {
   clock.classList.add("fade-out");
@@ -30,4 +17,4 @@ function stopClock(clock) {
   });
 }
 
-export default { formatTime, startClock, stopClock };
+export default { startClock, stopClock };

@@ -15,6 +15,7 @@ import "./Files/PageControls.css";
 import history from "./history";
 import PageConfigContextProvider from "../Context/PageConfigContext";
 import FavoriteContextProvider from "../Context/FavoriteContext";
+import FilesContextProvider from "../Context/FilesContext";
 
 function App() {
   const [User, setUser] = useState({
@@ -36,36 +37,28 @@ function App() {
       {User.isAutenticated ? (
         <PageConfigContextProvider>
           <Navbar setUser={setUser} User={User} />
-          <FavoriteContextProvider favorities={User.favorities}>
-            <div id="content">
-              <Switch>
-                <Route
-                  path={[
-                    "/folders/:page?/:filter?",
-                    "/folder-content/:id/:page?/:filter?"
-                  ]}
-                  component={Folders}
-                />
-                <Route path="/mangas/:page?/:filter?" component={Mangas} />
-                <Route path="/videos/:page?/:filter?" component={Videos} />
-                <Route
-                  path="/favorities/:id?/:page?/:filter?"
-                  component={Favorities}
-                />
-                <Route exact path="/" component={Home} />
-              </Switch>
-            </div>
-          </FavoriteContextProvider>
+          <FilesContextProvider>
+            <FavoriteContextProvider favorities={User.favorities}>
+              <div id="content">
+                <Switch>
+                  <Route
+                    path={["/folders/:page?/:filter?", "/folder-content/:id/:page?/:filter?"]}
+                    component={Folders}
+                  />
+                  <Route path="/mangas/:page?/:filter?" component={Mangas} />
+                  <Route path="/videos/:page?/:filter?" component={Videos} />
+                  <Route path="/favorities/:id?/:page?/:filter?" component={Favorities} />
+                  <Route exact path="/" component={Home} />
+                </Switch>
+              </div>
+            </FavoriteContextProvider>
+          </FilesContextProvider>
         </PageConfigContextProvider>
       ) : (
         <Route
           path="/"
           render={props =>
-            User.isAutenticating ? (
-              <div></div>
-            ) : (
-              <Login {...props} setUser={setUser} />
-            )
+            User.isAutenticating ? <div></div> : <Login {...props} setUser={setUser} />
           }
         />
       )}

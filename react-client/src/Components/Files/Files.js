@@ -1,32 +1,8 @@
 import React, { useState, Fragment } from "react";
-import utils from "../../modules/utils";
+import { FileTypes } from "./utils";
 
 import "./File.css";
 import FavoriteActions from "./FavoriteActions";
-const fileTypes = {
-  mangas: {
-    class: "book-open",
-    formatter(a, b) {
-      return `${a}/${b}`;
-    }
-  },
-  videos: {
-    class: "play-circle",
-    formatter(a, b) {
-      return `${utils.formatTime(a)}/${utils.formatTime(b)}`;
-    }
-  },
-  folders: {
-    class: "folder-open",
-    formatter() {
-      return "";
-    }
-  },
-  favorities: {
-    class: "trash-alt",
-    formatter() {}
-  }
-};
 
 const File = ({ files, processFile, type }) => {
   const [showAddFav, setShowAddFav] = useState({
@@ -34,22 +10,27 @@ const File = ({ files, processFile, type }) => {
     fileId: ""
   });
 
-  const showFavList = e => {
-    let sf = {
-      show: false,
-      fileId: ""
-    };
+  const fileActions = e => {
+    let file = e.target.closest(".file");
     if (e.target.classList.contains("fa-star")) {
-      sf.show = true;
-      sf.fileId = e.target.closest(".file").id;
+      setShowAddFav({
+        show: true,
+        fileId: file.id
+      });
+    } else {
+      console.log("remove");
     }
-    setShowAddFav(sf);
+  };
+  const hideFileActions = e => {
+    if (!e.target.classList.contains("fa-star")) {
+      setShowAddFav({ show: false, fileId: "" });
+    }
   };
 
   return (
     <Fragment>
       {files.map(({ Id, Name, Type, isFav, CurrentPos, Duration }) => {
-        let t = fileTypes[type];
+        let t = FileTypes[Type];
         return (
           <div
             key={Id}
@@ -57,30 +38,31 @@ const File = ({ files, processFile, type }) => {
             className="file"
             data-type={Type ? Type : "Folder"}
             tabIndex="0"
-            onClick={showFavList}
+            onClick={hideFileActions}
           >
-            {type !== "favorities" &&
-            showAddFav.show &&
-            showAddFav.fileId === Id ? (
-              <FavoriteActions
-                showAddFav={showAddFav}
-                setShowAddFav={setShowAddFav}
-              />
+            {type !== "favorities" && showAddFav.show && showAddFav.fileId === Id ? (
+              <FavoriteActions showAddFav={showAddFav} setShowAddFav={setShowAddFav} />
             ) : (
               ""
             )}
             <div className="file-info">
               <div className="file-btns">
                 <i className={"fas fa-" + t.class} onClick={processFile} />
-                <span className="file-progress">
-                  {t.formatter(CurrentPos || 0, Duration)}
-                </span>
+                <span className="file-progress">{t.formatter(CurrentPos || 0, Duration)}</span>
+
                 <i
-                  className={isFav ? "fas fa-star text-warning" : "far fa-star"}
+                  className={
+                    type === "favorities"
+                      ? "fas fa-trash-alt text-danger"
+                      : isFav
+                      ? "fas fa-star text-warning"
+                      : "far fa-star"
+                  }
+                  onClick={fileActions}
                 />
               </div>
               <div className="file-cover">
-                <img src={`/covers/${type}/${Id}.jpg`} alt="No Cover Found" />
+                <img src={`/covers/${t.type}/${Id}.jpg`} alt="No Cover Found" />
               </div>
               <div>{Name}</div>
             </div>

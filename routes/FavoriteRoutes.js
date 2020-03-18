@@ -30,10 +30,12 @@ Router.post("/add-edit", (req, res) => {
       return null;
     })
     .catch(err => {
-      console.log(err);
-      res.json({ error: "Other error" });
+      console.log(err.message);
+
+      res.json({ created: false, msg: err.message });
     });
 });
+
 const removeFav = async req => {
   let favs = await req.user.getFavorites();
 
@@ -49,13 +51,15 @@ const removeFav = async req => {
   }
   return { removed: false, msg: `Favorite Id:${req.body.Id} not found` };
 };
+
 Router.delete("/remove", (req, res) => {
   removeFav(req)
     .then(result => {
       return res.send(result);
     })
     .catch(err => {
-      console.log(err);
+      console.log(err.name);
+
       res.send({ removed: true, msg: "Internal Server Error 500" });
     });
 });

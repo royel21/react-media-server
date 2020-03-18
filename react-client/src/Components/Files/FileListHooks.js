@@ -1,29 +1,27 @@
-import { useState, useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { genUrl, PageTitles } from "./utils";
+import { FilesContext } from "../../Context/FilesContext";
 
 const FileListHooks = ({ id, history, type }, pageConfig) => {
   let { page, filter } = useParams();
-  const [pagedata, setPageData] = useState({
-    files: [],
-    totalPages: 0,
-    totalFiles: 0,
-    favorities: []
-  });
+  const { filesData, setFilesData } = useContext(FilesContext);
+  const { files, totalPages } = filesData;
 
   useEffect(() => {
     axios(genUrl(page, pageConfig, filter, type, false, id)).then(({ data }) => {
-      setPageData(data);
+      setFilesData(data);
     });
-  }, [page, pageConfig, filter, type, id]);
+  }, [page, pageConfig, filter, type, id, setFilesData]);
 
   const pushHistory = (pg, fltr, tid) => {
     history.push(genUrl(pg, pageConfig, fltr, type, true, tid));
   };
 
   const goToPage = pg => {
-    if (pg !== page && pg > 0 && pg < pagedata.totalPages + 1) {
+    pg = pg < 1 ? 1 : pg > totalPages + 1 ? totalPages : pg;
+    if (pg !== page) {
       pushHistory(pg, filter, id);
     }
     return pg;
@@ -56,14 +54,22 @@ const FileListHooks = ({ id, history, type }, pageConfig) => {
   };
 
   useEffect(() => {
-    if (pagedata.files.length) {
+    if (files.length > 0) {
+      let firstEl;
       // get last selected element base on if we was an a folder or refreshing the page
       let folder = window.local.getObject("folder");
-      let selected = parseInt(window.local.getItem("selected"));
+      firstEl = document.getElementById(folder ? folder.folder : "");
 
-      let firstEl =
-        document.getElementById(folder ? folder.folder : "") ||
-        document.querySelectorAll(".file")[selected || 0];
+      if (type.includes("folders") && folder.folder && firstEl) {
+        window.local.setObject("folder", {
+          selected: "",
+          pathname: ""
+        });
+      } else {
+        let selected = parseInt(window.local.getItem("selected"));
+        firstEl = document.querySelectorAll(".file")[selected || 0];
+      }
+
       /**********************************************************/
       if (firstEl) {
         let lastActiveEl = document.querySelector("#files-list .active");
@@ -73,13 +79,12 @@ const FileListHooks = ({ id, history, type }, pageConfig) => {
         firstEl.classList.add("active");
       }
     }
-    document.title = PageTitles[type] + (page > 1 ? ` ${page} of ${pagedata.totalPages}` : "");
   });
 
+  document.title = PageTitles[type] + (page > 1 ? ` ${page} of ${totalPages}` : "");
   return {
     page: page || 1,
     filter: filter || "",
-    pagedata,
     goToPage,
     fileFilter,
     processFile

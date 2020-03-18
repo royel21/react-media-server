@@ -96,12 +96,12 @@ const Navbar = ({ User, setUser, history }) => {
                   type="number"
                   name="fperpage"
                   id="fperpage"
-                  defaultValue="0"
                   min="0"
                   max="500"
+                  value={localConfig.fPerPage || 0}
                   onChange={filePerPage}
                 />
-                <span id="fpp-tips">0 = auto</span>
+                <span id="fpp-tips">0 = auto, max 500</span>
               </div>
               <div className="bottom-controls">
                 <span

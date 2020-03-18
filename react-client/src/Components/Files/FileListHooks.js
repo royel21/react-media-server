@@ -1,26 +1,29 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { genUrl, PageTitles } from "./utils";
-import { FilesContext } from "../../Context/FilesContext";
 
 const FileListHooks = ({ id, history, type }, pageConfig) => {
   let { page, filter } = useParams();
-  const { filesData, setFilesData } = useContext(FilesContext);
-  const { files, totalPages } = filesData;
-
+  const [filesData, setFilesData] = useState({
+    files: [],
+    totalPages: 0,
+    totalFiles: 0
+  });
   useEffect(() => {
-    axios(genUrl(page, pageConfig, filter, type, false, id)).then(({ data }) => {
-      setFilesData(data);
-    });
-  }, [page, pageConfig, filter, type, id, setFilesData]);
+    axios(genUrl(page, pageConfig, filter, type, false, id)).then(
+      ({ data }) => {
+        setFilesData(data);
+      }
+    );
+  }, [page, pageConfig, filter, type, id]);
 
   const pushHistory = (pg, fltr, tid) => {
     history.push(genUrl(pg, pageConfig, fltr, type, true, tid));
   };
 
   const goToPage = pg => {
-    pg = pg < 1 ? 1 : pg > totalPages + 1 ? totalPages : pg;
+    pg = pg < 1 ? 1 : pg > filesData.totalPages + 1 ? filesData.totalPages : pg;
     if (pg !== page) {
       pushHistory(pg, filter, id);
     }
@@ -52,15 +55,14 @@ const FileListHooks = ({ id, history, type }, pageConfig) => {
       }
     }
   };
-
   useEffect(() => {
-    if (files.length > 0) {
+    if (filesData.files.length > 0) {
       let firstEl;
       // get last selected element base on if we was an a folder or refreshing the page
       let folder = window.local.getObject("folder");
       firstEl = document.getElementById(folder ? folder.folder : "");
 
-      if (type.includes("folders") && folder.folder && firstEl) {
+      if (type.includes("folders") && folder && folder.folder && firstEl) {
         window.local.setObject("folder", {
           selected: "",
           pathname: ""
@@ -81,10 +83,12 @@ const FileListHooks = ({ id, history, type }, pageConfig) => {
     }
   });
 
-  document.title = PageTitles[type] + (page > 1 ? ` ${page} of ${totalPages}` : "");
+  document.title =
+    PageTitles[type] + (page > 1 ? ` ${page} of ${filesData.totalPages}` : "");
   return {
     page: page || 1,
     filter: filter || "",
+    filesData,
     goToPage,
     fileFilter,
     processFile

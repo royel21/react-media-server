@@ -3,9 +3,9 @@ import React, { createContext, useState } from "react";
 export const FavoriteContext = createContext();
 
 const FavoriteContextProvider = props => {
-  const [favorities, setFavorities] = useState(props.favorities);
+  const [favorites, setFavorites] = useState(props.favorites);
   return (
-    <FavoriteContext.Provider value={{ favorities, setFavorities }}>
+    <FavoriteContext.Provider value={{ favorites, setFavorites }}>
       {props.children}
     </FavoriteContext.Provider>
   );

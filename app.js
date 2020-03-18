@@ -43,7 +43,7 @@ app.use("/api/*", (req, res, next) => {
   return res.redirect("/notfound");
 });
 
-app.use("/api/files/favorities", favoriteRoutes);
+app.use("/api/files/favorites", favoriteRoutes);
 
 app.use("/api/files", filesRoutes);
 

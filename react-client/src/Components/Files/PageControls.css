@@ -9,7 +9,7 @@
   pointer-events: none;
 }
 
-.controls > *:not(.total-files) {
+.controls>*:not(.total-files) {
   pointer-events: all;
 }
 
@@ -30,8 +30,7 @@
   width: 180px;
 }
 
-#pager li:last-child,
-#filter-file {
+#pager li:last-child, #filter-file {
   padding: 2px 5px;
   border-top-right-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
@@ -52,8 +51,7 @@
   padding: 0 15px;
 }
 
-#pager li,
-#filter-control span {
+#pager li, #filter-control span {
   cursor: pointer;
   user-select: none;
 }
@@ -128,6 +126,7 @@
   color: rgb(214, 202, 36);
   pointer-events: none;
 }
+
 .controls label .fa-cog {
   font-size: 20px;
   cursor: pointer;
@@ -151,7 +150,7 @@
   color: black;
   background: white;
   height: max-content;
-  width: 245px;
+  width: 300px;
   bottom: 40px;
   left: 10px;
   border-radius: 0.25rem;
@@ -163,12 +162,11 @@
   margin: 0;
 }
 
-#fav-manager *,
-#fav-manager {
+#fav-manager *, #fav-manager {
   max-height: initial;
 }
 
-#show-fav:checked + #fav-manager {
+#show-fav:checked+#fav-manager {
   visibility: visible;
 }
 
@@ -192,21 +190,37 @@
   height: 100%;
 }
 
+#fav-manager select {
+  width: 80px;
+  height: 32px;
+  padding: 0;
+  margin-left: 4px;
+}
+
 #fav-manager .modal-content .table {
   min-width: 100%;
 }
 
-#fav-manager th,
-#fav-manager td {
+#fav-manager th, #fav-manager td {
   padding: 0.3rem;
   max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 #fav-manager th {
   min-width: 100px;
 }
+
+#fav-manager th:nth-child(2) {
+  min-width: 65px;
+}
+
+#fav-manager th:last-child {
+  min-width: 60px;
+}
+
 #fav-manager td:first-child:hover {
   position: absolute;
   overflow: visible;
@@ -216,13 +230,11 @@
   background-color: white;
 }
 
-#fav-manager th:last-child,
-#fav-manager td:last-child {
+#fav-manager th:last-child, #fav-manager td:last-child {
   text-align: center;
 }
 
-#fav-manager #addfav,
-#fav-manager span {
+#fav-manager #addfav, #fav-manager span {
   cursor: pointer;
 }
 
@@ -231,19 +243,15 @@
   font-size: 20px;
 }
 
-#fav-manager input + span {
-  right: 15px;
+#fav-manager input+span {
+  right: 85px;
 }
 
-#fav-manager td span + span {
+#fav-manager td span+span {
   margin-left: 10px;
 }
 
-#fav-manager label:active i,
-#fav-manager table span:active .fas,
-.controls label:active .fa-cog,
-#pager li:active > i,
-#filter-control span:active > i {
+#fav-manager label:active i, #fav-manager table span:active .fas, .controls label:active .fa-cog, #pager li:active>i, #filter-control span:active>i {
   transform: scale(1.3);
 }
 
@@ -262,11 +270,10 @@
     left: 34px;
     width: 150px;
   }
-  #filter-control #filter-file:focus + #clear-search {
+  #filter-control #filter-file:focus+#clear-search {
     right: -90px;
   }
-  #first-page,
-  #last-page {
+  #first-page, #last-page {
     display: none;
   }
   #prev-page {

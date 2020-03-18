@@ -4,21 +4,29 @@ import Files from "./Files";
 import FileFilter from "./FileFilter";
 import Pagination from "./Pagination";
 import FileListHooks from "./FileListHooks";
-import FavoritiesManager from "./FavoriteManager";
+import FavoritesManager from "./FavoriteManager";
 
 import { fileNavKeydown, fileNavClick } from "../KeyboardNav";
 import { genUrl } from "./utils";
 
 import { PageConfigContext } from "../../Context/PageConfigContext";
-import { FilesContext } from "../../Context/FilesContext";
 
 const FilesList = props => {
   const { pageConfig } = useContext(PageConfigContext);
-  const { files, totalFiles, totalPages } = useContext(FilesContext).filesData;
-  const { page, filter, goToPage, fileFilter, processFile } = FileListHooks(props, pageConfig);
+  const {
+    page,
+    filter,
+    filesData,
+    goToPage,
+    fileFilter,
+    processFile
+  } = FileListHooks(props, pageConfig);
+  const { files, totalFiles, totalPages } = filesData;
 
   const loadFavorite = fav => {
-    props.history.push(genUrl(page, pageConfig, filter, "favorities", true, fav));
+    props.history.push(
+      genUrl(page, pageConfig, filter, "favorites", true, fav)
+    );
   };
 
   return (
@@ -37,8 +45,8 @@ const FilesList = props => {
         <div id="files-list"></div>
       )}
       <div className="controls">
-        {props.type.includes("favorities") ? (
-          <FavoritiesManager fav={props.id} loadFavorite={loadFavorite} />
+        {props.type.includes("favorites") ? (
+          <FavoritesManager fav={props.id} loadFavorite={loadFavorite} />
         ) : (
           ""
         )}

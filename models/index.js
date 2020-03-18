@@ -35,10 +35,6 @@ var userConfigs = async user => {
       UserId: user.Id
     });
   }
-  // await db.favorite.create({
-  //     Name: user.Name,
-  //     UserId: user.Id
-  // });
   await db.recent.create({
     Name: user.Name,
     UserId: user.Id

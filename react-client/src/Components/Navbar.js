@@ -56,9 +56,9 @@ const Navbar = ({ User, setUser, history }) => {
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/favorities" className="nav-link">
+          <NavLink to="/favorites" className="nav-link">
             <i className="fas fa-heart" />
-            <span> Favorities</span>
+            <span> Favorites</span>
           </NavLink>
         </li>
       </ul>

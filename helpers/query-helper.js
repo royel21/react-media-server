@@ -34,9 +34,13 @@ const getFiles = async (user, data, model) => {
       }
     });
   }
-  user = user ? user : await db.user.findOne({ where: { Name: "Royel" }, include: db.recent });
+  user = user
+    ? user
+    : await db.user.findOne({ where: { Name: "Royel" }, include: db.recent });
 
-  let favs = (await user.getFavorites({ attributes: ["Id", "Name"] })).map(f => f.dataValues);
+  let favs = (await user.getFavorites({ attributes: ["Id", "Name"] })).map(
+    f => f.dataValues
+  );
 
   let query = {
     attributes: [
@@ -44,6 +48,7 @@ const getFiles = async (user, data, model) => {
       "Name",
       "Type",
       "Duration",
+      "Cover",
       [
         db.sqlze.literal(
           "(Select LastPos from RecentFiles where FileId == File.Id and RecentId == '" +

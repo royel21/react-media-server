@@ -15,7 +15,7 @@ module.exports = passport => {
         include: [
           { model: db.userConfig },
           { model: db.recent },
-          { model: db.favorite, attributes: ["Id", "Name"] }
+          { model: db.favorite, attributes: ["Id", "Name", "Type"] }
         ]
       })
       .then(user => {
@@ -47,7 +47,7 @@ module.exports = passport => {
             where: {
               Name: username
             },
-            include: { model: db.favorite, attributes: ["Id", "Name"] }
+            include: { model: db.favorite, attributes: ["Id", "Name", "Type"] }
           })
           .then(user => {
             if (user) {

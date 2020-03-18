@@ -6,7 +6,7 @@ Router.get("/getuser", (req, res) => {
   return res.json({
     username: req.user ? req.user.Name : "",
     isAutenticated: req.user !== undefined,
-    favorities: req.user ? req.user.Favorites : []
+    favorites: req.user ? req.user.Favorites : []
   });
 });
 
@@ -20,7 +20,7 @@ Router.post("/login", (req, res, next) => {
         return res.json({
           username: user.Name,
           isAutenticated: true,
-          favorities: user.Favorites
+          favorites: user.Favorites
         });
       });
     } else {

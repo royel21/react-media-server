@@ -2,35 +2,41 @@ import React, { useState, Fragment, useContext } from "react";
 import Axios from "axios";
 import { FavoriteContext } from "../../Context/FavoriteContext";
 
-const FavoritiesManager = ({ id, loadFavorite }) => {
-  const { favorities, setFavorities } = useContext(FavoriteContext);
+const FavoritesManager = ({ id, loadFavorite }) => {
+  const { favorites, setFavorites } = useContext(FavoriteContext);
   const [favManager, setFavManager] = useState(false);
-  const [currentFav, setCurrentFav] = useState({ Id: "", Name: "" });
+  const [currentFav, setCurrentFav] = useState({
+    Id: "",
+    Name: "",
+    Type: "Manga"
+  });
   const [serverError, setServerError] = useState("");
 
   const updateCurrentFav = e => {
     let tr = e.target.closest("tr");
     let input = e.target;
-    let fav = {
-      Id: currentFav.Id
-    };
+    let fav = {};
 
     if (tr) {
-      fav.Id = tr.id;
-      fav.Name = tr.textContent;
+      fav = {
+        ...favorites.find(f => f.Id === tr.id)
+      };
+      fav.Name = tr.querySelector("td:first-child").textContent;
     } else {
+      fav = { ...currentFav };
       fav.Name = input.value;
     }
+    console.log(fav);
     setCurrentFav(fav);
   };
 
   const saveFav = () => {
     if (!currentFav.Name) return;
-    Axios.post("/api/files/favorities/add-edit", currentFav).then(({ data }) => {
+    Axios.post("/api/files/favorites/add-edit", currentFav).then(({ data }) => {
       if (data.Id) {
-        let favs = favorities.filter(f => f.Id !== currentFav.Id);
+        let favs = favorites.filter(f => f.Id !== currentFav.Id);
         favs.push(data);
-        setFavorities(favs.sort((a, b) => a.Name.localeCompare(b.Name)));
+        setFavorites(favs.sort((a, b) => a.Name.localeCompare(b.Name)));
         setCurrentFav({ Id: "", Name: "" });
       } else {
         setServerError(data.msg);
@@ -45,15 +51,17 @@ const FavoritiesManager = ({ id, loadFavorite }) => {
 
   const remove = e => {
     let tr = e.target.closest("tr");
-    Axios.delete("/api/files/favorities/remove", { data: { Id: tr.id } }).then(({ data }) => {
-      if (data.removed) {
-        let favs = favorities.filter(f => f.Id !== tr.id);
-        setFavorities(favs);
-        setServerError("");
-      } else {
-        setServerError(data.msg);
+    Axios.delete("/api/files/favorites/remove", { data: { Id: tr.id } }).then(
+      ({ data }) => {
+        if (data.removed) {
+          let favs = favorites.filter(f => f.Id !== tr.id);
+          setFavorites(favs);
+          setServerError("");
+        } else {
+          setServerError(data.msg);
+        }
       }
-    });
+    );
   };
 
   return (
@@ -63,7 +71,11 @@ const FavoritiesManager = ({ id, loadFavorite }) => {
           <div className="modal-title">
             <div id="fav-controls">
               <div className="input-group-prepend">
-                <label id="addfav" className="input-group-text" onClick={saveFav}>
+                <label
+                  id="addfav"
+                  className="input-group-text"
+                  onClick={saveFav}
+                >
                   <i className="fas fa-save"></i>
                 </label>
                 <input
@@ -83,9 +95,23 @@ const FavoritiesManager = ({ id, loadFavorite }) => {
                 <span onClick={clearFav}>
                   <i className="fas fa-times"></i>
                 </span>
+                <select
+                  className="form-control"
+                  onChange={e => {
+                    currentFav.Type = e.target.value;
+                  }}
+                  value={currentFav.Type}
+                >
+                  <option>Manga</option>
+                  <option>Video</option>
+                </select>
               </div>
             </div>
-            {serverError ? <div className="text-danger">{serverError}</div> : ""}
+            {serverError ? (
+              <div className="text-danger">{serverError}</div>
+            ) : (
+              ""
+            )}
           </div>
           <div className="modal-body">
             <div className="modal-content">
@@ -93,13 +119,15 @@ const FavoritiesManager = ({ id, loadFavorite }) => {
                 <thead>
                   <tr>
                     <th>Name</th>
+                    <th>Type</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {favorities.map(f => (
+                  {favorites.map(f => (
                     <tr key={f.Id} id={f.Id}>
                       <td>{f.Name}</td>
+                      <td>{f.Type}</td>
                       <td>
                         <span onClick={updateCurrentFav}>
                           <i className="fas fa-edit"></i>
@@ -139,7 +167,7 @@ const FavoritiesManager = ({ id, loadFavorite }) => {
             loadFavorite(e.target.value);
           }}
         >
-          {favorities.map(({ Id, Name }) => {
+          {favorites.map(({ Id, Name }) => {
             return (
               <option key={Id} value={Id}>
                 {Name}
@@ -152,4 +180,4 @@ const FavoritiesManager = ({ id, loadFavorite }) => {
   );
 };
 
-export default FavoritiesManager;
+export default FavoritesManager;

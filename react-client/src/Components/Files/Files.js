@@ -29,30 +29,38 @@ const File = ({ files, processFile, type }) => {
 
   return (
     <Fragment>
-      {files.map(({ Id, Name, Type, isFav, CurrentPos, Duration }) => {
+      {files.map(({ Id, Name, Type, isFav, CurrentPos, Duration, Cover }) => {
         let t = FileTypes[Type];
+        console.log(Cover);
         return (
           <div
             key={Id}
             id={Id}
             className="file"
-            data-type={Type ? Type : "Folder"}
+            data-type={Type}
             tabIndex="0"
             onClick={hideFileActions}
           >
-            {type !== "favorities" && showAddFav.show && showAddFav.fileId === Id ? (
-              <FavoriteActions showAddFav={showAddFav} setShowAddFav={setShowAddFav} />
+            {type !== "favorites" &&
+            showAddFav.show &&
+            showAddFav.fileId === Id ? (
+              <FavoriteActions
+                showAddFav={showAddFav}
+                setShowAddFav={setShowAddFav}
+              />
             ) : (
               ""
             )}
             <div className="file-info">
               <div className="file-btns">
                 <i className={"fas fa-" + t.class} onClick={processFile} />
-                <span className="file-progress">{t.formatter(CurrentPos || 0, Duration)}</span>
+                <span className="file-progress">
+                  {t.formatter(CurrentPos || 0, Duration)}
+                </span>
 
                 <i
                   className={
-                    type === "favorities"
+                    type === "favorites"
                       ? "fas fa-trash-alt text-danger"
                       : isFav
                       ? "fas fa-star text-warning"
@@ -62,7 +70,7 @@ const File = ({ files, processFile, type }) => {
                 />
               </div>
               <div className="file-cover">
-                <img src={`/covers/${t.type}/${Id}.jpg`} alt="No Cover Found" />
+                <img src={Cover} alt="No Cover Found" />
               </div>
               <div>{Name}</div>
             </div>

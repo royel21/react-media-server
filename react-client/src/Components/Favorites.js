@@ -4,11 +4,11 @@ import { useParams } from "react-router-dom";
 
 import { FavoriteContext } from "../Context/FavoriteContext";
 
-const Favorities = props => {
+const Favorites = props => {
   let { id } = useParams();
 
-  const { favorities } = useContext(FavoriteContext);
-  return <FilesList {...props} type="favorities" id={id || favorities[0].Id} />;
+  const { favorites } = useContext(FavoriteContext);
+  return <FilesList {...props} type="favorites" id={id || favorites[0].Id} />;
 };
 
-export default Favorities;
+export default Favorites;

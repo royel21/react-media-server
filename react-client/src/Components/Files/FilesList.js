@@ -13,20 +13,14 @@ import { PageConfigContext } from "../../Context/PageConfigContext";
 
 const FilesList = props => {
   const { pageConfig } = useContext(PageConfigContext);
-  const {
-    page,
-    filter,
-    filesData,
-    goToPage,
-    fileFilter,
-    processFile
-  } = FileListHooks(props, pageConfig);
+  const { page, filter, filesData, goToPage, fileFilter, processFile } = FileListHooks(
+    props,
+    pageConfig
+  );
   const { files, totalFiles, totalPages } = filesData;
 
   const loadFavorite = fav => {
-    props.history.push(
-      genUrl(page, pageConfig, filter, "favorites", true, fav)
-    );
+    props.history.push(genUrl(1, pageConfig, filter, "favorites", true, fav));
   };
 
   return (

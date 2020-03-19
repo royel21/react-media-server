@@ -43,11 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
       hooks: {
         beforeCreate: (user, options) => {
-          user.Password = bcrypt.hashSync(
-            user.Password,
-            bcrypt.genSaltSync(8),
-            null
-          );
+          user.Password = bcrypt.hashSync(user.Password, bcrypt.genSaltSync(8), null);
           user.CreatedAt = new Date();
           if (user.Role === "User") {
             user.Favorites = [
@@ -64,21 +60,25 @@ module.exports = (sequelize, DataTypes) => {
         },
         beforeUpdate: (user, options) => {
           if (user.Password) {
-            user.Password = bcrypt.hashSync(
-              user.Password,
-              bcrypt.genSaltSync(8),
-              null
-            );
+            user.Password = bcrypt.hashSync(user.Password, bcrypt.genSaltSync(8), null);
           }
         },
         beforeBulkCreate: (users, options) => {
           for (var user of users) {
-            user.Password = bcrypt.hashSync(
-              user.Password,
-              bcrypt.genSaltSync(8),
-              null
-            );
+            user.Password = bcrypt.hashSync(user.Password, bcrypt.genSaltSync(8), null);
             user.CreatedAt = new Date();
+            if (user.Role === "User") {
+              user.Favorites = [
+                {
+                  Name: "Manga",
+                  Type: "Manga"
+                },
+                {
+                  Name: "Video",
+                  Type: "Video"
+                }
+              ];
+            }
           }
         }
       }

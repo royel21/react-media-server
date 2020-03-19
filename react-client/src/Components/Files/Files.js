@@ -31,7 +31,6 @@ const File = ({ files, processFile, type }) => {
     <Fragment>
       {files.map(({ Id, Name, Type, isFav, CurrentPos, Duration, Cover }) => {
         let t = FileTypes[Type];
-        console.log(Cover);
         return (
           <div
             key={Id}
@@ -41,33 +40,29 @@ const File = ({ files, processFile, type }) => {
             tabIndex="0"
             onClick={hideFileActions}
           >
-            {type !== "favorites" &&
-            showAddFav.show &&
-            showAddFav.fileId === Id ? (
-              <FavoriteActions
-                showAddFav={showAddFav}
-                setShowAddFav={setShowAddFav}
-              />
+            {type !== "favorites" && !isFav && showAddFav.show && showAddFav.fileId === Id ? (
+              <FavoriteActions showAddFav={showAddFav} setShowAddFav={setShowAddFav} Type={Type} />
             ) : (
               ""
             )}
             <div className="file-info">
               <div className="file-btns">
                 <i className={"fas fa-" + t.class} onClick={processFile} />
-                <span className="file-progress">
-                  {t.formatter(CurrentPos || 0, Duration)}
-                </span>
-
-                <i
-                  className={
-                    type === "favorites"
-                      ? "fas fa-trash-alt text-danger"
-                      : isFav
-                      ? "fas fa-star text-warning"
-                      : "far fa-star"
-                  }
-                  onClick={fileActions}
-                />
+                <span className="file-progress">{t.formatter(CurrentPos || 0, Duration)}</span>
+                {Type === "Folder" ? (
+                  ""
+                ) : (
+                  <i
+                    className={
+                      type === "favorites"
+                        ? "fas fa-trash-alt text-danger"
+                        : isFav
+                        ? "fas fa-star text-warning"
+                        : "far fa-star"
+                    }
+                    onClick={fileActions}
+                  />
+                )}
               </div>
               <div className="file-cover">
                 <img src={Cover} alt="No Cover Found" />

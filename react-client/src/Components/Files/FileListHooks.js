@@ -11,11 +11,9 @@ const FileListHooks = ({ id, history, type }, pageConfig) => {
     totalFiles: 0
   });
   useEffect(() => {
-    axios(genUrl(page, pageConfig, filter, type, false, id)).then(
-      ({ data }) => {
-        setFilesData(data);
-      }
-    );
+    axios(genUrl(page, pageConfig, filter, type, false, id)).then(({ data }) => {
+      setFilesData(data);
+    });
   }, [page, pageConfig, filter, type, id]);
 
   const pushHistory = (pg, fltr, tid) => {
@@ -23,7 +21,7 @@ const FileListHooks = ({ id, history, type }, pageConfig) => {
   };
 
   const goToPage = pg => {
-    pg = pg < 1 ? 1 : pg > filesData.totalPages + 1 ? filesData.totalPages : pg;
+    pg = pg < 1 ? 1 : pg > filesData.totalPages ? filesData.totalPages : pg;
     if (pg !== page) {
       pushHistory(pg, filter, id);
     }
@@ -83,8 +81,7 @@ const FileListHooks = ({ id, history, type }, pageConfig) => {
     }
   });
 
-  document.title =
-    PageTitles[type] + (page > 1 ? ` ${page} of ${filesData.totalPages}` : "");
+  document.title = PageTitles[type] + (page > 1 ? ` ${page} of ${filesData.totalPages}` : "");
   return {
     page: page || 1,
     filter: filter || "",

@@ -37,7 +37,7 @@ const FavoritesManager = ({ id, loadFavorite }) => {
         let favs = favorites.filter(f => f.Id !== currentFav.Id);
         favs.push(data);
         setFavorites(favs.sort((a, b) => a.Name.localeCompare(b.Name)));
-        setCurrentFav({ Id: "", Name: "" });
+        setCurrentFav({ Id: "", Name: "", Type: "Manga" });
       } else {
         setServerError(data.msg);
       }
@@ -45,23 +45,21 @@ const FavoritesManager = ({ id, loadFavorite }) => {
   };
 
   const clearFav = e => {
-    setCurrentFav({ Id: "", Name: "" });
+    setCurrentFav({ Id: "", Name: "", Type: "Manga" });
     setServerError("");
   };
 
   const remove = e => {
     let tr = e.target.closest("tr");
-    Axios.delete("/api/files/favorites/remove", { data: { Id: tr.id } }).then(
-      ({ data }) => {
-        if (data.removed) {
-          let favs = favorites.filter(f => f.Id !== tr.id);
-          setFavorites(favs);
-          setServerError("");
-        } else {
-          setServerError(data.msg);
-        }
+    let Type = tr.querySelector("td:nth-child(2)").textContent;
+    Axios.delete("/api/files/favorites/remove", { data: { Id: tr.id, Type } }).then(({ data }) => {
+      if (data.removed) {
+        setFavorites(favorites.filter(f => f.Id !== tr.id));
+        setServerError("");
+      } else {
+        setServerError(data.msg);
       }
-    );
+    });
   };
 
   return (
@@ -71,11 +69,7 @@ const FavoritesManager = ({ id, loadFavorite }) => {
           <div className="modal-title">
             <div id="fav-controls">
               <div className="input-group-prepend">
-                <label
-                  id="addfav"
-                  className="input-group-text"
-                  onClick={saveFav}
-                >
+                <label id="addfav" className="input-group-text" onClick={saveFav}>
                   <i className="fas fa-save"></i>
                 </label>
                 <input
@@ -98,7 +92,9 @@ const FavoritesManager = ({ id, loadFavorite }) => {
                 <select
                   className="form-control"
                   onChange={e => {
-                    currentFav.Type = e.target.value;
+                    let curFav = { ...currentFav };
+                    curFav.Type = e.target.value;
+                    setCurrentFav(curFav);
                   }}
                   value={currentFav.Type}
                 >
@@ -107,11 +103,7 @@ const FavoritesManager = ({ id, loadFavorite }) => {
                 </select>
               </div>
             </div>
-            {serverError ? (
-              <div className="text-danger">{serverError}</div>
-            ) : (
-              ""
-            )}
+            {serverError ? <div className="text-danger">{serverError}</div> : ""}
           </div>
           <div className="modal-body">
             <div className="modal-content">

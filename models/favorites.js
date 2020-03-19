@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       Type: {
         type: DataTypes.STRING(8),
-        default: ""
+        default: "Manga"
       }
     },
     {

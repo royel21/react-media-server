@@ -1,10 +1,9 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import { Link, NavLink, withRouter } from "react-router-dom";
 import axios from "axios";
 
-import { PageConfigContext } from "../Context/PageConfigContext";
-
 import "./Navbar.css";
+import UserConfig from "./UserConfig";
 
 const Navbar = ({ User, setUser, history }) => {
   const logOut = e => {
@@ -15,17 +14,6 @@ const Navbar = ({ User, setUser, history }) => {
         history.push("/");
       }
     });
-  };
-
-  const { pageConfig, setPageConfig } = useContext(PageConfigContext);
-  const [localConfig, setLocalConfig] = useState(pageConfig);
-
-  const filePerPage = e => {
-    let val = e.target.value;
-    val = val >= 0 ? val : 0;
-    val = val <= 501 ? val : 500;
-
-    setLocalConfig({ order: localConfig.order, fPerPage: parseInt(val) });
   };
 
   return (
@@ -64,58 +52,14 @@ const Navbar = ({ User, setUser, history }) => {
       </ul>
       <ul className="navbar-nav">
         <li id="p-config" className="nav-item">
-          <label htmlFor="show-config">
-            <i className="fas fa-user-cog" />
-            <span>{User.username}</span>
-          </label>
-          <input type="checkbox" name="" id="show-config" />
-          <div id="user-config">
-            <h4>Page Config</h4>
-            <div id="config-content">
-              <div className="page-control">
-                <label>Sort By: </label>
-                <select
-                  name="orderby"
-                  id="order-select"
-                  onChange={e =>
-                    setLocalConfig({
-                      order: e.target.value,
-                      fPerPage: pageConfig.fPerPage
-                    })
-                  }
-                >
-                  <option value="nu">&#xf15d; Name</option>
-                  <option value="nd">&#xf15e; Name</option>
-                  <option value="du">&#xf162; Date</option>
-                  <option value="dd">&#xf163; Date</option>
-                </select>
-              </div>
-              <div className="page-control">
-                <label>File per Page: </label>
-                <input
-                  type="number"
-                  name="fperpage"
-                  id="fperpage"
-                  min="0"
-                  max="500"
-                  value={localConfig.fPerPage || 0}
-                  onChange={filePerPage}
-                />
-                <span id="fpp-tips">0 = auto, max 500</span>
-              </div>
-              <div className="bottom-controls">
-                <span
-                  id="btn-save"
-                  className="btn"
-                  onClick={() => {
-                    setPageConfig(localConfig);
-                  }}
-                >
-                  Save
-                </span>
-              </div>
-            </div>
-          </div>
+          {User.role === "Administrator" ? (
+            <NavLink to="/favorites" className="nav-link">
+              <i className="fas fa-user-cog" />
+              <span>{User.Name}</span>
+            </NavLink>
+          ) : (
+            <UserConfig User={User} />
+          )}
         </li>
         <li id="logout" className="nav-item active">
           <Link to="/login" className="nav-link" onClick={logOut}>

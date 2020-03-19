@@ -4,7 +4,7 @@ import { FileTypes } from "./utils";
 import "./File.css";
 import FavoriteActions from "./FavoriteActions";
 
-const File = ({ files, processFile, type }) => {
+const File = ({ files, processFile, type, removeFavFile }) => {
   const [showAddFav, setShowAddFav] = useState({
     show: false,
     fileId: ""
@@ -18,7 +18,7 @@ const File = ({ files, processFile, type }) => {
         fileId: file.id
       });
     } else {
-      console.log("remove");
+      removeFavFile(file.id);
     }
   };
   const hideFileActions = e => {
@@ -40,15 +40,24 @@ const File = ({ files, processFile, type }) => {
             tabIndex="0"
             onClick={hideFileActions}
           >
-            {type !== "favorites" && !isFav && showAddFav.show && showAddFav.fileId === Id ? (
-              <FavoriteActions showAddFav={showAddFav} setShowAddFav={setShowAddFav} Type={Type} />
+            {type !== "favorites" &&
+            !isFav &&
+            showAddFav.show &&
+            showAddFav.fileId === Id ? (
+              <FavoriteActions
+                showAddFav={showAddFav}
+                setShowAddFav={setShowAddFav}
+                Type={Type}
+              />
             ) : (
               ""
             )}
             <div className="file-info">
               <div className="file-btns">
                 <i className={"fas fa-" + t.class} onClick={processFile} />
-                <span className="file-progress">{t.formatter(CurrentPos || 0, Duration)}</span>
+                <span className="file-progress">
+                  {t.formatter(CurrentPos || 0, Duration)}
+                </span>
                 {Type === "Folder" ? (
                   ""
                 ) : (

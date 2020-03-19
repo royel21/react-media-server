@@ -58,21 +58,44 @@ Router.delete("/remove", (req, res) => {
     })
     .catch(err => {
       console.log(err);
-
       res.send({ removed: true, msg: "Internal Server Error 500" });
     });
 });
 
-Router.post("/addfile", (req, res) => {
+Router.post("/add-file", (req, res) => {
   const { FavoriteId, FileId } = req.body;
   db.favoriteFile
     .create({ FileId, FavoriteId })
+    .then(result => {
+      return res.send(result !== null);
+    })
+    .catch(err => {
+      console.log(err);
+      return res.send(false);
+    });
+});
+
+const removeFile = async (req, res) => {
+  const { id, fid } = req.body;
+  let result = await db.favoriteFile.destroy({
+    where: { FileId: fid, FavoriteId: id }
+  });
+  if (result > 0) {
+    let data = await getFilesList(req.user, null, null, req.body, db.favorite);
+    return { removed: true, data };
+  } else {
+    return { removed: false };
+  }
+};
+
+Router.post("/remove-file", (req, res) => {
+  removeFile(req)
     .then(result => {
       return res.send(result);
     })
     .catch(err => {
       console.log(err);
-      return res.send(false);
+      res.send({ removed: false, msg: "Internal Server Error 500" });
     });
 });
 

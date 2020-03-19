@@ -3,15 +3,17 @@
 # dependencies
 /node_modules
 /react-client/node_modules
+/react-admin/node_modules
 /public
 /react-client/package-lock.json
+/react-admin/package-lock.json
 
 # testing
 /coverage
 
 # production
 /react-client/build
-/react-client/public/covers
+/react-admin/build
 /public/covers/
 files.db
 

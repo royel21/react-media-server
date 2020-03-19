@@ -3,10 +3,12 @@ const Router = require("express").Router();
 const passport = require("passport");
 
 Router.get("/getuser", (req, res) => {
+  let user = req.user || {};
   return res.json({
-    username: req.user ? req.user.Name : "",
+    role: user.Role || "",
+    username: user.Name || "",
     isAutenticated: req.user !== undefined,
-    favorites: req.user ? req.user.Favorites : []
+    favorites: user.Favorites || []
   });
 });
 
@@ -18,6 +20,7 @@ Router.post("/login", (req, res, next) => {
       return req.logIn(user, err => {
         if (err) return next(err);
         return res.json({
+          role: user.Role,
           username: user.Name,
           isAutenticated: true,
           favorites: user.Favorites

@@ -4,6 +4,7 @@ import { FavoriteContext } from "../../Context/FavoriteContext";
 
 const FavoritesManager = ({ id, loadFavorite }) => {
   const { favorites, setFavorites } = useContext(FavoriteContext);
+
   const [favManager, setFavManager] = useState(false);
   const [currentFav, setCurrentFav] = useState({
     Id: "",
@@ -11,6 +12,7 @@ const FavoritesManager = ({ id, loadFavorite }) => {
     Type: "Manga"
   });
   const [serverError, setServerError] = useState("");
+  if (favorites.length === 0) return "";
 
   const updateCurrentFav = e => {
     let tr = e.target.closest("tr");
@@ -26,7 +28,6 @@ const FavoritesManager = ({ id, loadFavorite }) => {
       fav = { ...currentFav };
       fav.Name = input.value;
     }
-    console.log(fav);
     setCurrentFav(fav);
   };
 
@@ -52,7 +53,9 @@ const FavoritesManager = ({ id, loadFavorite }) => {
   const remove = e => {
     let tr = e.target.closest("tr");
     let Type = tr.querySelector("td:nth-child(2)").textContent;
-    Axios.delete("/api/files/favorites/remove", { data: { Id: tr.id, Type } }).then(({ data }) => {
+    Axios.delete("/api/files/favorites/remove", {
+      data: { Id: tr.id, Type }
+    }).then(({ data }) => {
       if (data.removed) {
         setFavorites(favorites.filter(f => f.Id !== tr.id));
         setServerError("");
@@ -69,7 +72,11 @@ const FavoritesManager = ({ id, loadFavorite }) => {
           <div className="modal-title">
             <div id="fav-controls">
               <div className="input-group-prepend">
-                <label id="addfav" className="input-group-text" onClick={saveFav}>
+                <label
+                  id="addfav"
+                  className="input-group-text"
+                  onClick={saveFav}
+                >
                   <i className="fas fa-save"></i>
                 </label>
                 <input
@@ -103,7 +110,11 @@ const FavoritesManager = ({ id, loadFavorite }) => {
                 </select>
               </div>
             </div>
-            {serverError ? <div className="text-danger">{serverError}</div> : ""}
+            {serverError ? (
+              <div className="text-danger">{serverError}</div>
+            ) : (
+              ""
+            )}
           </div>
           <div className="modal-body">
             <div className="modal-content">
@@ -154,7 +165,7 @@ const FavoritesManager = ({ id, loadFavorite }) => {
         <select
           id="favs"
           className="form-control"
-          defaultValue={id}
+          value={id}
           onChange={e => {
             loadFavorite(e.target.value);
           }}

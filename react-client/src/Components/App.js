@@ -32,6 +32,7 @@ function App() {
       });
     }
   }, [User.isAutenticated]);
+
   return (
     <Router history={history}>
       {User.isAutenticated ? (

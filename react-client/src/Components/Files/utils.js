@@ -3,26 +3,34 @@ export function formatTime(time) {
   var min = Math.floor((time / 3600 - h) * 60);
   var sec = Math.floor(time % 60);
   return (
-    (h === 0 ? "" : h + ":") + String(min).padStart(2, "0") + ":" + String(sec).padStart(2, "0")
+    (h === 0 ? "" : h + ":") +
+    String(min).padStart(2, "0") +
+    ":" +
+    String(sec).padStart(2, "0")
   );
 }
-const getFilesPerPage = () => {
+const isMobile = /(android)|(iphone)/i.test(navigator.userAgent);
+const scrollW = isMobile ? 15 : 0;
+const itemW = isMobile ? 170 : 200;
+
+export const getFilesPerPage = () => {
   let fwidth = document.getElementById("files-list").offsetWidth;
-  let scrollW = fwidth > 500 ? 15 : 0;
-  let items = parseInt((fwidth - scrollW) / 200);
+  let items = parseInt((fwidth - scrollW) / itemW);
   return items * 3;
 };
 
-export const genUrl = (page, { order, fPerPage }, filter, type, notApi, id) => {
-  let itemsperpage = fPerPage === 0 ? getFilesPerPage() : fPerPage;
+export const genUrl = (page, { order, items }, filter, type, notApi, id) => {
+  let itemsperpage = (items || 0) === 0 ? getFilesPerPage() : items;
   if (["favorites", "folder-content"].includes(type) || id) {
-    type = type === "favorites" ? `favorites/${id || "0"}` : `folder-content/${id}`;
+    type =
+      type === "favorites" ? `favorites/${id || "0"}` : `folder-content/${id}`;
   }
 
   if (notApi) {
     return `/${type}/${page || 1}/${filter || ""}`;
   } else {
-    return `/api/files/${type}/${order || "nu"}/${page || 1}/${itemsperpage}/${filter || ""}`;
+    return `/api/files/${type}/${order || "nu"}/${page ||
+      1}/${itemsperpage}/${filter || ""}`;
   }
 };
 

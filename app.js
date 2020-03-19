@@ -46,6 +46,9 @@ app.use("/api/*", (req, res, next) => {
 app.use("/api/files/favorites", favoriteRoutes);
 
 app.use("/api/files", filesRoutes);
+app.use("/admin", (req, res, next) => {
+  return res.sendFile(path.join(__dirname + "/react-admin/build/index.html"));
+});
 
 app.get("/notfound", (req, res) => {
   return res.sendFile(path.join(__dirname + "/notfound.html"));

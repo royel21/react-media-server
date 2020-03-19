@@ -113,11 +113,12 @@ exports.getFilesList = async (user, res, type, params, model) => {
   } catch (err) {
     console.log(err);
   }
-  return res.json({
+  let pagedata = {
     files: data.rows,
     totalFiles: data.count,
     totalPages: Math.ceil(data.count / params.items)
-  });
+  };
+  return res ? res.json(pagedata) : pagedata;
 };
 
 exports.getFolders = async (req, res) => {

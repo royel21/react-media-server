@@ -9,12 +9,14 @@ const FavoriteActions = ({ showAddFav, setShowAddFav, Type }) => {
     e.stopPropagation();
     if (e.target.tagName !== "LI") return;
     // TODO implement add to favorite
-    Axios.post("/api/files/favorites/addfile", {
+    Axios.post("/api/files/favorites/add-file", {
       FileId: showAddFav.fileId,
       FavoriteId: e.target.id
     }).then(({ data }) => {
       if (data) {
-        let el = document.getElementById(showAddFav.fileId).querySelector(".fa-star");
+        let el = document
+          .getElementById(showAddFav.fileId)
+          .querySelector(".fa-star");
         el.className = "fas fa-star text-warning";
         setShowAddFav({ show: false, fileId: "" });
       }

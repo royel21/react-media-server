@@ -8,7 +8,13 @@ const Favorites = props => {
   let { id } = useParams();
 
   const { favorites } = useContext(FavoriteContext);
-  return <FilesList {...props} type="favorites" id={id || favorites[0].Id} />;
+  return (
+    <FilesList
+      {...props}
+      type="favorites"
+      id={id || (favorites[0] && favorites[0].Id) || ""}
+    />
+  );
 };
 
 export default Favorites;

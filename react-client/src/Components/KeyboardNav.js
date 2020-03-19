@@ -1,3 +1,4 @@
+import { getFilesPerPage } from "./Files/utils";
 const UP = 38;
 const DOWN = 40;
 const LEFT = 37;
@@ -9,9 +10,11 @@ var selectedIndex = 0;
 
 const calCol = () => {
   return Math.floor(
-    document.getElementById("files-list").offsetWidth / document.querySelector(".file").offsetWidth
+    document.getElementById("files-list").offsetWidth /
+      document.querySelector(".file").offsetWidth
   );
 };
+
 const getElByIndex = index => {
   return [...document.querySelectorAll(".file")][index];
 };
@@ -69,7 +72,9 @@ const fileNavKeydown = (e, page, itemsperpage, goToPage) => {
     let wasProcesed = false;
     let colNum = calCol();
     let totalitem = document.querySelectorAll(".file").length;
-    selectedIndex = getElementIndex(document.querySelector("#files-list .active"));
+    selectedIndex = getElementIndex(
+      document.querySelector("#files-list .active")
+    );
     switch (e.keyCode) {
       case ENTER: {
         break;
@@ -78,7 +83,7 @@ const fileNavKeydown = (e, page, itemsperpage, goToPage) => {
         if (selectedIndex > 0) {
           selectItem(selectedIndex - 1);
         } else {
-          window.local.setItem("selected", itemsperpage - 1);
+          window.local.setItem("selected", getFilesPerPage() - 1);
           goToPage(page - 1);
         }
 
@@ -87,7 +92,8 @@ const fileNavKeydown = (e, page, itemsperpage, goToPage) => {
       }
       case UP: {
         if (e.ctrlKey) {
-          // goBack();
+          window.local.setItem("selected", getFilesPerPage() - 1);
+          goToPage(page - 1);
         } else if (selectedIndex - colNum >= 0) {
           selectItem(selectedIndex - colNum);
         }
@@ -107,7 +113,10 @@ const fileNavKeydown = (e, page, itemsperpage, goToPage) => {
       }
 
       case DOWN: {
-        if (selectedIndex + colNum < totalitem) {
+        if (e.ctrlKey) {
+          window.local.setItem("selected", 0);
+          goToPage(parseInt(page) + 1);
+        } else if (selectedIndex + colNum < totalitem) {
           selectItem(selectedIndex + colNum);
         }
         wasProcesed = true;

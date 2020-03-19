@@ -5,7 +5,7 @@ export const PageConfigContext = createContext();
 const PageConfigContextProvider = props => {
   const [pageConfig, setPageConfig] = useState({
     order: "nu",
-    fPerPage: 0
+    items: 0
   });
 
   return (

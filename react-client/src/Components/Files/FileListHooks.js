@@ -1,19 +1,50 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { genUrl, PageTitles } from "./utils";
 
+const cancelToken = axios.CancelToken;
+var cancel;
+
 const FileListHooks = ({ id, history, type }, pageConfig) => {
+  let cStatus = useRef(true);
   let { page, filter } = useParams();
   const [filesData, setFilesData] = useState({
     files: [],
     totalPages: 0,
-    totalFiles: 0
+    totalFiles: 0,
+    isloading: true
   });
   useEffect(() => {
-    axios(genUrl(page, pageConfig, filter, type, false, id)).then(({ data }) => {
-      setFilesData(data);
-    });
+    return () => {
+      cStatus.current = false;
+    };
+  }, []);
+  useEffect(() => {
+    if (cancel) {
+      cancel();
+    }
+    axios
+      .get(genUrl(page, pageConfig, filter, type, false, id), {
+        cancelToken: new cancelToken(function executor(c) {
+          cancel = c;
+        })
+      })
+      .then(({ data }) => {
+        if (cStatus.current) {
+          if (data.files) {
+            setFilesData({ ...data, isloading: false });
+          } else {
+            setFilesData({
+              files: [],
+              isloading: false
+            });
+          }
+        }
+      })
+      .catch(err => {
+        console.log("canceled");
+      });
   }, [page, pageConfig, filter, type, id]);
 
   const pushHistory = (pg, fltr, tid) => {
@@ -81,11 +112,13 @@ const FileListHooks = ({ id, history, type }, pageConfig) => {
     }
   });
 
-  document.title = PageTitles[type] + (page > 1 ? ` ${page} of ${filesData.totalPages}` : "");
+  document.title =
+    PageTitles[type] + (page > 1 ? ` ${page} of ${filesData.totalPages}` : "");
   return {
     page: page || 1,
     filter: filter || "",
     filesData,
+    setFilesData,
     goToPage,
     fileFilter,
     processFile

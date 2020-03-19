@@ -62,10 +62,6 @@ body, html {
   background-color: khaki;
 }
 
-#clock:empty {
-  display: none;
-}
-
 .btn {
   color: white;
   transition: 0.3s all;

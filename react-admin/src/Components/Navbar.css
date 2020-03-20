@@ -14,7 +14,8 @@
   color: #6fb5ff;
 }
 
-#menu label, #menu li a {
+#menu label,
+#menu li a {
   margin: 0;
   padding: 4px 5px;
   cursor: pointer;
@@ -25,7 +26,8 @@
   padding: 0;
 }
 
-#menu label:active .fas, #menu a:active .fas {
+#menu label:active .fas,
+#menu a:active .fas {
   transform: scale(1.2);
 }
 
@@ -77,7 +79,9 @@
   margin: 0;
 }
 
-#user-config input[type="number"], #user-config select option, #user-config select {
+#user-config input[type="number"],
+#user-config select option,
+#user-config select {
   background: rgb(221, 170, 94);
   border: none;
   outline: none;
@@ -106,7 +110,7 @@
   padding: 5px 10px;
 }
 
-#menu #show-config:checked+#user-config {
+#menu #show-config:checked + #user-config {
   visibility: visible;
   opacity: 1;
 }
@@ -124,7 +128,8 @@
   -webkit-appearance: none;
 }
 
-input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -148,7 +153,7 @@ input[type="number"] {
   z-index: -1;
 }
 
-#menu #fperpage:hover+span {
+#menu #fperpage:hover + span {
   display: inline-block;
 }
 
@@ -174,7 +179,7 @@ input[type="number"] {
   .navbar-nav:last-child .nav-item:not(:first-child):not(:last-child) {
     display: none;
   }
-  #menu #admin+label {
+  #menu #admin + label {
     position: relative;
     top: -1px;
   }

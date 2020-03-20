@@ -54,7 +54,7 @@ app.use("/api/files/favorites", favoriteRoutes);
 
 app.use("/api/files", filesRoutes);
 
-app.use("/api/admin", UsersRoute);
+app.use("/api/admin/users", UsersRoute);
 
 app.use("/admin", (req, res) => {
   console.log("/admin");

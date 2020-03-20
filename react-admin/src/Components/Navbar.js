@@ -39,7 +39,7 @@ const Navbar = ({ User }) => {
         </li>
         <li className="nav-item">
           <NavLink to="/admin/directories" className="nav-link">
-            <i className="fas fa-hdd" />
+            <i className="fas fa-sitemap" />
             <span> Disk Manager</span>
           </NavLink>
         </li>

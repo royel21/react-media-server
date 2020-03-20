@@ -7,12 +7,12 @@ const LoginRedirect = ({ Auth }) => {
     <div id="notfound">
       <h2>Unauthorized Zone</h2>
       <p>
-        Are you lost? you are trying to access a private zone. if this is an error nothing will
-        happend if this is your first time, but if there is a second time, we will take formal
-        action against such individuals.
+        Are you lost? you are trying to access a private zone. if this is an
+        error nothing will happend if this is your first time, but if there is a
+        second time, we will take formal action against such individuals.
       </p>
       <div>
-        <a id="return" href="/admin/">
+        <a id="return" href="/admin">
           Return
         </a>
       </div>

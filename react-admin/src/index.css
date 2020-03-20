@@ -45,21 +45,6 @@ html {
 
 /************************* End ********************************/
 
-.input-group-text {
-  padding: 0 8px;
-}
-
-#clock {
-  display: inline-block;
-  position: absolute;
-  top: 60px;
-  z-index: 9;
-  padding: 0 5px;
-  border: 1px solid;
-  border-radius: 0.25rem;
-  background-color: khaki;
-}
-
 .btn {
   color: white;
   transition: 0.3s all;
@@ -131,7 +116,7 @@ input[type="text"]:not(:placeholder-shown) + span {
   position: relative;
   margin: 0 5px 0 5px;
   padding: 2px;
-  min-height: 99%;
+  min-height: 98.5%;
   min-width: fit-content;
 }
 #t-control span:first-child {

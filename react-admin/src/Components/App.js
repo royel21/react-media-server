@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { Router, Switch, Route } from "react-router-dom";
 import axios from "axios";
 
-import UsersManager from "./UsersManager.js";
+import UsersManager from "./Users/UsersManager.js";
 import FilesManager from "./FilesManager.js";
 import DiskManager from "./DiskManager.js";
 import LoginRedirct from "./LoginRedirect";
@@ -35,14 +35,19 @@ function App() {
           <Navbar User={User} />
           <div id="content">
             <Switch>
-              FoldersManager
-              <Route exact path={[, "/admin/users"]} component={UsersManager} />
+              <Route
+                exact
+                path={["/admin", "/admin/users"]}
+                component={UsersManager}
+              />
               <Route path="/admin/files" component={FilesManager} />
               <Route path="/admin/folders" component={FoldersManager} />
               <Route path="/admin/directories" component={DiskManager} />
               <Route
                 path="/admin/*"
-                render={props => <LoginRedirct {...props} Auth={User.isAutenticated} />}
+                render={props => (
+                  <LoginRedirct {...props} Auth={User.isAutenticated} />
+                )}
               />
             </Switch>
           </div>

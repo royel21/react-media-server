@@ -16,10 +16,12 @@ app.use(cookieParser());
 
 app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/react-client/build"));
+app.use(express.static(__dirname + "/react-admin/build"));
 
 const userRoutes = require("./routes/UserRoutes");
 const filesRoutes = require("./routes/FilesRoutes");
 const favoriteRoutes = require("./routes/FavoriteRoutes");
+const UsersRoute = require("./routes/admin/UsersRoute");
 
 app.use(
   session({
@@ -36,17 +38,26 @@ app.use(passport.session());
 
 app.use("/api/users", userRoutes);
 
-app.use("/api/*", (req, res, next) => {
-  console.log(req.url);
-  // next();
+app.use("/login", (req, res) => {
+  console.log("login");
+  return res.sendFile(path.join(__dirname + "/public/login.html"));
+});
+
+app.use("/*", (req, res, next) => {
+  // console.log("origin", req.get("origin"));
   if (req.user) return next();
-  return res.redirect("/notfound");
+  next();
+  // return res.redirect("/login");
 });
 
 app.use("/api/files/favorites", favoriteRoutes);
 
 app.use("/api/files", filesRoutes);
-app.use("/admin", (req, res, next) => {
+
+app.use("/api/admin", UsersRoute);
+
+app.use("/admin", (req, res) => {
+  console.log("/admin");
   return res.sendFile(path.join(__dirname + "/react-admin/build/index.html"));
 });
 

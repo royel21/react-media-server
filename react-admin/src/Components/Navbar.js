@@ -3,9 +3,8 @@ import { Link, NavLink, withRouter } from "react-router-dom";
 import axios from "axios";
 
 import "./Navbar.css";
-import UserConfig from "./UserConfig";
 
-const Navbar = ({ User, setUser, history }) => {
+const Navbar = ({ User }) => {
   const logOut = e => {
     e.preventDefault();
     axios.post("/api/users/logout").then(resp => {
@@ -21,39 +20,36 @@ const Navbar = ({ User, setUser, history }) => {
     <nav id="menu" className="navbar navbar-expand navbar-dark bg-dark">
       <ul className="navbar-nav">
         <li className="nav-item">
-          <NavLink exact to="/" className="nav-link">
-            <i className="fas fa-home" />
-            <span> Home</span>
+          <NavLink exact to="/admin/users" className="nav-link">
+            <i className="fas fa-users" />
+            <span> User Manager</span>
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/folders" className="nav-link">
+          <NavLink to="/admin/files" className="nav-link">
+            <i className="fas fa-copy" />
+            <span> Files Manager</span>
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink to="/admin/folders" className="nav-link">
             <i className="fas fa-folder" />
-            <span> Folders</span>
+            <span> Folders Manager</span>
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/mangas" className="nav-link">
-            <i className="fas fa-book" />
-            <span> Mangas</span>
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink to="/videos" className="nav-link">
-            <i className="fas fa-film" />
-            <span> Videos</span>
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink to="/favorites" className="nav-link">
-            <i className="fas fa-heart" />
-            <span> Favorites</span>
+          <NavLink to="/admin/directories" className="nav-link">
+            <i className="fas fa-hdd" />
+            <span> Disk Manager</span>
           </NavLink>
         </li>
       </ul>
       <ul className="navbar-nav">
         <li id="p-config" className="nav-item">
-          <UserConfig User={User} />
+          <label htmlFor="show-config">
+            <i className="fas fa-user-cog" />
+            <span>{User.username}</span>
+          </label>
         </li>
         <li id="logout" className="nav-item active">
           <Link to="/login" className="nav-link" onClick={logOut}>

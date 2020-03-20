@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Router, Switch, Route } from "react-router-dom";
 import axios from "axios";
 
-import Home from "./Home";
+import UsersManager from "./UsersManager.js";
+import FilesManager from "./FilesManager.js";
+import DiskManager from "./DiskManager.js";
 import LoginRedirct from "./LoginRedirect";
 
 import history from "./history";
+import Navbar from "./Navbar";
+import FoldersManager from "./FoldersManager.js";
 
 function App() {
   const [User, setUser] = useState({
@@ -22,17 +26,29 @@ function App() {
       });
     }
   }, [User.isAutenticated]);
-
   return (
     <Router history={history}>
-      {User.isAutenticated ? (
-        <div id="content">
-          <Switch>
-            <Route exact path="*" component={Home} />
-          </Switch>
-        </div>
+      {User.isAutenticating ? (
+        <div></div>
+      ) : User.isAutenticated ? (
+        <Fragment>
+          <Navbar User={User} />
+          <div id="content">
+            <Switch>
+              FoldersManager
+              <Route exact path={[, "/admin/users"]} component={UsersManager} />
+              <Route path="/admin/files" component={FilesManager} />
+              <Route path="/admin/folders" component={FoldersManager} />
+              <Route path="/admin/directories" component={DiskManager} />
+              <Route
+                path="/admin/*"
+                render={props => <LoginRedirct {...props} Auth={User.isAutenticated} />}
+              />
+            </Switch>
+          </div>
+        </Fragment>
       ) : (
-        <LoginRedirct />
+        <Route path="/*" component={LoginRedirct} />
       )}
     </Router>
   );

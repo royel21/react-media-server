@@ -7,8 +7,8 @@ import Home from "./Home";
 import Folders from "./Folders";
 import Mangas from "./Mangas";
 import Favorites from "./Favorites";
-import Login from "./Login";
 import Videos from "./Videos";
+import LoginRedirct from "./LoginRedirect";
 
 import "./Files/PageControls.css";
 
@@ -35,7 +35,9 @@ function App() {
 
   return (
     <Router history={history}>
-      {User.isAutenticated ? (
+      {User.isAutenticating ? (
+        <div></div>
+      ) : User.isAutenticated ? (
         <PageConfigContextProvider>
           <Navbar setUser={setUser} User={User} />
           <FilesContextProvider>
@@ -43,18 +45,12 @@ function App() {
               <div id="content">
                 <Switch>
                   <Route
-                    path={[
-                      "/folders/:page?/:filter?",
-                      "/folder-content/:id/:page?/:filter?"
-                    ]}
+                    path={["/folders/:page?/:filter?", "/folder-content/:id/:page?/:filter?"]}
                     component={Folders}
                   />
                   <Route path="/mangas/:page?/:filter?" component={Mangas} />
                   <Route path="/videos/:page?/:filter?" component={Videos} />
-                  <Route
-                    path="/favorites/:id?/:page?/:filter?"
-                    component={Favorites}
-                  />
+                  <Route path="/favorites/:id?/:page?/:filter?" component={Favorites} />
                   <Route exact path="/" component={Home} />
                 </Switch>
               </div>
@@ -62,16 +58,7 @@ function App() {
           </FilesContextProvider>
         </PageConfigContextProvider>
       ) : (
-        <Route
-          path="/"
-          render={props =>
-            User.isAutenticating ? (
-              <div></div>
-            ) : (
-              <Login {...props} setUser={setUser} />
-            )
-          }
-        />
+        <Route path="/*" component={LoginRedirct} />
       )}
     </Router>
   );

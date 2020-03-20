@@ -1,4 +1,5 @@
-body, html {
+body,
+html {
   background: rgba(0, 0, 0, 0);
   position: absolute;
   top: 0;
@@ -25,6 +26,12 @@ body, html {
   padding-top: 5px;
 }
 
+#content .loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /*************************Scrollbar Style********************************/
 
 ::-webkit-scrollbar {
@@ -34,15 +41,6 @@ body, html {
 ::-webkit-scrollbar-thumb {
   background-color: rgba(0, 123, 255, 0.95);
   box-shadow: inset 0 0 6px rgba(15, 1, 228, 0.9);
-}
-
-@media screen and (max-width: 450px) {
-  ::-webkit-scrollbar {
-    width: 0;
-  }
-  #content {
-    padding-bottom: 40px;
-  }
 }
 
 /************************* End ********************************/
@@ -76,7 +74,7 @@ body, html {
 
 /* Clear input text icon*/
 
-input[type="text"]+span {
+input[type="text"] + span {
   display: none !important;
   position: absolute;
   right: 4px;
@@ -85,6 +83,127 @@ input[type="text"]+span {
   font-size: 20px;
 }
 
-input[type="text"]:not(:placeholder-shown)+span {
+input[type="text"]:not(:placeholder-shown) + span {
   display: initial !important;
+}
+
+#notfound {
+  display: flex;
+  color: white;
+  position: relative;
+  background-color: #14243d;
+  background: radial-gradient(ellipse at center, #14243d 0%, #030611 100%);
+  height: 100vh;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#notfound h2 {
+  font-size: 40px;
+  color: red;
+}
+#notfound p {
+  padding-top: 20px;
+  max-width: 70%;
+  margin: 0 auto;
+  font-size: 18px;
+}
+#notfound #return {
+  display: inline-block;
+  color: white;
+  padding: 5px 10px;
+  font-size: 25px;
+  text-decoration: none;
+  background-color: green;
+  border-radius: 0.25rem;
+}
+#notfound #return:hover {
+  transform: scale(1.1);
+}
+
+.table th:last-child,
+.table td:last-child {
+  text-align: center;
+}
+
+#content > div {
+  position: relative;
+  margin: 0 5px 0 5px;
+  padding: 2px;
+  min-height: 99%;
+  min-width: fit-content;
+}
+#t-control span:first-child {
+  position: absolute;
+  left: 5px;
+  top: 5px;
+}
+
+#content .manager span {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+#content .manager span:active i {
+  transform: scale(1.2);
+}
+#content .manager span .fa-edit {
+  color: #007bff;
+}
+
+#content .manager span .fa-trash-alt {
+  color: #ff0909;
+}
+
+.table {
+  margin: 0;
+}
+.table th,
+.table td {
+  padding: 0.5rem 1rem;
+}
+
+.lds-ring {
+  display: inline-block;
+  position: absolute;
+  top: calc(50% - 104px);
+  left: calc(50% - 108px);
+  width: 80px;
+  height: 80px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  margin: 8px;
+  border: 8px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 450px) {
+  ::-webkit-scrollbar {
+    width: 0;
+  }
 }

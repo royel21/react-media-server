@@ -38,7 +38,7 @@ const Navbar = ({ User }) => {
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/admin/directories" className="nav-link">
+          <NavLink to="/admin/disk" className="nav-link">
             <i className="fas fa-sitemap" />
             <span> Disk Manager</span>
           </NavLink>

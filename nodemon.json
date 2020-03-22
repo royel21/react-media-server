@@ -6,7 +6,10 @@
     "public/covers/videos",
     "public/covers/mangas",
     "public/covers/folders",
-    "react-client"
+    "react-client",
+    "react-admin",
+    "script.js",
+    "files copy.db"
   ],
   "env": {
     "NODE_ENV": "production"

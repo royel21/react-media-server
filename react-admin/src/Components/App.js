@@ -2,9 +2,11 @@ import React, { useState, useEffect, Fragment } from "react";
 import { Router, Switch, Route } from "react-router-dom";
 import axios from "axios";
 
+import SockectContextProvider from "./Context/SockectContext";
+
 import UsersManager from "./Users/UsersManager.js";
 import FilesManager from "./FilesManager.js";
-import DiskManager from "./DiskManager.js";
+import DiskManager from "./DisManager/DiskManager.js";
 import LoginRedirct from "./LoginRedirect";
 
 import history from "./history";
@@ -33,24 +35,26 @@ function App() {
       ) : User.isAutenticated ? (
         <Fragment>
           <Navbar User={User} />
-          <div id="content">
-            <Switch>
-              <Route
-                exact
-                path={["/admin", "/admin/users"]}
-                component={UsersManager}
-              />
-              <Route path="/admin/files" component={FilesManager} />
-              <Route path="/admin/folders" component={FoldersManager} />
-              <Route path="/admin/directories" component={DiskManager} />
-              <Route
-                path="/admin/*"
-                render={props => (
-                  <LoginRedirct {...props} Auth={User.isAutenticated} />
-                )}
-              />
-            </Switch>
-          </div>
+          <SockectContextProvider>
+            <div id="content">
+              <Switch>
+                <Route
+                  exact
+                  path={["/admin", "/admin/users"]}
+                  component={UsersManager}
+                />
+                <Route path="/admin/files" component={FilesManager} />
+                <Route path="/admin/folders" component={FoldersManager} />
+                <Route path="/admin/disk" component={DiskManager} />
+                <Route
+                  path="/admin/*"
+                  render={props => (
+                    <LoginRedirct {...props} Auth={User.isAutenticated} />
+                  )}
+                />
+              </Switch>
+            </div>
+          </SockectContextProvider>
         </Fragment>
       ) : (
         <Route path="/*" component={LoginRedirct} />

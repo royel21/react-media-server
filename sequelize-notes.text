@@ -1,0 +1,3 @@
+sequelize-cli db:migrate #apply migration
+
+sequelize-cli migration:generate --name add-name-to-directory

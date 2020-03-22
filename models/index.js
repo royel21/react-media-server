@@ -74,8 +74,8 @@ db.user.hasOne(db.userConfig, { onDelete: "cascade" });
 
 db.folder.hasMany(db.file);
 
-db.init = async () => {
-  await sequelize.sync();
+db.init = async force => {
+  await sequelize.sync({ force });
   let admin = await db.user.findOne({ where: { Name: "Administrator" } });
 
   if (!admin) {

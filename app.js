@@ -22,6 +22,7 @@ const userRoutes = require("./routes/UserRoutes");
 const filesRoutes = require("./routes/FilesRoutes");
 const favoriteRoutes = require("./routes/FavoriteRoutes");
 const UsersRoute = require("./routes/admin/UsersRoute");
+const DirectoriesRoute = require("./routes/admin/DirectoriesRoute");
 
 app.use(
   session({
@@ -45,6 +46,9 @@ app.use("/login", (req, res) => {
 
 app.use("/*", (req, res, next) => {
   // console.log("origin", req.get("origin"));
+
+  app.locals.user = req.user;
+  console.log("user:", req.user);
   if (req.user) return next();
   next();
   // return res.redirect("/login");
@@ -55,6 +59,7 @@ app.use("/api/files/favorites", favoriteRoutes);
 app.use("/api/files", filesRoutes);
 
 app.use("/api/admin/users", UsersRoute);
+app.use("/api/admin/directories", DirectoriesRoute);
 
 app.use("/admin", (req, res) => {
   console.log("/admin");
@@ -84,8 +89,7 @@ db.init().then(() => {
 
   console.log("Node server is running.. at http://localhost:" + port);
 
-  // return require("./modules/socketio-server")(server, app);
-  return server;
+  return require("./modules/socketio-server")(server, app);
 });
 
 console.log(process.env.NODE_ENV);

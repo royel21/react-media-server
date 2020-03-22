@@ -83,3 +83,8 @@
   padding: 0 5px;
   border-radius: 0.25rem;
 }
+
+#u-manager .table th:last-child,
+#u-manager .table td:last-child {
+  text-align: center;
+}

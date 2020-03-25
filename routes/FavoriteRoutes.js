@@ -11,7 +11,6 @@ Router.get("/:id/:order/:page/:items/:search?", (req, res) => {
 const saveEdit = async (req, res) => {
   let { Id, Name, Type } = req.body;
   let fav = await db.favorite.findOne({ where: { Id } });
-  console.log(Id, Name, Type, fav);
   if (!fav) {
     fav = await db.favorite.create({ Name, Type, UserId: req.user.Id });
   } else {

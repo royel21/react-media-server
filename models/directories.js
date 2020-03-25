@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       hooks: {
-        beforeValidate: function(item, options) {
+        beforeValidate(item, options) {
           item.Id = Math.random()
             .toString(36)
             .slice(-5);

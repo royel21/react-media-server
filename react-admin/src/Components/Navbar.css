@@ -7,6 +7,7 @@
   justify-content: space-between;
   padding: 0;
   user-select: none;
+  min-height: 34px;
 }
 
 #menu i.fa-user-cog {
@@ -31,101 +32,9 @@
   transform: scale(1.2);
 }
 
-#menu #show-config {
-  display: none;
-}
-
-#menu #p-config {
-  position: relative;
-  color: white;
-}
-
-#menu #p-config #user-config {
-  visibility: hidden;
-  opacity: 0;
-  position: absolute;
-  top: 40px;
-  right: 50%;
-  width: max-content;
-  border-radius: 0.25rem;
-  border: 1px solid;
-  transition: 0.3s all;
-  z-index: 2;
-}
-
-#user-config {
-  color: black;
-  background: rgb(221, 170, 94);
-}
-
-#user-config:after {
-  position: absolute;
-  top: -10.6px;
-  right: 14.5px;
-  content: " ";
-  height: 20px;
-  width: 20px;
-  background-color: inherit;
-  transform: rotate(45deg);
-  z-index: -1;
-  border-top: 1px solid;
-  border-left: 1px solid;
-}
-
-#user-config h4 {
+#menu .active {
   border-bottom: 1px solid;
-  text-align: center;
-  padding-bottom: 10px;
-  margin: 0;
-}
-
-#user-config input[type="number"],
-#user-config select option,
-#user-config select {
-  background: rgb(221, 170, 94);
-  border: none;
-  outline: none;
-  font-family: "Font Awesome 5 Free", "sans-serif";
-  font-weight: 600;
-  width: 95px;
-  padding: 0 5px 0 10px;
-  margin-right: 5px;
-}
-
-#user-config .page-control {
-  position: relative;
-  border: 1px solid;
-  border-radius: 0.25rem;
-  margin-bottom: 10px;
-}
-
-#menu .page-control label {
-  border-right: 1px solid;
-  text-align: right;
-  min-width: 105px;
-  cursor: initial;
-}
-
-#user-config #config-content {
-  padding: 5px 10px;
-}
-
-#menu #show-config:checked + #user-config {
-  visibility: visible;
-  opacity: 1;
-}
-
-#menu #fpp-tips {
-  position: absolute;
-  display: none;
-  min-width: max-content;
-  background-color: teal;
-  padding: 2px 5px;
-  border-radius: 0.25rem;
-  right: 10%;
-  top: -35px;
-  z-index: 3;
-  -webkit-appearance: none;
+  transition: 0.3s all;
 }
 
 input::-webkit-outer-spin-button,

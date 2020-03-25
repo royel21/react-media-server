@@ -116,6 +116,17 @@ input[type="text"]:not(:placeholder-shown) + span {
   border: 1px solid;
 }
 
+#content .controls {
+  display: flex;
+  padding-top: 5px;
+  justify-content: center;
+  border-bottom: 1px solid;
+  user-select: none;
+}
+#content h3 {
+  user-select: none;
+}
+
 #t-control span:first-child {
   position: absolute;
   left: 5px;
@@ -125,25 +136,74 @@ input[type="text"]:not(:placeholder-shown) + span {
 #content .manager span {
   cursor: pointer;
   font-size: 20px;
+  line-height: 1;
+}
+
+.modal-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 2;
 }
 
 #content .manager span:active i {
   transform: scale(1.2);
 }
-#content .manager span .fa-edit {
+.manager .fa-edit,
+.manager .fa-trash-alt {
+  pointer-events: none;
+}
+
+.manager .fa-sync,
+.manager span .fa-edit {
   color: #007bff;
 }
 
-#content .manager span .fa-trash-alt {
+.manager span .fa-trash-alt {
   color: #ff0909;
 }
 
 .table {
   margin: 0;
 }
+
+.table thead {
+  user-select: none;
+}
+
 .table th,
 .table td {
   padding: 0.5rem 1rem;
+}
+
+.table td:only-child {
+  text-align: center;
+}
+
+.table td:first-child,
+.table th:first-child {
+  width: 100px;
+  padding: 0.4rem 0.8rem;
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* Directory Style */
+.table .fa,
+.table .far,
+.table .fas {
+  cursor: pointer;
+  font-size: 20px;
+  user-select: none;
+}
+
+.table span:active .fa,
+.table span:active .far,
+.table span:active .fas {
+  transform: scale(1.2);
 }
 
 .lds-ring {
@@ -175,6 +235,7 @@ input[type="text"]:not(:placeholder-shown) + span {
 .lds-ring div:nth-child(3) {
   animation-delay: -0.15s;
 }
+
 @keyframes lds-ring {
   0% {
     transform: rotate(0deg);

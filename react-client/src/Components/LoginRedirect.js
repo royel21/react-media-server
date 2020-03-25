@@ -1,7 +1,7 @@
 import React from "react";
 
-const LoginRedirect = () => {
-  window.location.href = "/";
+const LoginRedirect = ({ Auth }) => {
+  if (!Auth) window.location.href = "/login";
   return <div></div>;
 };
 

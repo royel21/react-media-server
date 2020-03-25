@@ -1,12 +1,15 @@
-import { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState, useRef, useContext, useCallback } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import { genUrl, PageTitles } from "./utils";
+import { PageConfigContext } from "../../Context/PageConfigContext";
 
 const cancelToken = axios.CancelToken;
 var cancel;
 
-const FileListHooks = ({ id, history, type }, pageConfig) => {
+const FileListHooks = ({ id, history, type }) => {
+  const pageConfig = useContext(PageConfigContext);
+
   let cStatus = useRef(true);
   let { page, filter } = useParams();
   const [filesData, setFilesData] = useState({
@@ -47,9 +50,12 @@ const FileListHooks = ({ id, history, type }, pageConfig) => {
       });
   }, [page, pageConfig, filter, type, id]);
 
-  const pushHistory = (pg, fltr, tid) => {
-    history.push(genUrl(pg, pageConfig, fltr, type, true, tid));
-  };
+  const pushHistory = useCallback(
+    (pg, fltr, tid) => {
+      history.push(genUrl(pg, pageConfig, fltr, type, true, tid));
+    },
+    [pageConfig, type, history]
+  );
 
   const goToPage = pg => {
     pg = pg < 1 ? 1 : pg > filesData.totalPages ? filesData.totalPages : pg;
@@ -59,12 +65,11 @@ const FileListHooks = ({ id, history, type }, pageConfig) => {
     return pg;
   };
 
-  const fileFilter = () => {
+  const fileFilter = useCallback(() => {
     let input = document.getElementById("filter-file");
-
     let fltr = input && input.value;
     pushHistory(1, fltr, id);
-  };
+  }, [id, pushHistory]);
 
   const processFile = e => {
     let file = e.target.closest(".file");
@@ -73,6 +78,7 @@ const FileListHooks = ({ id, history, type }, pageConfig) => {
         break;
       }
       case "Video": {
+        // setShowPlayer({ show: true, videoId: file.id });
         break;
       }
       default: {

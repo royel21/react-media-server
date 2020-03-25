@@ -26,12 +26,12 @@ module.exports = (sequelize, DataTypes) => {
     {
       timestamps: false,
       hooks: {
-        beforeValidate: function(item, options) {
+        beforeValidate(item, options) {
           item.Id = Math.random()
             .toString(36)
             .slice(-5);
         },
-        beforeBulkCreate: (instances, options) => {
+        beforeBulkCreate(instances, options) {
           for (var item of instances) {
             item.Id = Math.random()
               .toString(36)

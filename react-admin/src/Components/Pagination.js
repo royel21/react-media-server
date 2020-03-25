@@ -1,5 +1,10 @@
-import React from "react";
+import React, { useCallback } from "react";
 import "./PageControls.css";
+import { useParams } from "react-router-dom";
+
+const getItems = () => {
+  return parseInt((window.innerHeight - 150) / 41);
+};
 
 const paginationInput = (li, page, totalPages, goToPage) => {
   let input = li.querySelector("input");
@@ -18,9 +23,9 @@ const paginationInput = (li, page, totalPages, goToPage) => {
     newInput.onkeydown = event => {
       if (event.keyCode === 13) {
         page = parseInt(newInput.value);
-        newInput = null;
         page = goToPage(page);
         li.textContent = page + "/" + totalPages;
+        newInput = null;
       }
     };
     newInput.focus();
@@ -57,8 +62,18 @@ const pagerClick = (e, page, totalPages, goToPage) => {
   }
 };
 
-const Pagination = props => {
-  const { goToPage, page, totalPages } = props.data;
+const Pagination = ({ history, totalPages, route }) => {
+  const { page = 1, filter = "" } = useParams();
+
+  //Navigate Pages
+  const goToPage = useCallback(
+    (pg = 1) => {
+      pg = pg < 1 ? 1 : pg > totalPages ? totalPages : pg;
+      history.push(`/admin/${route}/${pg}/${getItems()}${filter ? `/${filter}` : ""}`);
+      return pg;
+    },
+    [totalPages, history, route, filter]
+  );
 
   return totalPages > 1 ? (
     <div
@@ -70,23 +85,23 @@ const Pagination = props => {
       <ul className="pagination">
         {window.innerWidth > 700 && page > 1 ? (
           <li id="first-page" className="page-link">
-            <i className="fas fa-angle-double-left"></i>
+            <i className="fas fa-angle-double-left" />
           </li>
         ) : (
           ""
         )}
         <li id="prev-page" className="page-link">
-          <i className="fas fa-angle-left"></i>
+          <i className="fas fa-angle-left" />
         </li>
         <li id="current-page" className="page-link">
           {page + "/" + totalPages}
         </li>
         <li id="next-page" className="page-link">
-          <i className="fas fa-angle-right"></i>
+          <i className="fas fa-angle-right" />
         </li>
         {window.innerWidth > 700 && page < totalPages ? (
           <li id="last-page" className="page-link">
-            <i className="fas fa-angle-double-right"></i>
+            <i className="fas fa-angle-double-right" />
           </li>
         ) : (
           ""
@@ -98,4 +113,4 @@ const Pagination = props => {
   );
 };
 
-export default Pagination;
+export default React.memo(Pagination);

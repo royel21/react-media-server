@@ -1,4 +1,6 @@
 export function formatTime(time) {
+  if (time === 0) return "0";
+
   var h = Math.floor(time / 3600);
   var min = Math.floor((time / 3600 - h) * 60);
   var sec = Math.floor(time % 60);
@@ -22,15 +24,14 @@ export const getFilesPerPage = () => {
 export const genUrl = (page, { order, items }, filter, type, notApi, id) => {
   let itemsperpage = (items || 0) === 0 ? getFilesPerPage() : items;
   if (["favorites", "folder-content"].includes(type) || id) {
-    type =
-      type === "favorites" ? `favorites/${id || "0"}` : `folder-content/${id}`;
+    type = type === "favorites" ? `favorites/${id || "0"}` : `folder-content/${id}`;
   }
 
   if (notApi) {
     return `/${type}/${page || 1}/${filter || ""}`;
   } else {
-    return `/api/files/${type}/${order || "nu"}/${page ||
-      1}/${itemsperpage}/${filter || ""}`;
+    return `/api/files/${type}/${order || "nu"}/${page || 1}/${itemsperpage}/${filter ||
+      ""}`;
   }
 };
 

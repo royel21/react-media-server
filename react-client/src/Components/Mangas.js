@@ -1,5 +1,5 @@
 import React from "react";
-import FilesList from "./Files/FilesList";
+import FilesList from "./Shares/FilesList";
 
 const Mangas = props => <FilesList {...props} type="mangas" />;
 

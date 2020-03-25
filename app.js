@@ -21,8 +21,10 @@ app.use(express.static(__dirname + "/react-admin/build"));
 const userRoutes = require("./routes/UserRoutes");
 const filesRoutes = require("./routes/FilesRoutes");
 const favoriteRoutes = require("./routes/FavoriteRoutes");
-const UsersRoute = require("./routes/admin/UsersRoute");
+const UsersManagerRoute = require("./routes/admin/UsersManagerRoute");
 const DirectoriesRoute = require("./routes/admin/DirectoriesRoute");
+const FilesManagerRoute = require("./routes/admin/FilesManagerRoute");
+const VideoRoute = require("./routes/VideoRouter");
 
 app.use(
   session({
@@ -36,7 +38,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
+// it is here because is needed for login before access the other routes;
 app.use("/api/users", userRoutes);
 
 app.use("/login", (req, res) => {
@@ -46,20 +48,18 @@ app.use("/login", (req, res) => {
 
 app.use("/*", (req, res, next) => {
   // console.log("origin", req.get("origin"));
-
   app.locals.user = req.user;
-  console.log("user:", req.user);
   if (req.user) return next();
-  next();
-  // return res.redirect("/login");
+  // next();
+  return res.redirect("/login");
 });
 
 app.use("/api/files/favorites", favoriteRoutes);
-
 app.use("/api/files", filesRoutes);
-
-app.use("/api/admin/users", UsersRoute);
+app.use("/api/videos", VideoRoute);
+app.use("/api/admin/users", UsersManagerRoute);
 app.use("/api/admin/directories", DirectoriesRoute);
+app.use("/api/admin/files", FilesManagerRoute);
 
 app.use("/admin", (req, res) => {
   console.log("/admin");

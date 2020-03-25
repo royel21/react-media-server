@@ -39,7 +39,7 @@ const addEdit = async (req, res) => {
       ]
     };
     delete user.Id;
-    let newUser = await db.user.create(user);
+    let newUser = await db.user.create(user, { include: [db.favorite] });
 
     return res.send({
       user: { ...newUser.dataValues, Password: "" },

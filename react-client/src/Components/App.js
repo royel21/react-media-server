@@ -6,16 +6,16 @@ import Navbar from "./Navbar";
 import Home from "./Home";
 import Folders from "./Folders";
 import Mangas from "./Mangas";
-import Favorites from "./Favorites";
+import Favorites from "./Favorites/Favorites";
 import Videos from "./Videos";
 import LoginRedirct from "./LoginRedirect";
 
-import "./Files/PageControls.css";
+import "./Shares/PageControls.css";
 
 import history from "./history";
 import PageConfigContextProvider from "../Context/PageConfigContext";
 import FavoriteContextProvider from "../Context/FavoriteContext";
-import FilesContextProvider from "../Context/FilesContext";
+import Viewer from "./Viewer/Viewer";
 
 function App() {
   const [User, setUser] = useState({
@@ -40,22 +40,28 @@ function App() {
       ) : User.isAutenticated ? (
         <PageConfigContextProvider>
           <Navbar setUser={setUser} User={User} />
-          <FilesContextProvider>
-            <FavoriteContextProvider favorites={User.favorites}>
-              <div id="content">
-                <Switch>
-                  <Route
-                    path={["/folders/:page?/:filter?", "/folder-content/:id/:page?/:filter?"]}
-                    component={Folders}
-                  />
-                  <Route path="/mangas/:page?/:filter?" component={Mangas} />
-                  <Route path="/videos/:page?/:filter?" component={Videos} />
-                  <Route path="/favorites/:id?/:page?/:filter?" component={Favorites} />
-                  <Route exact path="/" component={Home} />
-                </Switch>
-              </div>
-            </FavoriteContextProvider>
-          </FilesContextProvider>
+          <FavoriteContextProvider favorites={User.favorites}>
+            <div id="content">
+              <Switch>
+                <Route
+                  path={[
+                    "/folders/:page?/:filter?",
+                    "/folder-content/:id/:page?/:filter?"
+                  ]}
+                  component={Folders}
+                />
+                <Route path="/mangas/:page?/:filter?" component={Mangas} />
+                <Route path="/videos/:page?/:filter?" component={Videos} />
+                <Route path="/favorites/:id?/:page?/:filter?" component={Favorites} />
+                <Route path="/viewer/:type/:id/:fileId?" component={Viewer} />
+                <Route exact path="/" component={Home} />
+                <Route
+                  path="/*"
+                  render={props => <LoginRedirct {...props} Auth={User.isAutenticated} />}
+                />
+              </Switch>
+            </div>
+          </FavoriteContextProvider>
         </PageConfigContextProvider>
       ) : (
         <Route path="/*" component={LoginRedirct} />

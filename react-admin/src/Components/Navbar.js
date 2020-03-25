@@ -20,7 +20,16 @@ const Navbar = ({ User }) => {
     <nav id="menu" className="navbar navbar-expand navbar-dark bg-dark">
       <ul className="navbar-nav">
         <li className="nav-item">
-          <NavLink exact to="/admin/users" className="nav-link">
+          <NavLink
+            exact
+            to="/admin/users"
+            isActive={(match, location) => {
+              return /(^\/admin$)|(^\/admin\/$)|(^\/admin\/users$)/gi.test(
+                location.pathname
+              );
+            }}
+            className="nav-link"
+          >
             <i className="fas fa-users" />
             <span> User Manager</span>
           </NavLink>

@@ -1,4 +1,4 @@
-import { getFilesPerPage } from "./Files/utils";
+import { getFilesPerPage } from "./Shares/utils";
 const UP = 38;
 const DOWN = 40;
 const LEFT = 37;
@@ -72,9 +72,7 @@ const fileNavKeydown = (e, page, itemsperpage, goToPage) => {
     let wasProcesed = false;
     let colNum = calCol();
     let totalitem = document.querySelectorAll(".file").length;
-    selectedIndex = getElementIndex(
-      document.querySelector("#files-list .active")
-    );
+    selectedIndex = getElementIndex(document.querySelector("#files-list .active"));
     switch (e.keyCode) {
       case ENTER: {
         break;

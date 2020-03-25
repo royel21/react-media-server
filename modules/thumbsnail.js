@@ -1,7 +1,7 @@
-const StreamZip = require('node-stream-zip');
-const sharp = require('sharp');
+const StreamZip = require("node-stream-zip");
+const sharp = require("sharp");
 
-const images = ['png', 'gif', 'jpg', 'jpeg', 'webp'];
+const images = /jpg|jpeg|png|gif|webp/i;
 
 // module.exports.RarCover = (file, coverP) => {
 //     let rar = new rcunrar(file);
@@ -25,39 +25,50 @@ const images = ['png', 'gif', 'jpg', 'jpeg', 'webp'];
 //         });
 //     });
 // }
+var buff;
+module.exports.ZipCover = (file, coverP, exist) => {
+  var zip = new StreamZip({
+    file,
+    storeEntries: true
+  });
+  return new Promise((resolve, reject) => {
+    zip.on("ready", () => {
+      var entries = Object.values(zip.entries()).sort((a, b) => {
+        return String(a.name).localeCompare(String(b.name));
+      });
 
-module.exports.ZipCover = (file, coverP) => {
-    var zip = new StreamZip({
-        file,
-        storeEntries: true
-    });
-    return new Promise((resolve, reject) => {
-        zip.on('ready', () => {
+      var firstImg = entries.find(e => {
+        return images.test(e.name.split(".").pop()) && e.size > 1024 * 30;
+      });
 
-            var entries = Object.values(zip.entries()).sort((a, b) => {
-                return String(a.name).localeCompare(String(b.name))
+      if (exist) return resolve(entries.length);
+
+      if (firstImg === undefined) {
+        resolve(0);
+        zip.close();
+      } else {
+        buff = zip.entryDataSync(firstImg);
+        try {
+          sharp(buff)
+            .jpeg({
+              quality: 80
+            })
+            .resize(240)
+            .toFile(coverP, () => {
+              resolve(entries.length);
+              zip.close();
+              buff = [];
             });
-
-            var firstImg = entries.find(e => {
-                return images.includes(e.name.toLocaleLowerCase().split('.').pop()) &&
-                    e.size > 1024 * 30
-            });
-
-            if (firstImg == undefined) {
-                resolve(0);
-                zip.close();
-            } else {
-                sharp(zip.entryDataSync(firstImg)).jpeg({
-                    quality: 80
-                }).resize(240).toFile(coverP, (error) => {
-                    resolve(entries.length);
-                    zip.close();
-                });
-            }
-        });
-        zip.on("error", (error) => {
-            console.log(file, error);
-            zip.close();
-        })
+        } catch (err) {
+          console.log(err);
+          resolve(0);
+        }
+      }
     });
-}
+    zip.on("error", error => {
+      console.log(file, error);
+      zip.close();
+      resolve(0);
+    });
+  });
+};

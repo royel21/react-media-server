@@ -10,8 +10,6 @@ const Navbar = ({ User, setUser, history }) => {
     e.preventDefault();
     axios.post("/api/users/logout").then(resp => {
       if (resp.status === 200) {
-        // setUser({ username: "", isAutenticated: false });
-        // history.push("/");
         window.location.href = "/login";
       }
     });
@@ -27,7 +25,13 @@ const Navbar = ({ User, setUser, history }) => {
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/folders" className="nav-link">
+          <NavLink
+            to="/folders"
+            className="nav-link"
+            isActive={(match, location) => {
+              return /(^\/folders)|(^\/folder-content)/gi.test(location.pathname);
+            }}
+          >
             <i className="fas fa-folder" />
             <span> Folders</span>
           </NavLink>
@@ -44,12 +48,17 @@ const Navbar = ({ User, setUser, history }) => {
             <span> Videos</span>
           </NavLink>
         </li>
-        <li className="nav-item">
-          <NavLink to="/favorites" className="nav-link">
-            <i className="fas fa-heart" />
-            <span> Favorites</span>
-          </NavLink>
-        </li>
+
+        {User.favorites.length > 0 ? (
+          <li className="nav-item">
+            <NavLink to="/favorites" className="nav-link">
+              <i className="fas fa-heart" />
+              <span> Favorites</span>
+            </NavLink>
+          </li>
+        ) : (
+          ""
+        )}
       </ul>
       <ul className="navbar-nav">
         <li id="p-config" className="nav-item">

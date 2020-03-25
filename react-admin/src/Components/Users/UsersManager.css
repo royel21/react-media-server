@@ -10,6 +10,18 @@
   width: 350px;
   background-color: cadetblue;
 }
+
+#u-manager .controls .btn {
+  position: absolute;
+  left: 10px;
+  font-size: initial;
+  padding: 0.4rem 0.6rem;
+}
+
+#u-manager .controls .btn i {
+  font-size: 20px;
+}
+
 #content .modal .errors {
   color: rgb(226, 35, 35);
   font-size: 20px;
@@ -82,9 +94,4 @@
   background-color: ghostwhite;
   padding: 0 5px;
   border-radius: 0.25rem;
-}
-
-#u-manager .table th:last-child,
-#u-manager .table td:last-child {
-  text-align: center;
 }

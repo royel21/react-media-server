@@ -1,12 +1,35 @@
-Insert INTO Favorites (Id, Name, UserId, Type)
-VALUES(
-    "abck",
-    "Lolitas",
-    "1009fc10-b68b-487b-88e8-5099fee01f37",
-    "Manga"
-  );
-Select
+-- DELETE from Favorites
+-- where
+--   Id = 'abck';
+-- SQLite
+--- Update Isloading Query
+-- UPDATE Directories
+-- set
+--   IsLoading = 0
+-- Where
+--   IsLoading = 1;
+------
+---Find duplicate
+-- Select
+--   Id
+-- from Files
+-- where
+--   Id in (
+--     select
+--       folderId
+--     from (
+--         SELECT
+--           count(*) count,
+--           *
+--         From Files
+--         GROUP by
+--           Name
+--       )
+--     where
+--       count > 1
+--   );
+SELECT
   *
-From Favorites
+From Files
 WHERE
-  UserId = '1009fc10-b68b-487b-88e8-5099fee01f37	';
+  FolderId = "2tnh5"

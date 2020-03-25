@@ -11,8 +11,8 @@ const FavoritesManager = ({ id, loadFavorite }) => {
     Name: "",
     Type: "Manga"
   });
+
   const [serverError, setServerError] = useState("");
-  if (favorites.length === 0) return "";
 
   const updateCurrentFav = e => {
     let tr = e.target.closest("tr");
@@ -72,11 +72,7 @@ const FavoritesManager = ({ id, loadFavorite }) => {
           <div className="modal-title">
             <div id="fav-controls">
               <div className="input-group-prepend">
-                <label
-                  id="addfav"
-                  className="input-group-text"
-                  onClick={saveFav}
-                >
+                <label id="addfav" className="input-group-text" onClick={saveFav}>
                   <i className="fas fa-save"></i>
                 </label>
                 <input
@@ -110,11 +106,7 @@ const FavoritesManager = ({ id, loadFavorite }) => {
                 </select>
               </div>
             </div>
-            {serverError ? (
-              <div className="text-danger">{serverError}</div>
-            ) : (
-              ""
-            )}
+            {serverError ? <div className="text-danger">{serverError}</div> : ""}
           </div>
           <div className="modal-body">
             <div className="modal-content">
@@ -183,4 +175,4 @@ const FavoritesManager = ({ id, loadFavorite }) => {
   );
 };
 
-export default FavoritesManager;
+export default React.memo(FavoritesManager);

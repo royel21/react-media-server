@@ -1,31 +1,21 @@
 import React from "react";
 
-const clearSearch = fileFilter => {
-  document.getElementById("filter-file").value = "";
-  fileFilter("");
-};
+const FileFilter = ({ fileFilter, filter, showback, exitFolder }) => {
+  const clearSearch = () => {
+    document.getElementById("filter-file").value = "";
+    fileFilter("");
+  };
 
-const submitFilter = (e, fileFilter) => {
-  if (e.keyCode === 13) {
-    fileFilter(e.target.value);
-  }
-};
+  const submitFilter = e => {
+    if (e.keyCode === 13) {
+      fileFilter(e.target.value);
+    }
+  };
 
-const backFromFolderContent = history => {
-  let pathname = window.local.getObject("folder").pathname || "/folders";
-  history.push(pathname);
-};
-
-const FileFilter = ({ fileFilter, filter, showback, history }) => {
   return (
     <div id="filter-control" className="input-group">
       {showback ? (
-        <span
-          className="badge badge-secondary mx-2"
-          onClick={e => {
-            backFromFolderContent(history);
-          }}
-        >
+        <span className="badge badge-secondary mx-2" onClick={exitFolder}>
           <i className="fas fa-arrow-circle-left"></i>
         </span>
       ) : (
@@ -58,4 +48,4 @@ const FileFilter = ({ fileFilter, filter, showback, history }) => {
   );
 };
 
-export default FileFilter;
+export default React.memo(FileFilter);

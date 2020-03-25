@@ -1,35 +1,43 @@
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import Axios from "axios";
 
-import Files from "./Files";
-import FileFilter from "./FileFilter";
-import Pagination from "./Pagination";
-import FileListHooks from "./FileListHooks";
+import { useParams } from "react-router-dom";
+
+import Files from "../Shares/Files";
+import FileFilter from "../Shares/FileFilter";
+import Pagination from "../Shares/Pagination";
 import FavoritesManager from "./FavoriteManager";
+import FileListHooks from "../Shares/FileListHooks";
+import Loading from "../Shares/Loading";
 
 import { fileNavKeydown, fileNavClick } from "../KeyboardNav";
-import { genUrl, getFilesPerPage, PageTitles } from "./utils";
+import { genUrl, getFilesPerPage } from "../Shares/utils";
 
 import { PageConfigContext } from "../../Context/PageConfigContext";
+import { FavoriteContext } from "../../Context/FavoriteContext";
 
-const FilesList = props => {
+const Favorites = props => {
+  let { id, filter = "", page } = useParams();
+  const { favorites } = useContext(FavoriteContext);
+
   const { pageConfig } = useContext(PageConfigContext);
-  const {
-    page,
-    filter,
-    filesData,
-    setFilesData,
-    goToPage,
-    fileFilter,
-    processFile
-  } = FileListHooks(props, pageConfig);
+
+  const { filesData, setFilesData, goToPage, fileFilter, processFile } = FileListHooks({
+    ...props,
+    id: id || favorites[0].Id,
+    type: "favorites"
+  });
+
   const { files, totalFiles, totalPages } = filesData;
 
-  const loadFavorite = fav => {
-    props.history.push(genUrl(1, pageConfig, filter, "favorites", true, fav));
-  };
+  const loadFavorite = useCallback(
+    fav => {
+      props.history.push(genUrl(1, pageConfig, filter, "favorites", true, fav));
+    },
+    [props.history, filter, pageConfig]
+  );
 
-  const removeFavFile = fid => {
+  const removeFavFile = fileId => {
     let nextPage = page;
     if (filesData.files.length === 1) {
       nextPage = page > 1 ? page - 1 : page;
@@ -39,15 +47,15 @@ const FilesList = props => {
     items = items === 0 ? getFilesPerPage() : items;
 
     Axios.post("/api/files/favorites/remove-file", {
-      id: props.id,
-      fid,
+      id,
+      fid: fileId,
       page: nextPage,
       order: pageConfig.order,
       items,
       search: filter
     }).then(({ data }) => {
       if (data.removed) {
-        props.history.replace(`/favorites/${props.id}/${nextPage}/${filter}`);
+        props.history.replace(`/favorites/${id}/${nextPage}/${filter}`);
         setFilesData(data.data);
       }
     });
@@ -68,32 +76,21 @@ const FilesList = props => {
               files={files}
               FavoriteId={props.id}
               processFile={processFile}
-              type={props.type}
+              type={"favorites"}
               removeFavFile={removeFavFile}
             />
           </div>
         ) : (
           <div id="files-list" className="loading">
-            <h3>{`No ${PageTitles[props.type]} Available`}</h3>
+            <h3>{`This Favorite Has not files added`}</h3>
           </div>
         )
       ) : (
-        <div id="files-list" className="loading">
-          <h3>Loading Data Wait...</h3>
-        </div>
+        <Loading />
       )}
       <div className="controls">
-        {props.type.includes("favorites") ? (
-          <FavoritesManager id={props.id} loadFavorite={loadFavorite} />
-        ) : (
-          ""
-        )}
-        <FileFilter
-          {...props}
-          fileFilter={fileFilter}
-          filter={filter}
-          showback={props.type.includes("folder-content")}
-        />
+        <FavoritesManager id={props.id} loadFavorite={loadFavorite} />
+        <FileFilter fileFilter={fileFilter} filter={filter} />
         <Pagination
           data={{
             goToPage,
@@ -108,4 +105,4 @@ const FilesList = props => {
   );
 };
 
-export default FilesList;
+export default Favorites;

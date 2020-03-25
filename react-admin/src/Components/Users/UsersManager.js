@@ -55,52 +55,38 @@ const UsersManager = () => {
 
   return (
     <Fragment>
-      {showModal ? (
-        <Modal
-          setShowModal={setShowModal}
-          user={user}
-          usersData={usersData}
-          setUsersData={setUsersData}
-        />
-      ) : (
-        ""
-      )}
-      {usersData.isLoading ? (
-        <div className="loading">
-          <h3>Loading...</h3>
-          <div className="lds-ring">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
+      <div id="u-manager" className="card bg-dark manager">
+        {showModal ? (
+          <Modal
+            setShowModal={setShowModal}
+            user={user}
+            usersData={usersData}
+            setUsersData={setUsersData}
+          />
+        ) : (
+          ""
+        )}
+        <div className="remove-error">{error}</div>
+        <div className="controls">
+          <span className="btn" onClick={saveEdit}>
+            <i className="fas fa-user-plus"></i>
+          </span>
+          <h3 className="text-center">Users Manager</h3>
         </div>
-      ) : (
-        <div id="u-manager" className="card bg-dark manager">
-          <div className="remove-error">{error}</div>
-          <div id="t-control">
-            <span className="badge bg-primary" onClick={saveEdit}>
-              <i className="fas fa-user-plus"></i>
-            </span>
-            <h3 className="text-center">Users Manager</h3>
-          </div>
-          <table className="table table-dark table-hover table-bordered">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Role</th>
-                <th>State</th>
-                <th>Adult</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {usersData.users.map(u => (
+        <table className="table table-dark table-hover table-bordered">
+          <thead>
+            <tr>
+              <th>Actions</th>
+              <th>Name</th>
+              <th>Role</th>
+              <th>State</th>
+              <th>Adult</th>
+            </tr>
+          </thead>
+          <tbody>
+            {usersData.users.length > 0 ? (
+              usersData.users.map(u => (
                 <tr id={u.Id} key={u.Name}>
-                  <td>{u.Name}</td>
-                  <td>{u.Role}</td>
-                  <td>{u.State}</td>
-                  <td>{u.AdultPass ? "true" : "false"}</td>
                   <td>
                     <span className="u-edit" onClick={saveEdit}>
                       <i className="fas fa-edit"></i>
@@ -109,12 +95,20 @@ const UsersManager = () => {
                       <i className="fas fa-trash-alt"></i>
                     </span>
                   </td>
+                  <td>{u.Name}</td>
+                  <td>{u.Role}</td>
+                  <td>{u.State}</td>
+                  <td>{u.AdultPass ? "true" : "false"}</td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5">Loading Data From Server</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </Fragment>
   );
 };

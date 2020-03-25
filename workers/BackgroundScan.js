@@ -9,7 +9,7 @@ const db = require("../models");
 
 const { genScreenShot, foldersThumbNails } = require("./generate-screenshot");
 
-const allExt = /(avi|avi2|mp4|mkv|ogg|webm|rar|zip)/gi;
+const allExt = /(avi|avi2|mp4|mkv|ogg|webm|rar|zip)/i;
 
 //Create all Folders Needed
 const coverPath = path.join("./public", "covers", "Folder");
@@ -21,17 +21,18 @@ var DirectoryId;
 
 var folderCovers = [];
 const createFolderAndCover = async (dir, files) => {
-  if (files.length === 0) return;
-
   let Name = path.basename(dir);
+
+  let folder = await db.folder.findOne({ where: { Name } });
+
   let FolderCover = path.join(coverPath, Name + ".jpg");
 
-  let folder = await db.folder.findOrCreate({
-    where: { Name, DirectoryId, Cover: FolderCover }
-  });
+  if (!folder) {
+    folder = await db.folder.create({ Name, DirectoryId, Cover: FolderCover });
+  }
 
   if (!fs.existsSync(FolderCover)) {
-    let img = files.find(a => /jpg|jpeg|png|gif/gi.test(a.extension));
+    let img = files.find(a => /jpg|jpeg|png|gif|webp/i.test(a.extension));
 
     if (img) {
       await sharp(path.join(dir, img.FileName))
@@ -59,7 +60,6 @@ const PopulateDB = async (folder, files, FolderId) => {
   let filteredFile = files.filter(
     f => f.isDirectory || (allExt.test(f.extension) && !f.isHidden)
   );
-
   for (let f of filteredFile) {
     try {
       if (!f.isDirectory) {
@@ -72,7 +72,6 @@ const PopulateDB = async (folder, files, FolderId) => {
             [db.Op.or]: [{ Id }, { Name: f.FileName }]
           }
         });
-
         if (found.length === 0 && vfound.length === 0) {
           tempFiles.push({
             Id,
@@ -86,11 +85,13 @@ const PopulateDB = async (folder, files, FolderId) => {
           });
         }
       } else {
-        let fId = await createFolderAndCover(f.FileName, f.Files);
-        await PopulateDB(f.FileName, f.Files, fId);
+        if (f.Files.length > 0) {
+          let fId = await createFolderAndCover(f.FileName, f.Files);
+          await PopulateDB(f.FileName, f.Files, fId);
+        }
       }
     } catch (error) {
-      console.log("folder-scan line:94", err);
+      console.log("folder-scan line:94", error);
       break;
     }
   }
@@ -115,20 +116,23 @@ const scanDirectory = async data => {
   DirectoryId = data.id;
 
   var fis = WinDrive.ListFilesRO(data.dir);
-  let folder;
-  if (fis.length > 0) folder = await createFolderAndCover(data.dir, fis);
+  let folderId;
 
-  await PopulateDB(data.dir, fis, folder);
-  await foldersThumbNails(folderCovers);
-  await genScreenShot(data.id);
+  if (fis.length > 0) {
+    folderId = await createFolderAndCover(data.dir, fis);
+    await PopulateDB(data.dir, fis, folderId);
+    await foldersThumbNails(folderCovers);
+    await genScreenShot(data.id);
+  }
 };
+
 const pendingJobs = [];
 const processJobs = async () => {
   while (pendingJobs.length > 0) {
     try {
       let data = pendingJobs.pop();
       await scanDirectory(data);
-      db.directory.update({ IsLoading: false }, { where: { Id: data.id } });
+      await db.directory.update({ IsLoading: false }, { where: { Id: data.id } });
       process.send(data);
     } catch (err) {
       console.log("folder-scan line:135", err);
@@ -139,6 +143,7 @@ const processJobs = async () => {
 var running = false;
 process.on("message", data => {
   pendingJobs.push(data);
+  db.directory.update({ IsLoading: true }, { where: { Id: data.id } });
   if (!running) {
     running = true;
     processJobs();

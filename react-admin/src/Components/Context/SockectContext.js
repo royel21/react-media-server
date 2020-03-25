@@ -5,12 +5,10 @@ export const SocketContext = createContext();
 
 const SockectContextProvider = props => {
   const [socket] = useState(socketIOClient("/"));
-
-  return (
-    <SocketContext.Provider value={socket}>
-      {props.children}
-    </SocketContext.Provider>
-  );
+  window.addEventListener("beforeunload", e => {
+    socket.close();
+  });
+  return <SocketContext.Provider value={socket}>{props.children}</SocketContext.Provider>;
 };
 
 export default SockectContextProvider;

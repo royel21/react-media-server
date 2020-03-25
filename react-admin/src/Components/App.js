@@ -5,7 +5,7 @@ import axios from "axios";
 import SockectContextProvider from "./Context/SockectContext";
 
 import UsersManager from "./Users/UsersManager.js";
-import FilesManager from "./FilesManager.js";
+import FilesManager from "./FilesManager/FilesManager.js";
 import DiskManager from "./DisManager/DiskManager.js";
 import LoginRedirct from "./LoginRedirect";
 
@@ -38,19 +38,16 @@ function App() {
           <SockectContextProvider>
             <div id="content">
               <Switch>
+                <Route exact path={["/admin", "/admin/users"]} component={UsersManager} />
                 <Route
-                  exact
-                  path={["/admin", "/admin/users"]}
-                  component={UsersManager}
+                  path="/admin/files/:page?/:items?/:filter?"
+                  component={FilesManager}
                 />
-                <Route path="/admin/files" component={FilesManager} />
                 <Route path="/admin/folders" component={FoldersManager} />
                 <Route path="/admin/disk" component={DiskManager} />
                 <Route
                   path="/admin/*"
-                  render={props => (
-                    <LoginRedirct {...props} Auth={User.isAutenticated} />
-                  )}
+                  render={props => <LoginRedirct {...props} Auth={User.isAutenticated} />}
                 />
               </Switch>
             </div>

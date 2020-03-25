@@ -1,15 +1,27 @@
 #d-manager {
   height: 100%;
 }
-#content #tab-directory {
-  display: flex;
-  padding-top: 5px;
-  justify-content: center;
-  border-bottom: 1px solid;
-}
 
 #tab-directories h3 {
   text-align: center;
+}
+#dirs,
+#disks {
+  position: absolute;
+  top: 15px;
+}
+#dirs {
+  left: 10px;
+}
+
+#disks {
+  right: 10px;
+}
+
+input[type="radio"]:checked + label span {
+  display: inline-block;
+  border-bottom: 1px solid;
+  padding-bottom: 2px;
 }
 
 #tabs-content {
@@ -18,7 +30,7 @@
   overflow-y: auto;
 }
 
-#tab-directory.nav label {
+.controls.nav label {
   display: inline-block;
   margin: 0;
   border-bottom: 1px solid;
@@ -26,11 +38,11 @@
   padding-bottom: 0.2rem;
 }
 
-#tab-directory .nav-link .fas {
+.controls .nav-link .fas {
   font-size: 30px;
 }
 
-#tab-directory.nav label:hover {
+.controls.nav label:hover {
   background-color: #007bff27;
 }
 .nav input[type="radio"]:checked + label:hover,
@@ -39,34 +51,6 @@
   border-color: #007bff;
   color: white;
   border: 1px solid;
-}
-
-/* Directory Style */
-.table .fa,
-.table .far,
-.table .fas {
-  cursor: pointer;
-  font-size: 25px;
-}
-
-.table span:active .fa,
-.table span:active .far,
-.table span:active .fas {
-  transform: scale(1.2);
-}
-
-#d-manager .table td:first-child,
-#d-manager .table th:first-child {
-  width: 100px;
-  padding: 0.4rem 0.8rem;
-}
-
-#d-manager .table td .fa-sync {
-  color: #007bff;
-}
-
-#d-manager .table td .fa-trash-alt {
-  color: rgb(226, 35, 35);
 }
 
 /* Tree Style */
@@ -135,4 +119,13 @@ ul,
 
 input[type="radio"] {
   display: none;
+}
+
+.event-msg {
+  position: absolute;
+  right: 20px;
+  top: 57px;
+  padding: 0 5px;
+  border-radius: 0.25rem;
+  font-size: 1.4rem;
 }

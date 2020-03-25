@@ -17,8 +17,8 @@ const DiskManager = () => {
 
   document.title = "Disk Manager";
   return (
-    <div id="d-manager" className="card bg-dark text-light">
-      <div className="nav nav-tabs" id="tab-directory">
+    <div id="d-manager" className="card bg-dark text-light manager">
+      <div className="nav nav-tabs controls">
         <div className="nav-item">
           <input
             type="radio"
@@ -29,12 +29,14 @@ const DiskManager = () => {
           />
           <label className="nav-link" htmlFor="tab1">
             <i className="fas fa-folder"></i>
+            <span id="dirs">Directory List</span>
           </label>
         </div>
         <div className="nav-item">
           <input type="radio" name="d-tab" id="tab2" onChange={switchTab} />
           <label className="nav-link" htmlFor="tab2">
             <div className="fas fa-hdd"></div>
+            <span id="disks">Server Disks</span>
           </label>
         </div>
       </div>

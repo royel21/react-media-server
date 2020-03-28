@@ -7,7 +7,7 @@ const thumbnails = require("../modules/thumbsnail");
 var ffmpeg = "ffmpeg";
 var ffprobe = "ffprobe";
 
-var vCover = path.resolve("./public", "covers");
+var vCover = path.resolve("./public");
 
 const getVideoDuration = async vPath => {
   try {
@@ -48,7 +48,7 @@ module.exports.genScreenShot = async id => {
   });
 
   for (let f of files) {
-    let coverPath = path.join(vCover, f.Type, f.Name + ".jpg");
+    let coverPath = path.join(vCover, f.Cover);
 
     let exist = fs.existsSync(coverPath);
     if (exist && f.Duration > 0) continue;

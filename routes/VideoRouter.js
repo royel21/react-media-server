@@ -12,6 +12,7 @@ getAttributes = (user, file) => {
     "Duration",
     "Cover",
     "FolderId",
+    "ViewCount",
     [
       db.sqlze.literal(
         `IFNULL((Select LastPos from RecentFiles where FileId == ${file}.Id and RecentId == '${user.Recent.Id}'), 0)`

@@ -78,7 +78,18 @@ const FileListHooks = ({ id, history, type }) => {
         break;
       }
       case "Video": {
-        // setShowPlayer({ show: true, videoId: file.id });
+        let tdata = history.location.pathname.split("/");
+        let playType = tdata[1];
+        let id = tdata[2];
+        let url = `/viewer/`;
+
+        if (["folder-content", "favorites"].includes(playType)) {
+          url += `${playType.replace("-content", "")}/${id}/${file.id}`;
+        } else {
+          url += `video/${file.id}`;
+        }
+
+        history.push(url, { fileId: file.id });
         break;
       }
       default: {

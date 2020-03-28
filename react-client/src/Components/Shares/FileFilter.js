@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const FileFilter = ({ fileFilter, filter, showback, exitFolder }) => {
+  const [localFilter, setLocalFilter] = useState(filter || "");
   const clearSearch = () => {
     document.getElementById("filter-file").value = "";
     fileFilter("");
@@ -11,6 +12,9 @@ const FileFilter = ({ fileFilter, filter, showback, exitFolder }) => {
       fileFilter(e.target.value);
     }
   };
+  useEffect(() => {
+    setLocalFilter(filter);
+  }, [setLocalFilter, filter]);
 
   return (
     <div id="filter-control" className="input-group">
@@ -31,7 +35,10 @@ const FileFilter = ({ fileFilter, filter, showback, exitFolder }) => {
         type="text"
         className="form-control"
         placeholder="Filter"
-        defaultValue={filter || ""}
+        value={localFilter}
+        onChange={e => {
+          setLocalFilter(e.target.value);
+        }}
         onKeyDown={e => {
           submitFilter(e, fileFilter);
         }}

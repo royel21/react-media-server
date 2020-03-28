@@ -29,42 +29,14 @@ const io = {
 // directoryInfo.setSocket(io, socket, db);
 
 const playList = async req => {
-  const { type, id } = req.body;
-
-  let table = await db[type].findOne({
-    where: id,
-    includes: {
-      model: db.file,
-      attributes: [
-        "Id",
-        "Name",
-        "Type",
-        "Duration",
-        "Cover",
-        [
-          db.sqlze.literal(
-            "(Select LastPos from RecentFiles where FileId == File.Id and RecentId == '" +
-              user.Recent.Id +
-              "')"
-          ),
-          "CurrentPos"
-        ],
-        [
-          db.sqlze.literal(
-            "(Select LastRead from RecentFiles where FileId == File.Id and RecentId == '" +
-              user.Recent.Id +
-              "')"
-          ),
-          "LastRead"
-        ]
-      ]
-    },
-    order: [db.sqlze.literal("REPLACE(File.Name, '[','0')")]
-  });
-  console.log(table.Files);
+  let files = await db.file.findAll({ where: { FolderId: "rqk0w" } });
+  for (let f of files) {
+    await f.destroy();
+  }
 };
 
 db.init().then(() => {
+  playList();
   // console.time("start");
 
   // directoryInfo.scanDir({ Path: "E:\\Temp\\Mangas" }).then(() => {
@@ -107,13 +79,13 @@ db.init().then(() => {
   // directoryInfo.scanDir({ Path: "E:\\Anime\\Knight's & Magic" });
   // directoryInfo.scanDir({ Path: "E:\\Series" });
   // directoryInfo.scanDir({ Path: "E:\\Anime\\Masamune-kun no Revenge" });
-  const req = {
-    body: {
-      type: "folder",
-      id: "lkvha"
-    }
-  };
-  playList(req);
+  // const req = {
+  //   body: {
+  //     type: "folder",
+  //     id: "lkvha"
+  //   }
+  // };
+  // playList(req);
 });
 
 // directoryInfo.diskLoader();

@@ -74,6 +74,18 @@ app.get("/*", (req, res) => {
   return res.sendFile(path.join(__dirname + "/react-client/build/index.html"));
 });
 
+app.use((e, req, res, next) => {
+  if (e.message.includes("Failed to decode param")) {
+    let url = encodeURI(
+      "/" + e.message.replace(/Failed to decode param |'/gi, "").toString()
+    );
+    res.redirect(url);
+    // console.log("", url);
+  }
+  // console.log("err", e.message);
+  res.send("error 404");
+});
+
 const port = 3001;
 
 db.init().then(() => {

@@ -14,33 +14,3 @@ Storage.prototype.getObject = function(key) {
   }
   return value;
 };
-
-window.lastEl = null;
-
-window.setfullscreen = element => {
-  try {
-    if (window.lastEl && element.tagName !== "BODY") {
-      if (document.fullscreenElement.tagName === "BODY") {
-        document.exitFullscreen().then(() => {
-          element.requestFullscreen();
-        });
-      } else {
-        document.exitFullscreen().then(() => {
-          window.lastEl.requestFullscreen();
-        });
-      }
-    } else {
-      if (!document.fullscreenElement) {
-        element.requestFullscreen();
-        if (element.tagName === "BODY") window.lastEl = element;
-        // startClock();
-      } else {
-        document.exitFullscreen();
-        window.lastEl = null;
-        // stopClock();
-      }
-    }
-  } catch (err) {
-    console.log(err);
-  }
-};

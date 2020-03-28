@@ -28,8 +28,11 @@
 --     where
 --       count > 1
 --   );
-SELECT
-  *
-From Files
+-- SELECT
+--   *
+-- From Files
+-- WHERE
+--   FolderId = "2tnh5"
+DELETE FROM Folders
 WHERE
-  FolderId = "2tnh5"
+  Id = 'fqawc';

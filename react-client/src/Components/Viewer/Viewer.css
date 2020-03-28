@@ -1,8 +1,21 @@
+#content {
+  overflow-x: hidden;
+}
 #viewer {
   display: flex;
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
+
+#viewer:fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
 #viewer #files-list.loading {
   position: absolute;
   top: 0;
@@ -10,6 +23,9 @@
   width: 100%;
   height: 100%;
   z-index: 2;
+}
+#viewer label {
+  margin: 0;
 }
 
 #viewer #files-list.loading h3 {
@@ -21,118 +37,30 @@
   display: none;
 }
 
-#player-container {
-  position: relative;
-  display: flex;
-  height: 100%;
-  width: calc(100% - 320px);
-  flex-grow: 1;
-  justify-content: center;
-  align-items: center;
-}
-
-#player-content {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-}
-
-#player-content:after {
-  content: attr(data-not-found);
-  position: absolute;
-  right: 41%;
-}
-
-#player-container video {
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  max-height: calc(100% - 74px);
-  outline: none;
-  object-fit: fill;
-  background-color: black;
-}
-
-#player-container video:after {
-  position: absolute;
-  content: "Not Found";
-  background-color: red;
-  bottom: -10px;
-  z-index: 1;
-}
-
-#player-container .v-controls {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  background-color: black;
-}
-
-.v-controls .v-seeker {
-  display: flex;
-  background-color: red;
-}
-
-.v-controls .v-seeker span {
-  display: inline-block;
-  padding-left: 10px;
-}
-
-.v-controls #v-seek {
-  width: 100%;
-  margin: 0 15px;
-  cursor: pointer;
-  outline: none;
-}
-
-#player-container .v-btns {
-  position: relative;
-  display: flex;
-  justify-content: center;
-}
-
-#player-container .v-btns span {
-  display: inline-block;
-  margin: 0 4px;
-  font-size: 24px;
-}
-
-#v-vol-control {
-  cursor: pointer;
-}
-
-#player-container .v-btns .v-vol {
-  position: absolute;
-  right: 5px;
-}
-
 #play-list {
+  position: absolute;
+  right: 0;
   height: 100%;
   width: 320px;
   background-color: black;
   border-left: 2px solid;
   transition: 0.3s all;
+  z-index: 3;
+  overflow: hidden;
+}
+
+#p-list {
+  overflow-y: auto;
+  height: calc(100% - 40px);
 }
 
 #play-list .p-controls {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   height: 40px;
-  border-bottom: 1px solid;
   transition: 0.3s all;
-}
-
-#p-hide:checked + #play-list .p-controls label {
-  position: absolute;
-  width: fit-content;
-  font-size: 25px;
-  right: 5px;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 0.25rem;
-  line-height: 1.3;
+  border-top: 1px solid;
 }
 
 #p-hide:checked + #play-list {
@@ -142,9 +70,7 @@
 #play-list label i {
   transition: 0.3s all;
 }
-#p-hide:checked + #play-list .p-controls label i:before {
-  content: "\f03a";
-}
+
 #p-hide:checked + #play-list .p-controls .form-control {
   display: none;
 }
@@ -154,17 +80,13 @@
   width: 32px;
   font-size: 30px;
   padding: 0 8px;
+  flex-grow: 0;
 }
 
 #play-list .p-controls .form-control {
   display: inline-block;
   height: 30px;
   margin-right: 8px;
-  width: 90%;
-}
-#play-list #p-list {
-  overflow-y: auto;
-  height: calc(100% - 40px);
 }
 
 #play-list ul {
@@ -178,21 +100,32 @@
   flex-direction: row;
   padding: 4px;
   border-bottom: 1px solid;
-  min-height: 65px;
+  min-height: 82px;
   cursor: pointer;
+  user-select: none;
+}
+
+#play-list #p-list .list-item:last-child {
+  border-bottom: none;
+}
+
+#play-list #p-list .list-item:hover {
+  background-color: rgba(26, 151, 179, 0.5);
 }
 
 #play-list #p-list .active {
-  background-color: rgba(51, 85, 136, 0.5);
+  background-color: rgba(255, 20, 25, 0.8);
 }
 
 #play-list .cover {
   position: relative;
+  pointer-events: none;
 }
 
 #play-list .l-name {
   display: inline-block;
   padding-left: 5px;
+  font-size: 14px;
 }
 
 #play-list .duration {
@@ -207,19 +140,23 @@
 }
 
 #play-list img {
-  max-width: 100px;
-  max-height: 70px;
+  max-width: 130px;
+  max-height: 75px;
 }
 
 #play-list #p-list::-webkit-scrollbar {
   width: 10px;
 }
 
-@media screen and (max-width: 700px) {
-  #player-container #v-vol-control {
-    width: 80px;
-  }
-  #player-container .v-btns {
-    justify-content: start;
-  }
+#play-list #v-filter {
+  flex-grow: 1;
+}
+
+#play-list .clear-filter {
+  right: 14px;
+}
+
+#p-items {
+  display: inline-block;
+  padding: 0 8px;
 }

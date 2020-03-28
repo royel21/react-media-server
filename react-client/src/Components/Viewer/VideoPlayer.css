@@ -1,0 +1,173 @@
+#player-container {
+  display: flex;
+  height: 100%;
+  width: calc(100% - 320px);
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+}
+
+#player-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 1280px;
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid;
+  border-radius: 0.5rem;
+  background-color: black;
+}
+
+#player-content .footer,
+#player-content .player {
+  position: relative;
+}
+
+#player-content .footer {
+  height: 32px;
+  border-top: 1px solid;
+}
+
+.footer #view {
+  position: absolute;
+  right: 0;
+  bottom: 0px;
+  font-size: 1rem;
+}
+
+#player-content:after {
+  content: attr(data-not-found);
+  position: absolute;
+  right: 41%;
+}
+#player-content[data-not-found*="Video"] {
+  height: 100%;
+}
+
+#player-content[data-not-found*="Video"] video {
+  height: 100%;
+}
+
+#player-container video {
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  outline: none;
+  object-fit: fill;
+  background-color: black;
+}
+
+#player-container .v-controls {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding-bottom: 5px;
+  opacity: 1;
+  transition: 0.5s all;
+  outline: none;
+}
+
+.v-controls .v-seeker {
+  display: flex;
+  height: 34px;
+  align-items: center;
+}
+
+.v-controls .v-seeker > span {
+  display: inline-block;
+  padding-left: 10px;
+  line-height: 1.8;
+}
+
+.v-controls #v-seek {
+  width: 100%;
+  margin: 0 15px;
+  cursor: pointer;
+  outline: none;
+}
+
+#player-container .v-btns {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+#player-container .v-btns > span {
+  display: inline-block;
+  margin: 0 4px;
+  font-size: 24px;
+}
+
+#v-vol-control {
+  cursor: pointer;
+}
+
+#v-vol-control[value="0"] + label i:before {
+  content: "\f026";
+}
+
+#v-mute + .fa-volume-up {
+  display: inline-block;
+  width: 30px;
+  margin-left: 5px;
+}
+
+#player-content #v-mute:checked + i:before {
+  content: "\f6a9";
+}
+
+#player-container .v-btns .v-vol {
+  position: absolute;
+  right: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+#player-vol {
+  width: 120px;
+}
+#player-content .card-body {
+  position: relative;
+}
+
+.v-controls #v-slider {
+  display: inline-block;
+  margin: 0 15px;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+#v-slider .MuiSlider-rail {
+  background-color: white;
+}
+
+:fullscreen #player-content video,
+:fullscreen #player-content .player {
+  height: 100%;
+}
+:fullscreen #player-content {
+  height: 100%;
+  max-width: 100%;
+  margin: 0px;
+  padding: 0px;
+  border: none;
+}
+:fullscreen #player-content .footer {
+  display: none;
+}
+
+@media screen and (max-width: 700px) {
+  #player-container #v-vol-control {
+    width: 80px;
+  }
+  #player-container .v-btns {
+    justify-content: start;
+  }
+}

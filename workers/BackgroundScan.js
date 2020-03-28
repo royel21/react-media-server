@@ -118,8 +118,11 @@ const scanDirectory = async data => {
   var fis = WinDrive.ListFilesRO(data.dir);
   let folderId;
 
-  if (fis.length > 0) {
-    folderId = await createFolderAndCover(data.dir, fis);
+  if (fis.filter(f => f.extension !== "none").length > 0) {
+    console.log(fis.filter(f => f.extension !== undefined));
+    if (fis.filter(f => f.extension !== undefined).length > 0) {
+      folderId = await createFolderAndCover(data.dir, fis);
+    }
     await PopulateDB(data.dir, fis, folderId);
     await foldersThumbNails(folderCovers);
     await genScreenShot(data.id);

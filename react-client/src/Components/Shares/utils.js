@@ -1,5 +1,5 @@
 export function formatTime(time) {
-  if (time === 0) return "0";
+  if (time === 0) return "00:00";
 
   var h = Math.floor(time / 3600);
   var min = Math.floor((time / 3600 - h) * 60);
@@ -27,11 +27,12 @@ export const genUrl = (page, { order, items }, filter, type, notApi, id) => {
     type = type === "favorites" ? `favorites/${id || "0"}` : `folder-content/${id}`;
   }
 
+  filter = (filter || "").replace("%", " ");
+
   if (notApi) {
-    return `/${type}/${page || 1}/${filter || ""}`;
+    return `/${type}/${page || 1}/${filter}`;
   } else {
-    return `/api/files/${type}/${order || "nu"}/${page || 1}/${itemsperpage}/${filter ||
-      ""}`;
+    return `/api/files/${type}/${order || "nu"}/${page || 1}/${itemsperpage}/${filter}`;
   }
 };
 
@@ -65,4 +66,38 @@ export const FileTypes = {
       return "";
     }
   }
+};
+
+var lastEl = null;
+
+export const setfullscreen = element => {
+  try {
+    if (lastEl && element.tagName !== "BODY") {
+      if (document.fullscreenElement.tagName === "BODY") {
+        document.exitFullscreen().then(() => {
+          element.requestFullscreen();
+        });
+      } else {
+        document.exitFullscreen().then(() => {
+          lastEl.requestFullscreen();
+        });
+      }
+    } else {
+      if (!document.fullscreenElement) {
+        element.requestFullscreen();
+        if (element.tagName === "BODY") lastEl = element;
+        // startClock();
+      } else {
+        document.exitFullscreen();
+        lastEl = null;
+        // stopClock();
+      }
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const map = function(value, in_min, in_max, out_min, out_max) {
+  return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
 };

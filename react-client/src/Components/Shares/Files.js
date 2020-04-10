@@ -4,7 +4,7 @@ import { FileTypes } from "./utils";
 import "./File.css";
 import FavoriteActions from "./FavoriteActions";
 
-const File = ({ files, processFile, type, removeFavFile }) => {
+const File = ({ files, type, removeFavFile }) => {
   const [showAddFav, setShowAddFav] = useState({
     show: false,
     fileId: ""
@@ -54,7 +54,7 @@ const File = ({ files, processFile, type, removeFavFile }) => {
             )}
             <div className="file-info">
               <div className="file-btns">
-                <i className={"fas fa-" + t.class} onClick={processFile} />
+                <i id="process-file" className={"fas fa-" + t.class} />
                 <span className="file-progress">
                   {t.formatter(CurrentPos || 0, Duration)}
                 </span>

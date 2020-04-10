@@ -3,7 +3,7 @@ import { Router, Switch, Route } from "react-router-dom";
 import axios from "axios";
 
 import Navbar from "./Navbar";
-import Home from "./Home";
+import Home from "./Home/Home";
 import Folders from "./Folders";
 import Mangas from "./Mangas";
 import Favorites from "./Favorites/Favorites";
@@ -22,7 +22,8 @@ function App() {
     username: "",
     isAutenticated: false,
     isAutenticating: true,
-    favorites: []
+    favorites: [],
+    Config: {}
   });
 
   useEffect(() => {
@@ -32,13 +33,12 @@ function App() {
       });
     }
   }, [User.isAutenticated]);
-
   return (
     <Router history={history}>
       {User.isAutenticating ? (
         <div></div>
       ) : User.isAutenticated ? (
-        <PageConfigContextProvider>
+        <PageConfigContextProvider config={User.Config}>
           <Navbar setUser={setUser} User={User} />
           <FavoriteContextProvider favorites={User.favorites}>
             <div id="content">

@@ -1,4 +1,4 @@
-import { getFilesPerPage } from "./Shares/utils";
+import { getFilesPerPage } from "./utils";
 const UP = 38;
 const DOWN = 40;
 const LEFT = 37;
@@ -9,10 +9,8 @@ const END = 35;
 var selectedIndex = 0;
 
 const calCol = () => {
-  return Math.floor(
-    document.getElementById("files-list").offsetWidth /
-      document.querySelector(".file").offsetWidth
-  );
+  let file = document.querySelector(".file");
+  return Math.floor(file.parentElement.offsetWidth / file.offsetWidth);
 };
 
 const getElByIndex = index => {
@@ -24,11 +22,12 @@ const getElementIndex = element => {
 };
 
 const selectItem = index => {
-  let scrollElement = document.querySelector("#content");
-  let itemContainer = document.getElementById("files-list");
   selectedIndex = index;
   let nextEl = getElByIndex(index);
+
   if (nextEl) {
+    let itemContainer = nextEl.parentElement;
+    let scrollElement = itemContainer.parentElement;
     let scroll = scrollElement.scrollTop,
       elofft = nextEl.offsetTop;
 
@@ -41,8 +40,8 @@ const selectItem = index => {
 
     if (top - sctop + 1 > 0) {
       scroll =
-        top + 26 > itemContainer.offsetHeight
-          ? itemContainer.offsetHeight + 50
+        top + 31 > itemContainer.offsetHeight
+          ? itemContainer.offsetHeight - 10
           : scroll + (top - sctop);
     }
 
@@ -61,27 +60,31 @@ const selectItem = index => {
   return nextEl;
 };
 
-const fileNavClick = e => {
-  let el = e.target;
-  if (el.classList.contains("fas") || el.classList.contains("far")) return;
-  selectItem(getElementIndex(el.closest(".file")));
+const fileClicks = (element, processFile) => {
+  if (element.classList.contains("fa-star")) return;
+
+  if (element.id === "process-file") {
+    processFile(element.closest(".file"));
+  } else selectItem(getElementIndex(element.closest(".file")));
 };
 
-const fileNavKeydown = (e, page, itemsperpage, goToPage) => {
-  if (document.querySelector(".file")) {
+const fileKeypress = (e, page, goToPage, processFile) => {
+  let file = document.querySelector(".file");
+  if (file) {
     let wasProcesed = false;
     let colNum = calCol();
     let totalitem = document.querySelectorAll(".file").length;
-    selectedIndex = getElementIndex(document.querySelector("#files-list .active"));
+    selectedIndex = getElementIndex(file.parentElement.querySelector(".active"));
     switch (e.keyCode) {
       case ENTER: {
+        processFile(e);
         break;
       }
       case LEFT: {
         if (selectedIndex > 0) {
           selectItem(selectedIndex - 1);
-        } else {
-          window.local.setItem("selected", getFilesPerPage() - 1);
+        } else if (goToPage) {
+          window.local.setItem("selected", getFilesPerPage(3) - 1);
           goToPage(page - 1);
         }
 
@@ -89,8 +92,8 @@ const fileNavKeydown = (e, page, itemsperpage, goToPage) => {
         break;
       }
       case UP: {
-        if (e.ctrlKey) {
-          window.local.setItem("selected", getFilesPerPage() - 1);
+        if (goToPage && e.ctrlKey) {
+          window.local.setItem("selected", getFilesPerPage(3) - 1);
           goToPage(page - 1);
         } else if (selectedIndex - colNum >= 0) {
           selectItem(selectedIndex - colNum);
@@ -101,7 +104,7 @@ const fileNavKeydown = (e, page, itemsperpage, goToPage) => {
       case RIGHT: {
         if (selectedIndex < totalitem - 1) {
           selectItem(selectedIndex + 1);
-        } else {
+        } else if (goToPage) {
           window.local.setItem("selected", 0);
           goToPage(parseInt(page) + 1);
         }
@@ -111,7 +114,7 @@ const fileNavKeydown = (e, page, itemsperpage, goToPage) => {
       }
 
       case DOWN: {
-        if (e.ctrlKey) {
+        if (goToPage && e.ctrlKey) {
           window.local.setItem("selected", 0);
           goToPage(parseInt(page) + 1);
         } else if (selectedIndex + colNum < totalitem) {
@@ -140,4 +143,4 @@ const fileNavKeydown = (e, page, itemsperpage, goToPage) => {
   }
 };
 
-export { fileNavClick, fileNavKeydown };
+export { fileClicks, fileKeypress };

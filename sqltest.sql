@@ -33,6 +33,12 @@
 -- From Files
 -- WHERE
 --   FolderId = "2tnh5"
-DELETE FROM Folders
-WHERE
-  Id = 'fqawc';
+-- DELETE FROM Folders
+-- WHERE
+--   Id = 'fqawc';
+SELECT
+  Name,
+  Duration
+from Files
+Where
+  Duration = 0;

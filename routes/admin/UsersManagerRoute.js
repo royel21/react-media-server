@@ -1,4 +1,5 @@
 const Router = require("express").Router();
+const KeysMap = require("./KeysMap");
 
 const db = require("../../models");
 
@@ -28,18 +29,35 @@ const validate = async req => {
 };
 
 const addEdit = async (req, res) => {
+  console.log("users:", req.user);
   let { Id } = req.body;
   if (!Id) {
+    let { Name } = req.body;
     let user = {
       ...req.body,
       CreatedAt: new Date(),
       Favorites: [
         { Name: "Mangas", Type: "Manga" },
         { Name: "Videos", Type: "Video" }
-      ]
+      ],
+      Recent: {
+        Name
+      },
+      UserConfig: {
+        Name,
+        Config: {
+          order: "nu",
+          items: 0,
+          recentFolders: [],
+          video: { KeysMap, volume: 0.3, pause: true, mute: false },
+          manga: { KeysMap, scaleX: 0.6, scaleY: 1, aniDuration: 300 }
+        }
+      }
     };
     delete user.Id;
-    let newUser = await db.user.create(user, { include: [db.favorite] });
+    let newUser = await db.user.create(user, {
+      include: [db.recent, db.favorite, db.userConfig]
+    });
 
     return res.send({
       user: { ...newUser.dataValues, Password: "" },

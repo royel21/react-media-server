@@ -1,0 +1,13 @@
+#home-file {
+  width: 100%;
+}
+
+#home-file .home-title {
+  text-align: center;
+  font-size: 25px;
+  user-select: none;
+}
+#home-file .home-title span {
+  display: inline-block;
+  border-bottom: 1px solid;
+}

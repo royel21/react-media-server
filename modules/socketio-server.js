@@ -1,6 +1,5 @@
 const FileManager = require("./file-manager");
-const mloader = require("./manga-loader");
-const recent = require("./update-recent");
+const userUpdate = require("./user-update");
 
 const db = require("../models");
 
@@ -11,7 +10,7 @@ module.exports = (server, app) => {
     console.log("connected: ", socket.id);
     FileManager.setSocket(io, socket, db);
     // mloader.setSocket(db);
-    // let user = app.locals.user;
+    var user = app.locals.user;
     // if (user) {
     socket.on("load-disks", FileManager.diskLoader);
 
@@ -20,7 +19,14 @@ module.exports = (server, app) => {
     socket.on("scan-dir", FileManager.scanDir);
 
     socket.on("remove-file", FileManager.removeFile);
-
+    socket.on("file-update-view", FileManager.updateFileView);
+    socket.on("file-update-pos", data => FileManager.updateFilePos(user, data));
+    socket.on("update-recentf", data => {
+      userUpdate.updateRecentFolders(user, data, db);
+    });
+    socket.on("video-config", data => {
+      userUpdate.updateConfig(user, data, db);
+    });
     // socket.on('loadzip-image', (data) => mloader.loadZipImages(data, socket, user));
 
     // socket.on('add-or-update-recent', (data) => { recent.updateRecent(data, user) });

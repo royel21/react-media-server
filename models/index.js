@@ -28,22 +28,22 @@ db.favoriteFile = require("./favorite-file")(sequelize, DataTypes);
 db.fileCategory = require("./file-category")(sequelize, DataTypes);
 
 db.sqlze = sequelize;
-var userConfigs = async user => {
-  if (!["manager", "admin"].includes(user.Role)) {
-    await db.userConfig.create({
-      Name: user.Name,
-      UserId: user.Id
-    });
-  }
-  await db.recent.create({
-    Name: user.Name,
-    UserId: user.Id
-  });
-};
+// var userConfigs = async user => {
+//   if (!["manager", "admin"].includes(user.Role)) {
+//     await db.userConfig.create({
+//       Name: user.Name,
+//       UserId: user.Id
+//     });
+//   }
+//   await db.recent.create({
+//     Name: user.Name,
+//     UserId: user.Id
+//   });
+// };
 
-db.user.afterCreate((user, options) => {
-  userConfigs(user);
-});
+// db.user.afterCreate((user, options) => {
+//   userConfigs(user);
+// });
 
 db.category.belongsToMany(db.file, { through: { model: db.fileCategory } });
 db.file.belongsToMany(db.category, {

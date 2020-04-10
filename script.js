@@ -17,35 +17,33 @@
 
 // const directoryInfo = require("./modules/folders");
 const db = require("./models");
-let socket = {
-  emit(event, data) {
-    console.log(event, data);
-  }
-};
+// let socket = {
+//   emit(event, data) {
+//     console.log(event, data);
+//   }
+// };
 
-const io = {
-  sockets: socket
-};
-// directoryInfo.setSocket(io, socket, db);
+// const io = {
+//   sockets: socket
+// };
+// // directoryInfo.setSocket(io, socket, db);
 
-const playList = async req => {
-  let files = await db.file.findAll({ where: { FolderId: "rqk0w" } });
-  for (let f of files) {
-    await f.destroy();
-  }
-};
+// const playList = async req => {
+//   let files = await db.file.findAll({ where: { FolderId: "rqk0w" } });
+//   for (let f of files) {
+//     await f.destroy();
+//   }
+// };
 
 db.init().then(() => {
-  playList();
+  // playList();
   // console.time("start");
-
   // directoryInfo.scanDir({ Path: "E:\\Temp\\Mangas" }).then(() => {
   //   console.timeEnd("start");
   // });
   // const page = 1;
   // const items = 12;
   // const filter = "";
-
   // db.file
   //   .findAndCountAll({
   //     order: [db.sqlze.literal("REPLACE(File.Name, '[','0')")],
@@ -64,18 +62,15 @@ db.init().then(() => {
   //       totalPages: files.count * items,
   //       totalFiles: files.count
   //     };
-
   //     data.files = files.rows.map(f => {
   //       f.dataValues;
   //     });
-
   //     // res.send(data);
   //     console.log(files);
   //   })
   //   .catch(err => {
   //     console.log(files);
   //   });
-
   // directoryInfo.scanDir({ Path: "E:\\Anime\\Knight's & Magic" });
   // directoryInfo.scanDir({ Path: "E:\\Series" });
   // directoryInfo.scanDir({ Path: "E:\\Anime\\Masamune-kun no Revenge" });
@@ -137,3 +132,14 @@ db.init().then(() => {
 //   await getDuration("E:\\Anime\\kiss x Sis\\Kiss x Sis OVA - 04.mp4");
 // };
 // work();
+
+const fs = require("fs-extra");
+const path = require("path");
+let dir = "F://hentai";
+
+let files = fs.readdirSync(dir);
+for (let f of files) {
+  let from = path.join(dir, f);
+  let to = path.join("H:\\hentai", f);
+  fs.copyFileSync(from, to);
+}

@@ -6,6 +6,7 @@
   height: 100%;
   width: 100%;
   overflow: hidden;
+  outline: none;
 }
 
 #viewer:fullscreen {
@@ -16,7 +17,7 @@
   width: 100%;
 }
 
-#viewer #files-list.loading {
+#viewer .files-list.loading {
   position: absolute;
   top: 0;
   left: 0;

@@ -4,8 +4,9 @@ import Files from "./Files";
 import FileFilter from "./FileFilter";
 import Pagination from "./Pagination";
 import FileListHooks from "./FileListHooks";
+import Loading from "./Loading";
 
-import { fileNavKeydown, fileNavClick } from "../KeyboardNav";
+import { fileClicks, fileKeypress } from "./FileEventsHandler";
 import { PageTitles } from "./utils";
 
 import { PageConfigContext } from "../../Context/PageConfigContext";
@@ -23,31 +24,26 @@ const FilesList = props => {
       {!filesData.isloading ? (
         files.length > 0 ? (
           <div
-            id="files-list"
-            onClick={fileNavClick}
+            className="files-list"
+            onDoubleClick={processFile}
+            onClick={e => {
+              e.persist();
+              fileClicks(e.target, processFile);
+            }}
             onKeyDown={e => {
-              fileNavKeydown(e, page, pageConfig.items, goToPage);
+              e.persist();
+              fileKeypress(e, page, goToPage, processFile);
             }}
           >
             <Files files={files} processFile={processFile} type={props.type} />
           </div>
         ) : (
-          <div id="files-list" className="loading">
+          <div className="files-list loading">
             <h3>{`No ${PageTitles[props.type]} Available`}</h3>
           </div>
         )
       ) : (
-        <div id="files-list" className="loading">
-          <div className="loading">
-            <h3>Loading...</h3>
-            <div className="lds-ring">
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-          </div>
-        </div>
+        <Loading />
       )}
       <div className="controls">
         <FileFilter

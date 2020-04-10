@@ -25,7 +25,6 @@ getAttributes = (user, file) => {
 const getFiles = async (req, res, type) => {
   let user = req.user;
   const id = req.body.id;
-
   let table = await db[type].findOne({
     where: { Id: id },
     include: {
@@ -35,16 +34,21 @@ const getFiles = async (req, res, type) => {
     }
   });
 
-  res.send(table.Files.map(f => f.dataValues));
+  res.send({
+    files: table.Files.map(f => f.dataValues),
+    config: user.UserConfig.dataValues.Config
+  });
 };
 
 Router.post("/video/", (req, res) => {
   let id = req.body.id;
+
   db.file
     .findOne({ where: { Id: id }, attributes: getAttributes(req.user, "File") })
     .then(file => {
       if (file) {
-        res.send(file.dataValues);
+        let config = req.user.UserConfig.dataValues.Config;
+        res.send({ files: [], file: file.dataValues, config });
       } else {
         res.send({ fail: true, msg: "File Not Found" });
       }
@@ -55,7 +59,7 @@ Router.post("/folder/", (req, res) => {
   getFiles(req, res, "folder");
 });
 
-Router.post("/favorite/", (req, res) => {
+Router.post("/favorites/", (req, res) => {
   getFiles(req, res, "favorite");
 });
 

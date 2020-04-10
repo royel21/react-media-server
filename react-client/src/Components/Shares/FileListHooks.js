@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { genUrl, PageTitles } from "./utils";
 import { PageConfigContext } from "../../Context/PageConfigContext";
+import { ProcessFile } from "./utils";
 
 const cancelToken = axios.CancelToken;
 var cancel;
@@ -71,36 +72,6 @@ const FileListHooks = ({ id, history, type }) => {
     pushHistory(1, fltr, id);
   }, [id, pushHistory]);
 
-  const processFile = e => {
-    let file = e.target.closest(".file");
-    switch (file.dataset.type) {
-      case "Manga": {
-        break;
-      }
-      case "Video": {
-        let tdata = history.location.pathname.split("/");
-        let playType = tdata[1];
-        let id = tdata[2];
-        let url = `/viewer/`;
-
-        if (["folder-content", "favorites"].includes(playType)) {
-          url += `${playType.replace("-content", "")}/${id}/${file.id}`;
-        } else {
-          url += `video/${file.id}`;
-        }
-
-        history.push(url, { fileId: file.id });
-        break;
-      }
-      default: {
-        window.local.setObject("folder", {
-          folder: file.id,
-          pathname: window.location.pathname
-        });
-        history.push(`/folder-content/${file.id}/1`);
-      }
-    }
-  };
   useEffect(() => {
     if (filesData.files.length > 0) {
       let firstEl;
@@ -128,6 +99,9 @@ const FileListHooks = ({ id, history, type }) => {
       }
     }
   });
+  const processFile = e => {
+    ProcessFile(e, history);
+  };
 
   document.title =
     PageTitles[type] + (page > 1 ? ` ${page} of ${filesData.totalPages}` : "");

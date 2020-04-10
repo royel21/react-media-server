@@ -6,6 +6,7 @@ const session = require("express-session");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const fs = require("fs-extra");
 require("./helpers/passport")(passport);
 
 const app = express();
@@ -38,31 +39,44 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+  if (!/login|api\/users\/login/gi.test(req.url) && !req.user) {
+    return res.redirect("/login");
+  }
+  if (req.user) {
+    app.locals.user = req.user;
+  }
+  return next();
+});
+
 // it is here because is needed for login before access the other routes;
 app.use("/api/users", userRoutes);
 
 app.use("/login", (req, res) => {
-  console.log("login");
   return res.sendFile(path.join(__dirname + "/public/login.html"));
-});
-
-app.use("/*", (req, res, next) => {
-  // console.log("origin", req.get("origin"));
-  app.locals.user = req.user;
-  if (req.user) return next();
-  // next();
-  return res.redirect("/login");
 });
 
 app.use("/api/files/favorites", favoriteRoutes);
 app.use("/api/files", filesRoutes);
 app.use("/api/videos", VideoRoute);
+
+app.use("/api/admin", (req, res, next) => {
+  console.log("not admin redirect");
+  if (!req.user.Role.includes("Administrator")) {
+    return res.redirect("/notfound");
+  }
+  next();
+});
+
 app.use("/api/admin/users", UsersManagerRoute);
 app.use("/api/admin/directories", DirectoriesRoute);
 app.use("/api/admin/files", FilesManagerRoute);
 
 app.use("/admin", (req, res) => {
-  console.log("/admin");
+  if (!req.user.Role.includes("Administrator")) {
+    return res.redirect("/notfound");
+  }
   return res.sendFile(path.join(__dirname + "/react-admin/build/index.html"));
 });
 
@@ -76,14 +90,8 @@ app.get("/*", (req, res) => {
 
 app.use((e, req, res, next) => {
   if (e.message.includes("Failed to decode param")) {
-    let url = encodeURI(
-      "/" + e.message.replace(/Failed to decode param |'/gi, "").toString()
-    );
-    res.redirect(url);
-    // console.log("", url);
+    return res.redirect("/notfound");
   }
-  // console.log("err", e.message);
-  res.send("error 404");
 });
 
 const port = 3001;
@@ -92,8 +100,8 @@ db.init().then(() => {
   let server = https
     .createServer(
       // {
-      //     key: fs.readFileSync('./cert/server.key'),
-      //     cert: fs.readFileSync('./cert/server.cert')
+      //   key: fs.readFileSync("./cert/server.key"),
+      //   cert: fs.readFileSync("./cert/server.cert")
       // },
       app
     )

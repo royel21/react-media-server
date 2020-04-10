@@ -15,14 +15,18 @@ const isMobile = /(android)|(iphone)/i.test(navigator.userAgent);
 const scrollW = isMobile ? 15 : 0;
 const itemW = isMobile ? 170 : 200;
 
-export const getFilesPerPage = () => {
-  let fwidth = document.getElementById("files-list").offsetWidth;
-  let items = parseInt((fwidth - scrollW) / itemW);
-  return items * 3;
+export const getFilesPerPage = i => {
+  let fList = document.querySelector(".files-list");
+  let items = 9;
+  if (fList) {
+    let fwidth = fList.offsetWidth;
+    items = parseInt((fwidth - scrollW) / itemW);
+  }
+  return items * i;
 };
 
 export const genUrl = (page, { order, items }, filter, type, notApi, id) => {
-  let itemsperpage = (items || 0) === 0 ? getFilesPerPage() : items;
+  let itemsperpage = (items || 0) === 0 ? getFilesPerPage(3) : items;
   if (["favorites", "folder-content"].includes(type) || id) {
     type = type === "favorites" ? `favorites/${id || "0"}` : `folder-content/${id}`;
   }
@@ -86,11 +90,9 @@ export const setfullscreen = element => {
       if (!document.fullscreenElement) {
         element.requestFullscreen();
         if (element.tagName === "BODY") lastEl = element;
-        // startClock();
       } else {
         document.exitFullscreen();
         lastEl = null;
-        // stopClock();
       }
     }
   } catch (err) {
@@ -100,4 +102,35 @@ export const setfullscreen = element => {
 
 export const map = function(value, in_min, in_max, out_min, out_max) {
   return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
+};
+
+export const ProcessFile = (file, history) => {
+  localStorage.setItem("lastLoc", history.location.pathname);
+  switch (file.dataset.type) {
+    case "Manga": {
+      break;
+    }
+    case "Video": {
+      let tdata = history.location.pathname.split("/");
+      let playType = tdata[1];
+      let id = tdata[2];
+      let url = `/viewer/`;
+
+      if (["folder-content", "favorites"].includes(playType)) {
+        url += `${playType.replace("-content", "")}/${id}/${file.id}`;
+      } else {
+        url += `video/${file.id}`;
+      }
+
+      history.push(url, { fileId: file.id });
+      break;
+    }
+    default: {
+      window.local.setObject("folder", {
+        folder: file.id,
+        pathname: window.location.pathname
+      });
+      history.push(`/folder-content/${file.id}/1`);
+    }
+  }
 };

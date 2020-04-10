@@ -114,7 +114,7 @@ const Slider = ({ min, max, value, onChange, previewContent, prew }) => {
             ...(Math.round(progress) === 100
               ? progressStyle.full
               : progressStyle.inProgress),
-            width: progress + "%"
+            width: (progress > 0.3 ? progress : 0) + "%"
           }}
         ></div>
         <span

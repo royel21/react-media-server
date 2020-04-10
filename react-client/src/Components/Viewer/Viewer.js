@@ -1,25 +1,26 @@
 import React, { useEffect, useState, Fragment, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
+import Axios from "axios";
 
 import "./Viewer.css";
-
+// Components
 import VidePlayer from "./VideoPlayer";
 import PlayList from "./PlayList";
-import Axios from "axios";
 import Loading from "../Shares/Loading";
+// Utils
 import { setfullscreen } from "../Shares/utils";
 import { KeyMap, handleKeyboard } from "./KeyMap";
 
 const TypeList = ["folder", "favorite"];
 
-const Viewer = ({ location }) => {
+const Viewer = props => {
   const viewRef = useRef(null);
-  const { type, id } = useParams();
-  const [fileId, setFileId] = useState(location.state.fileId);
+  const { type, id, fileId } = useParams();
 
   const [viewerData, setViewerData] = useState({
-    playList: [],
-    isLoading: true
+    files: [],
+    isLoading: true,
+    config: {}
   });
   let file = {};
 
@@ -29,33 +30,44 @@ const Viewer = ({ location }) => {
         console.log(data.msg);
       } else {
         if (TypeList.includes(type)) {
-          setViewerData({ playList: data, isLoading: false });
+          setViewerData({ ...data, isLoading: false });
         } else {
-          setViewerData({ playList: [], file: data, isLoading: false });
+          setViewerData({ ...data, isLoading: false });
         }
       }
     });
   }, [type, id]);
 
-  if (viewerData.playList.length > 0) {
-    file = viewerData.playList.find(tf => tf.Id === fileId) || {};
+  if (viewerData.files.length > 0) {
+    file = viewerData.files.find(tf => tf.Id === fileId) || {};
   } else {
-    file = viewerData.file;
+    file = viewerData.file || {};
   }
 
+  const goToFile = file => {
+    props.history.push(`/viewer/${type}/${id}/${file}`);
+  };
   const prevOrNextFile = pos => {
-    let data = viewerData.playList;
+    let data = viewerData.files;
     let fileIndex = data.findIndex(f => f.Id === fileId) + pos;
-
-    console.log(fileIndex);
-    if (fileIndex > 0 && fileIndex < data.length) setFileId(data[fileIndex].Id);
+    if (fileIndex > -1 && fileIndex < data.length) {
+      goToFile(data[fileIndex].Id);
+    }
   };
 
-  const nextFile = () => {
+  const updateFile = f => {
+    let data = { ...viewerData };
+    let ff = data.files.find(of => of.Id === f.Id);
+    ff.CurrentPos = f.CurrentPos;
+    setViewerData(data);
+  };
+  const nextFile = f => {
+    if (f) updateFile(f);
     prevOrNextFile(1);
   };
 
-  const prevFile = () => {
+  const prevFile = f => {
+    if (f) updateFile(f);
     prevOrNextFile(-1);
   };
 
@@ -66,29 +78,47 @@ const Viewer = ({ location }) => {
     // }
   };
 
-  const fullSreenChange = useCallback(e => {
-    if (
-      document.fullscreenElement === viewRef.current &&
-      /(android)|(iphone)/i.test(navigator.userAgent)
-    ) {
-      window.screen.orientation.lock("landscape");
-      console.log("isAndroid");
-    } else {
-      window.screen.orientation.unlock();
-      console.log("isAndroid not");
-    }
-  }, []);
-
-  useEffect(() => {
-    document.addEventListener("fullscreenchange", fullSreenChange);
-    return () => {
-      document.removeEventListener("fullscreenchange", fullSreenChange);
-    };
-  }, [fullSreenChange]);
+  const fullSreenChange = useCallback(
+    e => {
+      if (
+        /(android)|(iphone)/i.test(navigator.userAgent) &&
+        file.Type.includes("Video")
+      ) {
+        if (document.fullscreenElement === viewRef.current) {
+          window.screen.orientation.lock("landscape");
+          console.log("isAndroid");
+        } else {
+          window.screen.orientation.unlock();
+          console.log("isAndroid not");
+        }
+      }
+    },
+    [file.Type]
+  );
 
   const setFullViewerScreen = () => {
     setfullscreen(document.getElementById("viewer"));
   };
+
+  useEffect(() => {
+    if (viewRef.current) {
+      viewRef.current.focus();
+    }
+    document.addEventListener("fullscreenchange", fullSreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", fullSreenChange);
+    };
+  }, [fullSreenChange, viewRef]);
+
+  useEffect(() => {
+    console.log(fileId, id);
+    if (fileId) {
+      window.socket.emit("update-recentf", {
+        id,
+        fileId
+      });
+    }
+  }, [fileId, id]);
 
   KeyMap.Fullscreen.action = setFullViewerScreen;
   KeyMap.PrevFile.action = prevFile;
@@ -99,21 +129,24 @@ const Viewer = ({ location }) => {
       {viewerData.isLoading ? (
         <Loading />
       ) : (
-        <div id="viewer" onClick={handleClick} ref={viewRef} onKeyDown={handleKeyboard}>
+        <div
+          id="viewer"
+          onClick={handleClick}
+          ref={viewRef}
+          onKeyDown={handleKeyboard}
+          tabIndex={0}
+        >
+          <div id="clock"></div>
           <VidePlayer
+            configMedia={viewerData.config.video}
             file={file}
             btnlist={fileId}
             prevFile={prevFile}
             nextFile={nextFile}
             setFullscreen={setFullViewerScreen}
-            auto={true}
           />
-          {viewerData.playList.length > 0 ? (
-            <PlayList
-              fileId={fileId}
-              setFile={setFileId}
-              playList={viewerData.playList}
-            />
+          {viewerData.files.length > 0 ? (
+            <PlayList fileId={fileId} setFile={goToFile} files={viewerData.files} />
           ) : (
             ""
           )}

@@ -159,3 +159,19 @@ module.exports.removeFile = async ({ Id, Del }) => {
   }
   socket.emit("file-removed", message);
 };
+
+module.exports.updateFileView = async data => {
+  let file = db.file.findByPk(data.id);
+  if (file) {
+    await file.update({ ViewCount: file.ViewCount + 1 });
+  }
+};
+
+module.exports.updateFilePos = async (user, data) => {
+  if (!data.id || !user) return;
+  let recent = await db.recentFile.findOrCreate({
+    where: { FileId: data.id, RecentId: user.Recent.Id }
+  });
+  console.log("positions:", data);
+  await recent[0].update({ LastRead: new Date(), LastPos: data.pos || 0 });
+};

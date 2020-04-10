@@ -10,7 +10,7 @@ import FavoritesManager from "./FavoriteManager";
 import FileListHooks from "../Shares/FileListHooks";
 import Loading from "../Shares/Loading";
 
-import { fileNavKeydown, fileNavClick } from "../KeyboardNav";
+import { fileClicks, fileKeypress } from "../Shares/FileEventsHandler";
 import { genUrl, getFilesPerPage } from "../Shares/utils";
 
 import { PageConfigContext } from "../../Context/PageConfigContext";
@@ -44,7 +44,7 @@ const Favorites = props => {
     }
 
     let items = pageConfig.items;
-    items = items === 0 ? getFilesPerPage() : items;
+    items = items === 0 ? getFilesPerPage(3) : items;
 
     Axios.post("/api/files/favorites/remove-file", {
       id,
@@ -66,16 +66,20 @@ const Favorites = props => {
       {!filesData.isloading ? (
         files.length > 0 ? (
           <div
-            id="files-list"
-            onClick={fileNavClick}
+            className="files-list"
+            onDoubleClick={processFile}
+            onClick={e => {
+              e.persist();
+              fileClicks(e.target, processFile);
+            }}
             onKeyDown={e => {
-              fileNavKeydown(e, page, pageConfig.items, goToPage);
+              e.persist();
+              fileKeypress(e, page, goToPage, processFile);
             }}
           >
             <Files
               files={files}
               FavoriteId={props.id}
-              processFile={processFile}
               type={"favorites"}
               removeFavFile={removeFavFile}
             />

@@ -9,7 +9,7 @@ const db = require("../models");
 
 const { genScreenShot, foldersThumbNails } = require("./generate-screenshot");
 
-const allExt = /(avi|avi2|mp4|mkv|ogg|webm|rar|zip)/i;
+const allExt = /.(avi|avi2|mp4|mkv|ogg|webm|rar|zip)/i;
 
 //Create all Folders Needed
 const coverPath = path.join("./public", "covers", "Folder");
@@ -21,18 +21,13 @@ var DirectoryId;
 
 var folderCovers = [];
 const createFolderAndCover = async (dir, files) => {
+  let firstFile = files.find(a => allExt.test(a.FileName));
+  if (!firstFile) return "";
+
   let Name = path.basename(dir);
-
-  let folder = await db.folder.findOne({ where: { Name } });
-
   let FolderCover = path.join(coverPath, Name + ".jpg");
-
-  if (!folder) {
-    folder = await db.folder.create({ Name, DirectoryId, Cover: FolderCover });
-  }
-
   if (!fs.existsSync(FolderCover)) {
-    let img = files.find(a => /jpg|jpeg|png|gif|webp/i.test(a.extension));
+    let img = files.find(a => /.(jpg|jpeg|png|gif|webp)/i.test(a.FileName));
 
     if (img) {
       await sharp(path.join(dir, img.FileName))
@@ -40,8 +35,6 @@ const createFolderAndCover = async (dir, files) => {
         .resize({ height: 160 })
         .toFile(FolderCover);
     } else {
-      let firstFile = files.filter(a => allExt.test(a.extension))[0];
-
       if (firstFile) {
         folderCovers.push({
           folder: true,
@@ -52,13 +45,20 @@ const createFolderAndCover = async (dir, files) => {
       }
     }
   }
+  //Create Folder
+  let folder = await db.folder.findOne({ where: { Name } });
+
+  if (!folder) {
+    folder = await db.folder.create({ Name, DirectoryId, Cover: FolderCover });
+  }
+
   return folder.Id;
 };
 
 var tempFiles = [];
 const PopulateDB = async (folder, files, FolderId) => {
   let filteredFile = files.filter(
-    f => f.isDirectory || (allExt.test(f.extension) && !f.isHidden)
+    f => f.isDirectory || (allExt.test(f.FileName) && !f.isHidden)
   );
   for (let f of filteredFile) {
     try {
@@ -72,6 +72,7 @@ const PopulateDB = async (folder, files, FolderId) => {
             [db.Op.or]: [{ Id }, { Name: f.FileName }]
           }
         });
+
         if (found.length === 0 && vfound.length === 0) {
           tempFiles.push({
             Id,
@@ -87,7 +88,9 @@ const PopulateDB = async (folder, files, FolderId) => {
       } else {
         if (f.Files.length > 0) {
           let fId = await createFolderAndCover(f.FileName, f.Files);
-          await PopulateDB(f.FileName, f.Files, fId);
+          if (fId) {
+            await PopulateDB(f.FileName, f.Files, fId);
+          }
         }
       }
     } catch (error) {
@@ -119,13 +122,19 @@ const scanDirectory = async data => {
   let folderId;
 
   if (fis.filter(f => f.extension !== "none").length > 0) {
-    console.log(fis.filter(f => f.extension !== undefined));
     if (fis.filter(f => f.extension !== undefined).length > 0) {
       folderId = await createFolderAndCover(data.dir, fis);
     }
-    await PopulateDB(data.dir, fis, folderId);
-    await foldersThumbNails(folderCovers);
-    await genScreenShot(data.id);
+    try {
+      await PopulateDB(data.dir, fis, folderId);
+      console.log("job db end: ", data.id);
+      await foldersThumbNails(folderCovers);
+      console.log("job folder end:", data.id);
+      await genScreenShot(data.id);
+      console.log("job screenshot end: ", data.id);
+    } catch (err) {
+      console.log("line 14:", err);
+    }
   }
 };
 

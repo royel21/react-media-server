@@ -1,4 +1,4 @@
-#files-list {
+.files-list {
   display: flex;
   flex-wrap: wrap;
   min-height: calc(100% - 39px);
@@ -6,7 +6,7 @@
   padding-bottom: 30px;
 }
 
-#files-list.loading {
+.files-list.loading {
   flex-wrap: initial;
   justify-content: center;
   align-items: center;
@@ -18,6 +18,7 @@
   background-color: transparent;
   padding: 5px;
   width: 200px;
+  min-width: 200px;
   height: 270px;
   transition: 0.2s all;
 }
@@ -41,7 +42,7 @@
   z-index: 1;
 }
 
-#files-list .active .file-info {
+.file.active .file-info {
   background-color: rgba(0, 15, 150) !important;
   box-shadow: 0 0 10px;
 }
@@ -86,7 +87,7 @@
   user-select: none;
 }
 
-.file-cover:hover>img {
+.file-cover:hover > img {
   max-width: initial;
   max-height: initial;
 }
@@ -110,7 +111,8 @@
   user-select: text;
 }
 
-.file-name:hover, .file-info:hover>.file-name {
+.file-name:hover,
+.file-info:hover > .file-name {
   display: inline-block;
   z-index: 999;
   top: 5px;
@@ -165,11 +167,12 @@
 }
 
 @media screen and (max-width: 420px) {
-  #files-list {
+  .files-list {
     padding-bottom: 70px;
   }
   .file {
     width: 185px;
+    min-width: 185px;
   }
   .file-info {
     width: 175px;
@@ -177,7 +180,7 @@
 }
 
 @media screen and (max-width: 370px) {
-  #files-list {
+  .files-list {
     justify-content: center;
   }
   #filter-control {

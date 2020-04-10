@@ -1,11 +1,11 @@
-export const KeyMap = {
-  PrevFile: {
+module.exports.KeysMap = {
+  NextFile: {
     name: "PageUp",
     keyCode: 33,
     isctrl: false,
     action: null
   },
-  NextFile: {
+  PrevFile: {
     name: "PageDown",
     keyCode: 34,
     isctrl: false,
@@ -46,15 +46,5 @@ export const KeyMap = {
     keyCode: 32,
     isctrl: false,
     action: null
-  }
-};
-
-export const handleKeyboard = e => {
-  for (let key of Object.keys(KeyMap)) {
-    if (KeyMap[key].keyCode === e.keyCode) {
-      let action = KeyMap[key].action;
-      if (action) action(e.ctrlKey);
-      break;
-    }
   }
 };

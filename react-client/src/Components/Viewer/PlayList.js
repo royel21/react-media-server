@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { formatTime } from "../Shares/utils";
 
-const PlayList = ({ playList, setFile, fileId, hideList }) => {
+const PlayList = ({ files, setFile, fileId, hideList }) => {
   const [filter, setFilter] = useState("");
   const filterPlayList = e => {
     setFilter(e.target.value);
@@ -25,7 +25,7 @@ const PlayList = ({ playList, setFile, fileId, hideList }) => {
       <div id="play-list">
         <div id="p-list">
           <ul className="list">
-            {playList
+            {files
               .filter(f => f.Name.includes(filter.toLocaleLowerCase()))
               .map(item => (
                 <li
@@ -58,8 +58,8 @@ const PlayList = ({ playList, setFile, fileId, hideList }) => {
               <i className="fas fa-times-circle"></i>
             </span>
           </div>
-          <span id="p-items">{`${playList.findIndex(i => i.Id === fileId) + 1}/${
-            playList.length
+          <span id="p-items">{`${files.findIndex(i => i.Id === fileId) + 1}/${
+            files.length
           }`}</span>
         </div>
       </div>

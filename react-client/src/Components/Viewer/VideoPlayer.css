@@ -5,7 +5,62 @@
   flex-grow: 1;
   justify-content: center;
   align-items: center;
-  outline: none;
+}
+
+#player-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  max-height: 720px;
+  max-width: 1280px;
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid;
+  border-radius: 0.5rem;
+  background-color: black;
+}
+
+#player-content .footer,
+#player-content .player {
+  position: relative;
+  height: 100%;
+}
+
+#player-content .footer {
+  display: flex;
+  justify-content: space-between;
+  height: 32px;
+  border-top: 1px solid;
+}
+
+.footer span {
+  display: inline-block;
+  height: 30px;
+  font-size: 20px;
+  padding: 0 5px;
+}
+
+#player-content:after {
+  content: attr(data-not-found);
+  position: absolute;
+  right: 41%;
+}
+#player-content[data-not-found*="Video"] {
+  height: 100%;
+}
+
+#player-content[data-not-found*="Video"] video {
+  height: 100%;
+}
+#player-container {
+  display: flex;
+  height: 100%;
+  width: calc(100% - 320px);
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
 }
 
 #player-content {
@@ -27,15 +82,17 @@
 }
 
 #player-content .footer {
+  display: flex;
+  justify-content: space-between;
   height: 32px;
   border-top: 1px solid;
 }
 
-.footer #view {
-  position: absolute;
-  right: 0;
-  bottom: 0px;
-  font-size: 1rem;
+.footer span {
+  display: inline-block;
+  height: 30px;
+  font-size: 20px;
+  padding: 0 5px;
 }
 
 #player-content:after {
@@ -55,7 +112,6 @@
   width: 100%;
   max-width: 100%;
   max-height: 100%;
-  outline: none;
   object-fit: fill;
   background-color: black;
 }
@@ -67,15 +123,12 @@
   flex-direction: column;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  padding-bottom: 5px;
   opacity: 1;
   transition: 0.5s all;
-  outline: none;
 }
 
 .v-controls .v-seeker {
   display: flex;
-  height: 34px;
   align-items: center;
 }
 
@@ -89,7 +142,6 @@
   width: 100%;
   margin: 0 15px;
   cursor: pointer;
-  outline: none;
 }
 
 #player-container .v-btns {
@@ -106,6 +158,23 @@
 
 #v-vol-control {
   cursor: pointer;
+}
+
+.v-controls .v-vol #v-vol-control {
+  position: relative;
+  width: 130px;
+  height: 8px;
+  top: -5.5px;
+  right: -5px;
+}
+
+#v-vol-control::-webkit-slider-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  padding: 8px;
+  background: #fff;
+  -webkit-app-region: no-drag;
 }
 
 #v-vol-control[value="0"] + label i:before {
@@ -129,6 +198,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  line-height: 1.3;
 }
 #player-vol {
   width: 120px;
@@ -147,7 +217,6 @@
 #v-slider .MuiSlider-rail {
   background-color: white;
 }
-
 :fullscreen #player-content video,
 :fullscreen #player-content .player {
   height: 100%;
@@ -155,19 +224,109 @@
 :fullscreen #player-content {
   height: 100%;
   max-width: 100%;
+  max-height: 100%;
   margin: 0px;
   padding: 0px;
   border: none;
 }
+
 :fullscreen #player-content .footer {
   display: none;
 }
+/* input Range style */
+input[type="range"] {
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  width: 100%; /* Specific width is required for Firefox. */
+  max-width: 160px;
+  background: transparent;
+}
+/* Thumb appeariance */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 1px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+}
+input[type="range"]::-moz-range-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+}
 
-@media screen and (max-width: 700px) {
+#player-container .v-btns span:not(.v-vol) {
+  margin: 0 10px;
+}
+
+:fullscreen #player-content #filename {
+  display: block;
+  position: fixed;
+  width: 100%;
+  top: 20px;
+  text-align: center;
+  border: none;
+}
+
+:fullscreen #player-content #filename span:first-child {
+  display: inline-block;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 0.25rem;
+  max-width: 700px;
+  height: fit-content;
+  text-align: left;
+}
+
+:fullscreen #player-content #filename span:last-child {
+  display: none;
+}
+
+#player-container #v-progress2 {
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: 0px;
+  padding: 2px 8px;
+  border-bottom-right-radius: 0.25rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  opacity: 1;
+  transition: 0.5s all;
+}
+
+@media screen and (max-width: 1200px) {
+  #player-content {
+    height: initial;
+  }
+}
+@media screen and (max-width: 600px) {
+  #player-content {
+    max-width: 100%;
+    height: 275px;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  #player-content .player,
+  #player-content .player video {
+    height: 100%;
+  }
   #player-container #v-vol-control {
     width: 80px;
   }
   #player-container .v-btns {
     justify-content: start;
+  }
+  .footer span {
+    font-size: 14px;
+    line-height: 2;
+  }
+  #player-container .v-btns span:not(.v-vol) {
+    margin: 0 5px;
   }
 }

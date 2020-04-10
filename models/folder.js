@@ -28,7 +28,6 @@ module.exports = (sequelize, DataTypes) => {
             .toString(36)
             .slice(-5);
           item.Cover = `/covers/${item.Type}/${encodeURI(item.Name)}.jpg`;
-          console.log(item.Cover);
         },
         beforeBulkCreate: (instances, options) => {
           for (var item of instances) {

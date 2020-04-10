@@ -5,13 +5,16 @@ import { PageConfigContext } from "../Context/PageConfigContext";
 const UserConfig = ({ User }) => {
   const { pageConfig, setPageConfig } = useContext(PageConfigContext);
   const [localConfig, setLocalConfig] = useState(pageConfig);
-
   const filePerPage = e => {
     let val = e.target.value;
     val = val >= 0 ? val : 0;
     val = val <= 501 ? val : 500;
 
     setLocalConfig({ order: localConfig.order, items: parseInt(val) });
+  };
+
+  const applyChanges = () => {
+    setPageConfig({ ...pageConfig, ...localConfig });
   };
   return (
     <Fragment>
@@ -55,13 +58,7 @@ const UserConfig = ({ User }) => {
             <span id="fpp-tips">0 = auto, max 500</span>
           </div>
           <div className="bottom-controls">
-            <span
-              id="btn-save"
-              className="btn"
-              onClick={() => {
-                setPageConfig(localConfig);
-              }}
-            >
+            <span id="btn-save" className="btn" onClick={applyChanges}>
               Save
             </span>
           </div>

@@ -1,10 +1,13 @@
 const db = require("../models");
 
-const getOrderBy = orderby => {
+const getOrderBy = (orderby, isFolder) => {
+  let nameOrder = db.sqlze.literal(
+    `REPLACE(${isFolder ? "Name" : "File.Name"}, '[','0')`
+  );
   let order = [];
   switch (orderby) {
     case "nd": {
-      order.push([db.sqlze.literal("REPLACE(File.Name, '[','0')"), "DESC"]);
+      order.push([nameOrder, "DESC"]);
       break;
     }
     case "du": {
@@ -16,7 +19,7 @@ const getOrderBy = orderby => {
       break;
     }
     default: {
-      order.push(db.sqlze.literal("REPLACE(File.Name, '[','0')"));
+      order.push(nameOrder);
     }
   }
   return order;
@@ -49,6 +52,7 @@ const getFiles = async (user, data, model) => {
       "Type",
       "Duration",
       "Cover",
+      "CreatedAt",
       [
         db.sqlze.literal(
           "(Select LastPos from RecentFiles where FileId == File.Id and RecentId == '" +
@@ -125,15 +129,27 @@ exports.getFolders = async (req, res) => {
   const { order, page, items, search } = req.params;
 
   let result = await db.folder.findAndCountAll({
+    attributes: [
+      "Id",
+      "Name",
+      "Type",
+      "CreatedAt",
+      "Cover",
+      [
+        db.sqlze.literal(`(Select count(*) from Files where FolderId == Folders.Id)`),
+        "FileCount"
+      ]
+    ],
     where: {
       Name: {
         [db.Op.like]: `%${search || ""}%`
       }
     },
-    order: [["Name", order === "nu" ? "ASC" : "DESC"]],
+    order: getOrderBy(order, true),
     offset: (page - 1) * items,
     limit: items
   });
+
   return res.json({
     files: result.rows,
     totalFiles: result.count,

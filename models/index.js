@@ -28,22 +28,6 @@ db.favoriteFile = require("./favorite-file")(sequelize, DataTypes);
 db.fileCategory = require("./file-category")(sequelize, DataTypes);
 
 db.sqlze = sequelize;
-// var userConfigs = async user => {
-//   if (!["manager", "admin"].includes(user.Role)) {
-//     await db.userConfig.create({
-//       Name: user.Name,
-//       UserId: user.Id
-//     });
-//   }
-//   await db.recent.create({
-//     Name: user.Name,
-//     UserId: user.Id
-//   });
-// };
-
-// db.user.afterCreate((user, options) => {
-//   userConfigs(user);
-// });
 
 db.category.belongsToMany(db.file, { through: { model: db.fileCategory } });
 db.file.belongsToMany(db.category, {
@@ -79,11 +63,29 @@ db.init = async force => {
   let admin = await db.user.findOne({ where: { Name: "Administrator" } });
 
   if (!admin) {
-    await db.user.create({
-      Name: "Administrator",
-      Password: "Admin",
-      Role: "Administrator"
-    });
+    await db.user.create(
+      {
+        Name: "Administrator",
+        Password: "Admin",
+        Role: "Administrator",
+        Recent: {
+          Name: "Administrator"
+        },
+        UserConfig: {
+          Name: "Administrator",
+          Config: {
+            order: "nu",
+            items: 0,
+            recentFolders: [],
+            video: { KeysMap: {}, volume: 0.3, pause: true, mute: false },
+            manga: { KeysMap: {}, scaleX: 0.6, scaleY: 1, aniDuration: 300 }
+          }
+        }
+      },
+      {
+        include: [db.recent, db.favorite, db.userConfig]
+      }
+    );
   }
 };
 

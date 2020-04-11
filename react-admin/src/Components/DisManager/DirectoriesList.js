@@ -9,18 +9,23 @@ const DirectoriesList = ({ socket }) => {
   const [eventMsg, setEventMsg] = useState({ bg: "", msg: "" });
 
   useEffect(() => {
-    Axios.get("/api/admin/directories").then(({ data }) => {
-      setDirsData(data);
-    });
+    console.log("loading-data:");
+    Axios.get("/api/admin/directories")
+      .then(({ data }) => {
+        console.log("data:", data);
+        setDirsData(data || []);
+      })
+      .catch(err => {
+        console.log(err);
+      });
 
     socket.on("scan-finish", ({ id }) => {
       if (id) {
         let dir = dataRef.current.find(d => d.Id === id);
         dir.IsLoading = false;
-        setDirsData(dataRef.current);
       } else {
       }
-      setDirsData(dataRef.current);
+      setDirsData(dataRef.current || []);
     });
 
     socket.on("scan-info", info => {
@@ -53,14 +58,13 @@ const DirectoriesList = ({ socket }) => {
     if (!dir.IsLoading) {
       socket.emit("scan-dir", { Id: tr.id });
       dir.IsLoading = true;
-      setDirsData(dataRef.current);
+      setDirsData(dataRef.current || []);
     }
   };
 
   useEffect(() => {
     dataRef.current = [...dirsData];
   });
-
   return (
     <anin.div id="tab-directories" style={props}>
       <div className={"event-msg " + eventMsg.bg}>{eventMsg.msg}</div>

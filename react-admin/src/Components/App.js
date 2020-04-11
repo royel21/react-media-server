@@ -23,9 +23,14 @@ function App() {
 
   useEffect(() => {
     if (!User.isAutenticated) {
-      axios.get("/api/users/getuser").then(resp => {
-        setUser({ ...resp.data, isAutenticating: false });
-      });
+      axios
+        .get("/api/users/getuser")
+        .then(resp => {
+          setUser({ ...resp.data, isAutenticating: false });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }, [User.isAutenticated]);
   return (

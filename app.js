@@ -6,7 +6,6 @@ const session = require("express-session");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const fs = require("fs-extra");
 require("./helpers/passport")(passport);
 
 const app = express();
@@ -62,7 +61,6 @@ app.use("/api/files", filesRoutes);
 app.use("/api/videos", VideoRoute);
 
 app.use("/api/admin", (req, res, next) => {
-  console.log("not admin redirect");
   if (!req.user.Role.includes("Administrator")) {
     return res.redirect("/notfound");
   }

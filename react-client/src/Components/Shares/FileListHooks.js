@@ -9,7 +9,7 @@ const cancelToken = axios.CancelToken;
 var cancel;
 
 const FileListHooks = ({ id, history, type }) => {
-  const pageConfig = useContext(PageConfigContext);
+  const { pageConfig } = useContext(PageConfigContext);
 
   let cStatus = useRef(true);
   let { page, filter } = useParams();

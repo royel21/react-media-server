@@ -32,7 +32,6 @@ export const genUrl = (page, { order, items }, filter, type, notApi, id) => {
   }
 
   filter = (filter || "").replace("%", " ");
-
   if (notApi) {
     return `/${type}/${page || 1}/${filter}`;
   } else {

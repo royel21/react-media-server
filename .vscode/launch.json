@@ -14,7 +14,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Server Launch",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}\\app.js"
     }

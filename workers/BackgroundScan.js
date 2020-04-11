@@ -20,6 +20,7 @@ fs.mkdirsSync(path.resolve("./public", "covers", "Video"));
 var DirectoryId;
 
 var folderCovers = [];
+
 const createFolderAndCover = async (dir, files) => {
   let firstFile = files.find(a => allExt.test(a.FileName));
   if (!firstFile) return "";
@@ -49,7 +50,8 @@ const createFolderAndCover = async (dir, files) => {
   let folder = await db.folder.findOne({ where: { Name } });
 
   if (!folder) {
-    folder = await db.folder.create({ Name, DirectoryId, Cover: FolderCover });
+    let CreatedAt = WinDrive.ListFiles(path.resolve(dir), { oneFile: true }).LastModified;
+    folder = await db.folder.create({ Name, DirectoryId, Cover: FolderCover, CreatedAt });
   }
 
   return folder.Id;

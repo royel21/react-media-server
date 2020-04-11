@@ -6,5 +6,4 @@ import "./index.css";
 import "./utils";
 
 import App from "./Components/App";
-
 render(<App />, document.getElementById("root"));

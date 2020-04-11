@@ -85,7 +85,7 @@ const Favorites = props => {
             />
           </div>
         ) : (
-          <div id="files-list" className="loading">
+          <div className="files-list loading">
             <h3>{`This Favorite Has not files added`}</h3>
           </div>
         )

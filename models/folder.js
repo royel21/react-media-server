@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       Cover: {
         type: DataTypes.STRING
+      },
+      CreatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false
       }
     },
     {

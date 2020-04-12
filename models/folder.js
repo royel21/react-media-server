@@ -6,42 +6,42 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(10),
         primaryKey: true,
         unique: true,
-        allowNull: false
+        allowNull: false,
       },
       Type: {
         type: DataTypes.STRING(7),
-        defaultValue: "Folder"
+        defaultValue: "Folder",
       },
       Name: {
         type: DataTypes.STRING(100),
-        unique: true
+        unique: true,
       },
       Cover: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       CreatedAt: {
         type: DataTypes.DATE,
-        allowNull: false
-      }
+        allowNull: false,
+      },
+      FileCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
     },
     {
       timestamps: false,
       hooks: {
-        beforeValidate: function(item, options) {
-          item.Id = Math.random()
-            .toString(36)
-            .slice(-5);
+        beforeValidate: function (item, options) {
+          item.Id = Math.random().toString(36).slice(-5);
           item.Cover = `/covers/${item.Type}/${encodeURI(item.Name)}.jpg`;
         },
         beforeBulkCreate: (instances, options) => {
           for (var item of instances) {
-            item.Id = Math.random()
-              .toString(36)
-              .slice(-5);
+            item.Id = Math.random().toString(36).slice(-5);
             item.Cover = `/covers/${item.Type}/${item.Name.replace("#", "%23")}.jpg`;
           }
-        }
-      }
+        },
+      },
     }
   );
 

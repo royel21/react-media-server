@@ -25,7 +25,7 @@ const FilesList = props => {
         files.length > 0 ? (
           <div
             className="files-list"
-            onDoubleClick={processFile}
+            onDoubleClick={e => processFile(e.target.closest(".file"))}
             onClick={e => {
               e.persist();
               fileClicks(e.target, processFile);

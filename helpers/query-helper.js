@@ -33,8 +33,8 @@ const getFiles = async (user, data, model) => {
   for (let s of search.split("|")) {
     searchs.push({
       Name: {
-        [db.Op.like]: "%" + s + "%"
-      }
+        [db.Op.like]: "%" + s + "%",
+      },
     });
   }
   user = user
@@ -42,7 +42,7 @@ const getFiles = async (user, data, model) => {
     : await db.user.findOne({ where: { Name: "Royel" }, include: db.recent });
 
   let favs = (await user.getFavorites({ attributes: ["Id", "Name"] })).map(
-    f => f.dataValues
+    (f) => f.dataValues
   );
 
   let query = {
@@ -59,7 +59,7 @@ const getFiles = async (user, data, model) => {
             user.Recent.Id +
             "')"
         ),
-        "CurrentPos"
+        "CurrentPos",
       ],
       [
         db.sqlze.literal(
@@ -67,30 +67,30 @@ const getFiles = async (user, data, model) => {
             user.Recent.Id +
             "')"
         ),
-        "LastRead"
-      ]
+        "LastRead",
+      ],
     ],
     order: getOrderBy(data.order),
     offset: (data.page - 1) * data.items,
     limit: data.items,
     where: {
-      [db.Op.or]: searchs
-    }
+      [db.Op.or]: searchs,
+    },
   };
   // by file type manga or video => future audio
   if (data.type)
     query.where.Type = {
-      [db.Op.like]: `%${data.type || ""}%`
+      [db.Op.like]: `%${data.type || ""}%`,
     };
   // if we are getting files favorite, if favorite
   if (model !== db.favorite) {
     query.attributes.push([
       db.sqlze.literal(
         "(Select FileId from FavoriteFiles where FileId == File.Id and FavoriteId IN ('" +
-          favs.map(i => i.Id).join("','") +
+          favs.map((i) => i.Id).join("','") +
           "'))"
       ),
-      "isFav"
+      "isFav",
     ]);
   }
   // if we are getting files from a model (favorite or folder-content)
@@ -99,14 +99,15 @@ const getFiles = async (user, data, model) => {
       {
         model,
         where: {
-          Id: data.id
-        }
-      }
+          Id: data.id,
+        },
+      },
     ];
   }
 
   files = await db.file.findAndCountAll(query);
-  files.rows.map(f => f.dataValues);
+  files.rows.map((f) => f.dataValues);
+
   return files;
 };
 
@@ -120,7 +121,7 @@ exports.getFilesList = async (user, res, type, params, model) => {
   let pagedata = {
     files: data.rows,
     totalFiles: data.count,
-    totalPages: Math.ceil(data.count / params.items)
+    totalPages: Math.ceil(data.count / params.items),
   };
   return res ? res.json(pagedata) : pagedata;
 };
@@ -129,51 +130,39 @@ exports.getFolders = async (req, res) => {
   const { order, page, items, search } = req.params;
 
   let result = await db.folder.findAndCountAll({
-    attributes: [
-      "Id",
-      "Name",
-      "Type",
-      "CreatedAt",
-      "Cover",
-      [
-        db.sqlze.literal(`(Select count(*) from Files where FolderId == Folders.Id)`),
-        "FileCount"
-      ]
-    ],
     where: {
       Name: {
-        [db.Op.like]: `%${search || ""}%`
-      }
+        [db.Op.like]: `%${search || ""}%`,
+      },
     },
     order: getOrderBy(order, true),
     offset: (page - 1) * items,
-    limit: items
+    limit: items,
   });
-
   return res.json({
     files: result.rows,
     totalFiles: result.count,
-    totalPages: Math.ceil(result.count / items)
+    totalPages: Math.ceil(result.count / items),
   });
 };
 
-exports.getFolderContent = async req => {
+exports.getFolderContent = async (req) => {
   const { id, order, page, items, search } = req.params;
 
   let result = await db.folder.findAndCountAll({
     where: {
       Id: id,
       Name: {
-        [db.Op.like]: `%${search || ""}%`
-      }
+        [db.Op.like]: `%${search || ""}%`,
+      },
     },
     order: [["Name", order === "nu" ? "ASC" : "DESC"]],
     offset: (page - 1) * items,
-    limit: items
+    limit: items,
   });
   return {
     files: result.rows,
     totalFiles: result.count,
-    totalPages: result.count / items
+    totalPages: result.count / items,
   };
 };

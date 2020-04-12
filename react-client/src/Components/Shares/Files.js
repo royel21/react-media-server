@@ -29,7 +29,7 @@ const File = ({ files, type, removeFavFile }) => {
 
   return (
     <Fragment>
-      {files.map(({ Id, Name, Type, isFav, CurrentPos, Duration, Cover }) => {
+      {files.map(({ Id, Name, Type, isFav, CurrentPos, Duration, Cover, FileCount }) => {
         let t = FileTypes[Type];
         return (
           <div
@@ -56,7 +56,9 @@ const File = ({ files, type, removeFavFile }) => {
               <div className="file-btns">
                 <i id="process-file" className={"fas fa-" + t.class} />
                 <span className="file-progress">
-                  {t.formatter(CurrentPos || 0, Duration)}
+                  {Type.includes("Folder")
+                    ? FileCount
+                    : t.formatter(CurrentPos || 0, Duration)}
                 </span>
                 {Type === "Folder" ? (
                   ""

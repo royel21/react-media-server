@@ -25,13 +25,25 @@ const removeById = function(arr, Id) {
 
 module.exports.updateRecentFolders = async (user, data, db) => {
   if (user) {
-    let folder = await db.folder.findByPk(data.id);
+    let folder = await db.folder.findOne({
+      attributes: [
+        "Id",
+        "Name",
+        "Type",
+        "Cover",
+        [
+          db.sqlze.literal(`(Select count(*) from Files where FolderId == Folders.Id)`),
+          "FileCount"
+        ]
+      ],
+      where: { Id: data.id }
+    });
     console.log(data);
     let Config = { ...user.UserConfig.Config };
     let recentsF = [...Config.recentFolders];
     let recent = removeById(recentsF, data.id);
     // Create a recent
-    console.log(recentsF.length);
+    console.log("updateFolder: ", recentsF.length);
     if (!recent) {
       recent = {
         ...folder.dataValues,

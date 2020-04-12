@@ -62,10 +62,12 @@ const selectItem = index => {
 
 const fileClicks = (element, processFile) => {
   if (element.classList.contains("fa-star")) return;
-
+  let file = element.closest(".file");
   if (element.id === "process-file") {
-    processFile(element.closest(".file"));
-  } else selectItem(getElementIndex(element.closest(".file")));
+    processFile(file);
+  } else {
+    selectItem(getElementIndex(file));
+  }
 };
 
 const fileKeypress = (e, page, goToPage, processFile) => {

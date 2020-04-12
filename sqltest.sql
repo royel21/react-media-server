@@ -36,9 +36,9 @@
 -- DELETE FROM Folders
 -- WHERE
 --   Id = 'fqawc';
-SELECT
-  Name,
-  Duration
-from Files
-Where
-  Duration = 0;
+-- SELECT
+--   Name,
+--   Duration
+-- from Files
+-- Where
+--   Duration = 0;

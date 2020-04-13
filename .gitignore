@@ -4,7 +4,6 @@
 /node_modules
 /react-client/node_modules
 /react-admin/node_modules
-/public
 /react-client/package-lock.json
 /react-admin/package-lock.json
 modules/win-explorer/node_modules

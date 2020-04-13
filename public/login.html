@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/login.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="root">
+      <div id="login-container">
+        <form method="post" class="card bg-dark p-3" onsubmit="handleSubmit(event)">
+          <h3 class="mb-4">Login</h3>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <label htmlFor="" class="input-group-text">
+                <i class="fas fa-user"></i>
+              </label>
+            </div>
+            <input
+              id="name"
+              type="text"
+              class="form-control"
+              name="username"
+              placeholder="Name"
+              tabindex="1"
+            />
+          </div>
+          <div id="name-errors" class="error text-left text-danger"></div>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <label htmlFor="" class="input-group-text">
+                <i class="fas fa-key"></i>
+              </label>
+            </div>
+            <input
+              id="password"
+              type="password"
+              class="form-control"
+              name="password"
+              placeholder="Password"
+              autocomplete="on"
+              tabindex="2"
+            />
+          </div>
+
+          <div id="pasword-errors" class="error text-left text-danger"></div>
+          <div class="form-footer">
+            <button class="btn" tabindex="3">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="/js/axios.min.js"></script>
+    <script>
+      const handleSubmit = e => {
+        e.preventDefault();
+        let name = e.target.querySelector("#name").value;
+        let password = e.target.querySelector("#password").value;
+
+        axios.post("/api/users/login", { username: name, password }).then(({ data }) => {
+          if (data.isAutenticated) {
+            window.location.href = data.redirect;
+          } else {
+            if (name) {
+              document.getElementById("name-errors").textContent = "User can't be empty";
+            } else {
+              document.getElementById("pasword-errors").textContent = "Password can't be empty";
+            }
+          }
+          console.log(data);
+        });
+      };
+    </script>
+  </body>
+</html>

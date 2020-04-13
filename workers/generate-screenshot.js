@@ -9,13 +9,13 @@ var ffprobe = "ffprobe";
 
 var vCover = path.resolve("./public");
 
-const getVideoDuration = async vPath => {
+const getVideoDuration = async (vPath) => {
   try {
     let tempVal = execFileSync(
       ffprobe,
       ["-i", vPath, "-show_entries", "format=duration", "-v", "quiet", "-of", "csv=p=0"],
       {
-        timeout: 1000 * 60 * 10
+        timeout: 1000 * 60 * 10,
       }
     );
 
@@ -42,9 +42,9 @@ const getScreenShot = async (video, toPath, duration) => {
   });
 };
 
-module.exports.genScreenShot = async id => {
+module.exports.genScreenShot = async (id) => {
   let files = await db.file.findAll({
-    where: { DirectoryId: id, Duration: 0 }
+    where: { DirectoryId: id, Duration: 0 },
   });
 
   for (let f of files) {
@@ -77,7 +77,7 @@ module.exports.genScreenShot = async id => {
   }
 };
 
-module.exports.foldersThumbNails = async folders => {
+module.exports.foldersThumbNails = async (folders) => {
   for (let s of folders) {
     try {
       if (!s.isManga) {

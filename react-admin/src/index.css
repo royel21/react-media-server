@@ -112,7 +112,6 @@ input[type="text"]:not(:placeholder-shown) + span {
   position: relative;
   margin: 0 5px 0 5px;
   min-height: 99.5%;
-  min-width: fit-content;
   border: 1px solid;
 }
 

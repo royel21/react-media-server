@@ -9,16 +9,15 @@ var socket;
 var db;
 
 const getNewId = () => {
-  return Math.random()
-    .toString(36)
-    .slice(-5);
+  return Math.random().toString(36).slice(-5);
 };
+
 var worker = null;
-const startWork = model => {
+const startWork = (model) => {
   if (!worker) {
     worker = fork("./workers/BackgroundScan.js");
 
-    worker.on("message", data => {
+    worker.on("message", (data) => {
       io.sockets.emit("scan-finish", data);
     });
 
@@ -43,9 +42,9 @@ module.exports.setSocket = (_io, _socket, _db) => {
 };
 
 module.exports.diskLoader = () => {
-  drivelist.list().then(drives => {
+  drivelist.list().then((drives) => {
     let disks = [];
-    drives.forEach(drive => {
+    drives.forEach((drive) => {
       if (drive) {
         if (drive.mountpoints.length > 0) {
           let mp = drive.mountpoints[0].path;
@@ -54,7 +53,7 @@ module.exports.diskLoader = () => {
             Id: getNewId(),
             Name: mp,
             Path: mp,
-            Content: []
+            Content: [],
           });
         }
       }
@@ -64,7 +63,7 @@ module.exports.diskLoader = () => {
   });
 };
 
-module.exports.loadContent = data => {
+module.exports.loadContent = (data) => {
   //If is it root of disk return;
   if (fs.existsSync(data.Path)) {
     let dirs = winEx.ListFiles(data.Path, { directory: true });
@@ -74,7 +73,7 @@ module.exports.loadContent = data => {
         Id: getNewId(),
         Name: d.FileName,
         Path: path.join(data.Path, d.FileName),
-        Content: []
+        Content: [],
       });
     }
     socket.emit("content-loaded", { data: tdata, Id: data.Id });
@@ -95,17 +94,17 @@ module.exports.scanDir = async ({ Id, Path }) => {
       if (dirInfo && !["c:\\", "C:\\", "/"].includes(Path)) {
         model = await db.directory.create({
           FullPath: Path,
-          Name: dirInfo.FileName
+          Name: dirInfo.FileName,
         });
       }
     } else {
       model = await db.directory.findOne({
-        where: { Id }
+        where: { Id },
       });
     }
 
     if (model) {
-      if (model.IsLoading) {
+      if (model.IsLoading && worker) {
         msg = `Directory ${model.Name} is already scanning content`;
       } else {
         msg = `Directory ${model.Name} scanning content`;
@@ -125,6 +124,7 @@ module.exports.scanDir = async ({ Id, Path }) => {
   }
 
   socket.emit("scan-info", msg);
+  console.log(msg);
 };
 
 /************Remove file */
@@ -160,7 +160,7 @@ module.exports.removeFile = async ({ Id, Del }) => {
   socket.emit("file-removed", message);
 };
 
-module.exports.updateFileView = async data => {
+module.exports.updateFileView = async (data) => {
   let file = db.file.findByPk(data.id);
   if (file) {
     await file.update({ ViewCount: file.ViewCount + 1 });
@@ -170,7 +170,7 @@ module.exports.updateFileView = async data => {
 module.exports.updateFilePos = async (user, data) => {
   if (!data.id || !user) return;
   let recent = await db.recentFile.findOrCreate({
-    where: { FileId: data.id, RecentId: user.Recent.Id }
+    where: { FileId: data.id, RecentId: user.Recent.Id },
   });
   console.log("positions:", data);
   await recent[0].update({ LastRead: new Date(), LastPos: data.pos || 0 });

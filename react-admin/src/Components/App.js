@@ -11,24 +11,26 @@ import LoginRedirct from "./LoginRedirect";
 
 import history from "./history";
 import Navbar from "./Navbar";
-import FoldersManager from "./FoldersManager.js";
+import FoldersManager from "./Folders/FoldersManager.js";
+
+import "./Shares/Modals.css";
 
 function App() {
   const [User, setUser] = useState({
     username: "",
     isAutenticated: false,
     isAutenticating: true,
-    favorites: []
+    favorites: [],
   });
 
   useEffect(() => {
     if (!User.isAutenticated) {
       axios
         .get("/api/users/getuser")
-        .then(resp => {
+        .then((resp) => {
           setUser({ ...resp.data, isAutenticating: false });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     }
@@ -48,11 +50,13 @@ function App() {
                   path="/admin/files/:page?/:items?/:filter?"
                   component={FilesManager}
                 />
-                <Route path="/admin/folders" component={FoldersManager} />
+                <Route path="/admin/folders/:page?" component={FoldersManager} />
                 <Route path="/admin/disk" component={DiskManager} />
                 <Route
                   path="/admin/*"
-                  render={props => <LoginRedirct {...props} Auth={User.isAutenticated} />}
+                  render={(props) => (
+                    <LoginRedirct {...props} Auth={User.isAutenticated} />
+                  )}
                 />
               </Switch>
             </div>

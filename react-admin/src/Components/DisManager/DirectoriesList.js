@@ -15,20 +15,20 @@ const DirectoriesList = ({ socket }) => {
         console.log("data:", data);
         setDirsData(data || []);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
 
     socket.on("scan-finish", ({ id }) => {
       if (id) {
-        let dir = dataRef.current.find(d => d.Id === id);
+        let dir = dataRef.current.find((d) => d.Id === id);
         dir.IsLoading = false;
       } else {
       }
       setDirsData(dataRef.current || []);
     });
 
-    socket.on("scan-info", info => {
+    socket.on("scan-info", (info) => {
       console.log(info);
     });
     return () => {
@@ -37,13 +37,13 @@ const DirectoriesList = ({ socket }) => {
     };
   }, [socket]);
 
-  const removeDir = e => {
+  const removeDir = (e) => {
     let tr = e.target.closest("tr");
     if (tr) {
       Axios.delete("/api/admin/directories/remove", { data: { Id: tr.id } }).then(
         ({ data }) => {
           if (data.removed) {
-            setDirsData(dirsData.filter(d => d.Id !== tr.id));
+            setDirsData(dirsData.filter((d) => d.Id !== tr.id));
           } else {
             setEventMsg({ bg: "danger", msg: data.msg });
           }
@@ -52,14 +52,12 @@ const DirectoriesList = ({ socket }) => {
     }
   };
 
-  const rescan = e => {
+  const rescan = (e) => {
     let tr = e.target.closest("tr");
-    let dir = dataRef.current.find(d => d.Id === tr.id);
-    if (!dir.IsLoading) {
-      socket.emit("scan-dir", { Id: tr.id });
-      dir.IsLoading = true;
-      setDirsData(dataRef.current || []);
-    }
+    let dir = dataRef.current.find((d) => d.Id === tr.id);
+    socket.emit("scan-dir", { Id: tr.id });
+    dir.IsLoading = true;
+    setDirsData(dataRef.current || []);
   };
 
   useEffect(() => {
@@ -82,7 +80,7 @@ const DirectoriesList = ({ socket }) => {
               <td colSpan="3">Not Directory Added</td>
             </tr>
           ) : (
-            dirsData.map(dir => (
+            dirsData.map((dir) => (
               <tr id={dir.Id} key={dir.Id}>
                 <td>
                   <span className="dir-sync" onClick={rescan}>

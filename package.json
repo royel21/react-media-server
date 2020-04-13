@@ -7,7 +7,7 @@
     "start": "nf start",
     "client": "nf start -f Profile2",
     "admin": "nf start -f Profile3",
-    "node app": "node app.js",
+    "server": "node app.js",
     "nodemon": "nodemon ./app.js",
     "script": "node script"
   },

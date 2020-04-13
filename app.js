@@ -21,10 +21,13 @@ app.use(express.static(__dirname + "/react-admin/build"));
 const userRoutes = require("./routes/UserRoutes");
 const filesRoutes = require("./routes/FilesRoutes");
 const favoriteRoutes = require("./routes/FavoriteRoutes");
+const VideoRoute = require("./routes/VideoRouter");
+
+// Administrator
 const UsersManagerRoute = require("./routes/admin/UsersManagerRoute");
 const DirectoriesRoute = require("./routes/admin/DirectoriesRoute");
 const FilesManagerRoute = require("./routes/admin/FilesManagerRoute");
-const VideoRoute = require("./routes/VideoRouter");
+const FoldersRoute = require("./routes/admin/FoldersRoute");
 
 app.use(
   session({
@@ -32,7 +35,7 @@ app.use(
     secret: "2491eb2c-595d-4dc8-8427",
     resave: true,
     saveUninitialized: false,
-    maxAge: 60000
+    maxAge: 60000,
   })
 );
 
@@ -70,6 +73,7 @@ app.use("/api/admin", (req, res, next) => {
 app.use("/api/admin/users", UsersManagerRoute);
 app.use("/api/admin/directories", DirectoriesRoute);
 app.use("/api/admin/files", FilesManagerRoute);
+app.use("/api/admin/folders", FoldersRoute);
 
 app.use("/admin", (req, res) => {
   if (!req.user.Role.includes("Administrator")) {

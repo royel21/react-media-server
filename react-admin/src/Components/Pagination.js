@@ -1,10 +1,5 @@
-import React, { useCallback } from "react";
+import React from "react";
 import "./PageControls.css";
-import { useParams } from "react-router-dom";
-
-const getItems = () => {
-  return parseInt((window.innerHeight - 150) / 41);
-};
 
 const paginationInput = (li, page, totalPages, goToPage) => {
   let input = li.querySelector("input");
@@ -16,11 +11,11 @@ const paginationInput = (li, page, totalPages, goToPage) => {
 
     let newInput = li.querySelector("input");
 
-    newInput.addEventListener("focusout", e => {
+    newInput.addEventListener("focusout", (e) => {
       li.textContent = page + "/" + totalPages;
     });
 
-    newInput.onkeydown = event => {
+    newInput.onkeydown = (event) => {
       if (event.keyCode === 13) {
         page = parseInt(newInput.value);
         page = goToPage(page);
@@ -62,23 +57,13 @@ const pagerClick = (e, page, totalPages, goToPage) => {
   }
 };
 
-const Pagination = ({ history, totalPages, route }) => {
-  const { page = 1, filter = "" } = useParams();
-
+const Pagination = ({ totalPages, goToPage, page = 1 }) => {
   //Navigate Pages
-  const goToPage = useCallback(
-    (pg = 1) => {
-      pg = pg < 1 ? 1 : pg > totalPages ? totalPages : pg;
-      history.push(`/admin/${route}/${pg}/${getItems()}${filter ? `/${filter}` : ""}`);
-      return pg;
-    },
-    [totalPages, history, route, filter]
-  );
 
   return totalPages > 1 ? (
     <div
       id="pager"
-      onClick={e => {
+      onClick={(e) => {
         pagerClick(e, parseInt(page), totalPages, goToPage);
       }}
     >

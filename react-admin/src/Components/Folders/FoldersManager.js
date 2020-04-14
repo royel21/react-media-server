@@ -71,7 +71,6 @@ const FoldersManager = ({ history }) => {
   }, [page, loadContent]);
 
   document.title = "Folders Manager";
-  console.log("render fdmanager");
   return (
     <div id="fd-manager" className="card bg-dark manager">
       <div className="row m-0">

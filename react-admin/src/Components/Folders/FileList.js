@@ -13,7 +13,6 @@ const FileList = ({ mData, loadFiles, setFilesData }) => {
   const [showModal, setShowModal] = useState({});
 
   const goToPage = (pg) => {
-    console.log(pg);
     pg = pg < 1 ? 1 : pg > totalPages ? totalPages : pg;
     setPage(pg);
     loadFiles(pg);
@@ -51,8 +50,6 @@ const FileList = ({ mData, loadFiles, setFilesData }) => {
       setShowModal({ Remove: true });
     }
   };
-
-  console.log("render Files");
 
   return (
     <Fragment>

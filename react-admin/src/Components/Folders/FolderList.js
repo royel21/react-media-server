@@ -75,7 +75,6 @@ const FolderList = ({
     });
   };
 
-  console.log("render Folder");
   return (
     <Fragment>
       {showModal.Edit ? (

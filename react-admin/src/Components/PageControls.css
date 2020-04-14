@@ -8,7 +8,7 @@
   z-index: 1;
 }
 
-#fl-manager .controls > span:last-child {
+#fl-manager .controls>span:last-child {
   pointer-events: none;
 }
 
@@ -33,8 +33,7 @@
   width: 180px;
 }
 
-#pager li:last-child,
-#filter-file {
+#pager li:last-child, #content .filter-file {
   padding: 2px 5px;
   border-top-right-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
@@ -55,8 +54,7 @@
   padding: 0 14px;
 }
 
-#pager li,
-#filter-control span {
+#pager li, #filter-control span {
   cursor: pointer;
   user-select: none;
 }
@@ -141,14 +139,12 @@
   border-radius: 0.25rem 0 0 0.25rem !important;
 }
 
-#pager li:active > i,
-#filter-control span:active > i {
+#pager li:active>i, #filter-control span:active>i {
   transform: scale(1.3);
 }
 
 @media screen and (max-width: 700px) {
-  #first-page,
-  #last-page {
+  #first-page, #last-page {
     display: none;
   }
   #prev-page {
@@ -160,17 +156,18 @@
     border-bottom-right-radius: 0.25rem;
   }
 }
+
 @media screen and (max-width: 550px) {
   #filter-control {
     position: relative;
     width: 90px;
   }
-  #filter-file:focus {
+  .filter-file:focus {
     position: absolute;
     left: 34px;
     width: 150px;
   }
-  #filter-control #filter-file:focus + #clear-filter {
+  #filter-control .filter-file:focus+#clear-filter {
     right: -90px;
   }
 }

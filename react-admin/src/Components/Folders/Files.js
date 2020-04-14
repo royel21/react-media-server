@@ -7,7 +7,7 @@ const Files = ({ title, data, goToPage, page, folderId, handleClick }) => {
   return (
     <div className="file-list col-6">
       <div className="sub-controls">
-        <h3 className="text-center">{`${title} - ${items}`}</h3>
+        <h3 className="text-center">{`${items} - ${title}`}</h3>
       </div>
       <div className="list-container">
         <ul className="list-group text-dark">

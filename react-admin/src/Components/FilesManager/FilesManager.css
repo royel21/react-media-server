@@ -1,3 +1,10 @@
+.table-container {
+  height: calc(100% - 42px);
+  overflow-y: auto;
+  padding: 0 4px;
+  overflow-x: hidden;
+}
+
 #fl-manager .table td:nth-child(2) {
   position: relative;
 }
@@ -38,4 +45,13 @@
 
 #fl-manager #remove.modal label {
   width: fit-content;
+}
+
+@media screen and (max-width: 700px) {
+  #fl-manager tbody td:nth-child(2) {
+    /* width: 170px; */
+    white-space: nowrap;
+    /* overflow: hidden; */
+    /* text-overflow: ellipsis; */
+  }
 }

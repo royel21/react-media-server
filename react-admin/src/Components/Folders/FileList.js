@@ -47,7 +47,7 @@ const FileList = ({ mData, loadFiles, setFilesData }) => {
     setLocalFile(file);
     if (/fa-edit/gi.test(cList)) {
       setShowModal({ Edit: true });
-    } else {
+    } else if (/fa-trash-alt/gi.test(cList)) {
       setShowModal({ Remove: true });
     }
   };

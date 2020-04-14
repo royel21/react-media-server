@@ -147,18 +147,6 @@
 }
 
 @media screen and (max-width: 700px) {
-  #filter-control {
-    position: relative;
-    width: 90px;
-  }
-  #filter-file:focus {
-    position: absolute;
-    left: 34px;
-    width: 150px;
-  }
-  #filter-control #filter-file:focus + #clear-filter {
-    right: -90px;
-  }
   #first-page,
   #last-page {
     display: none;
@@ -170,5 +158,19 @@
   #next-page {
     border-top-right-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
+  }
+}
+@media screen and (max-width: 550px) {
+  #filter-control {
+    position: relative;
+    width: 90px;
+  }
+  #filter-file:focus {
+    position: absolute;
+    left: 34px;
+    width: 150px;
+  }
+  #filter-control #filter-file:focus + #clear-filter {
+    right: -90px;
   }
 }

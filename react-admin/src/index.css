@@ -111,7 +111,7 @@ input[type="text"]:not(:placeholder-shown) + span {
 #content > div {
   position: relative;
   margin: 0 5px 0 5px;
-  min-height: 99.5%;
+  height: 99.5%;
   border: 1px solid;
 }
 
@@ -156,13 +156,17 @@ input[type="text"]:not(:placeholder-shown) + span {
   pointer-events: none;
 }
 
-.manager .fa-sync,
-.manager span .fa-edit {
+.fa-trash-alt {
+  color: #ff0909f1;
+}
+
+.fa-sync,
+.fa-edit {
   color: #007bff;
 }
 
-.manager span .fa-trash-alt {
-  color: #ff0909;
+li.active .fa-edit {
+  color: white;
 }
 
 .table {

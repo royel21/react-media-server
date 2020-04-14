@@ -18,7 +18,7 @@
 }
 
 #fd-manager .list-group-item {
-  padding: 0.35rem 0.75rem;
+  padding: 0.3rem 0.4rem;
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -61,4 +61,22 @@
 
 #fd-manager .controls > h4 {
   margin: 0;
+}
+
+@media screen and (max-width: 700px) {
+  #fd-manager .list-container {
+    height: calc(100% - 115px);
+  }
+
+  #fd-manager .controls {
+    flex-direction: column;
+  }
+  #fd-manager .controls #filter-control {
+    position: relative;
+    width: 100%;
+  }
+  #fd-manager .controls #filter-file:focus {
+    position: initial;
+    width: initial;
+  }
 }

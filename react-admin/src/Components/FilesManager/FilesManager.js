@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useCallback,
+} from "react";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 import Pagination from "../Pagination";
@@ -11,7 +17,8 @@ import { SocketContext } from "../Context/SockectContext";
 import "./FilesManager.css";
 
 const getItems = () => {
-  return parseInt((window.innerHeight - 150) / 41);
+  let container = document.querySelector(".table-container");
+  return parseInt(container.offsetHeight / 40.7) - 1;
 };
 
 const FilesManager = (props) => {
@@ -33,11 +40,11 @@ const FilesManager = (props) => {
 
   const getData = useCallback(
     (page) => {
-      Axios.get(`/api/admin/files/${page || 1}/${getItems()}/${filter || ""}`).then(
-        ({ data }) => {
-          setFilesData({ ...data, isLoading: false });
-        }
-      );
+      Axios.get(
+        `/api/admin/files/${page || 1}/${getItems()}/${filter || ""}`
+      ).then(({ data }) => {
+        setFilesData({ ...data, isLoading: false });
+      });
     },
     [setFilesData, filter]
   );
@@ -94,7 +101,9 @@ const FilesManager = (props) => {
 
   const goToPage = (pg = 1) => {
     pg = pg < 1 ? 1 : pg > filesData.totalPages ? filesData.totalPages : pg;
-    props.history.push(`/admin/files/${pg}/${getItems()}${filter ? `/${filter}` : ""}`);
+    props.history.push(
+      `/admin/files/${pg}/${getItems()}${filter ? `/${filter}` : ""}`
+    );
     return pg;
   };
 
@@ -133,43 +142,51 @@ const FilesManager = (props) => {
         ) : (
           ""
         )}
-        <span className="badge badge-primary">Files: {filesData.totalFiles}</span>
+        <span className="badge badge-primary">
+          Files: {filesData.totalFiles}
+        </span>
       </div>
-      <table className="table table-dark table-hover table-bordered">
-        <thead>
-          <tr>
-            <th>Actions</th>
-            <th>Name</th>
-            <th>View</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filesData.files.length > 0 ? (
-            filesData.files.map((f) => (
-              <tr id={f.Id} key={f.Id}>
-                <td>
-                  <span id="Edit" onClick={showEditOrRemove}>
-                    <i className="fas fa-edit"></i>
-                  </span>
-                  <span id="Delete" className="ml-2" onClick={showEditOrRemove}>
-                    <i className="fas fa-trash-alt"></i>
-                  </span>
-                </td>
-                <td data-path={f.FullPath}>{f.Name}</td>
-                <td>{f.ViewCount}</td>
-              </tr>
-            ))
-          ) : (
+      <div className="table-container">
+        <table className="table table-dark table-hover table-bordered">
+          <thead>
             <tr>
-              <td colSpan="3">
-                {filesData.isLoading
-                  ? "Loading Data From Server"
-                  : "No files found in the server"}
-              </td>
+              <th>Actions</th>
+              <th>Name</th>
+              <th>View</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filesData.files.length > 0 ? (
+              filesData.files.map((f) => (
+                <tr id={f.Id} key={f.Id}>
+                  <td>
+                    <span id="Edit" onClick={showEditOrRemove}>
+                      <i className="fas fa-edit"></i>
+                    </span>
+                    <span
+                      id="Delete"
+                      className="ml-2"
+                      onClick={showEditOrRemove}
+                    >
+                      <i className="fas fa-trash-alt"></i>
+                    </span>
+                  </td>
+                  <td data-path={f.FullPath}>{f.Name}</td>
+                  <td>{f.ViewCount}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="3">
+                  {filesData.isLoading
+                    ? "Loading Data From Server"
+                    : "No files found in the server"}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

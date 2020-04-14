@@ -8,8 +8,8 @@ import Axios from "axios";
 import { useParams } from "react-router-dom";
 
 const calRows = () => {
-  let container = document.getElementById("fd-manager") || {};
-  return parseInt((container.offsetHeight - 41) / 37) - 1;
+  let container = document.querySelector(".list-container") || {};
+  return parseInt(container.offsetHeight / 35);
 };
 
 const FoldersManager = ({ history }) => {
@@ -30,7 +30,9 @@ const FoldersManager = ({ history }) => {
 
   const loadFiles = useCallback((pg, flt) => {
     Axios.get(
-      `/api/admin/folders/files/${folderIdRef.current}/${pg}/${calRows()}/${flt || ""}`
+      `/api/admin/folders/files/${folderIdRef.current}/${pg}/${calRows()}/${
+        flt || ""
+      }`
     ).then(({ data }) => {
       console.log("Files: ", data);
       setFilesData({

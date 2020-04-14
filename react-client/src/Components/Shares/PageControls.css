@@ -1,0 +1,290 @@
+.controls {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  position: sticky;
+  bottom: 0px;
+  padding: 4px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.controls > *:not(.total-files) {
+  pointer-events: all;
+}
+
+.pagination {
+  margin: 0;
+}
+
+.controls * {
+  max-height: 31px;
+}
+
+.controls .input-group-text {
+  padding: 0 0.5rem;
+}
+
+#filter-control {
+  position: relative;
+  width: 180px;
+}
+
+#pager li:last-child,
+#filter-file {
+  padding: 2px 5px;
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+#pager {
+  width: fit-content;
+  padding: 0;
+}
+
+#pager li:first-child {
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+
+#pager li:not(#current-page) {
+  line-height: 2;
+  padding: 0 15px;
+}
+
+#pager li,
+#filter-control span {
+  cursor: pointer;
+  user-select: none;
+}
+
+#pager li i {
+  font-size: 20px;
+  pointer-events: none;
+}
+
+#pager #current-page {
+  font-size: 14px;
+  padding: 0 4px;
+  line-height: 2;
+  font-weight: 700;
+}
+
+#pager #current-page {
+  width: 70px;
+  text-align: center;
+}
+
+#pager #current-page input {
+  width: 95%;
+  height: 29px;
+  padding: 0 8px;
+  font-size: 15px;
+  color: #007bff;
+}
+
+#pager #current-page input:focus {
+  box-shadow: 0 0 0 0.05rem rgba(0, 123, 255, 0.25);
+}
+
+#ordering {
+  max-width: 140px;
+}
+
+#order-select {
+  padding: 0 5px;
+  cursor: pointer;
+}
+
+#ordering * {
+  font-family: "Font Awesome 5 Free", "sans-serif";
+  font-weight: 600;
+}
+
+.controls span.input-group-tex {
+  padding: 0 6px;
+}
+
+.total-files {
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.controls .fa-arrow-circle-left {
+  font-size: 25px;
+}
+
+.controls #all-favs {
+  max-width: max-content;
+}
+
+.controls #all-favs select {
+  padding: 0 4px;
+  cursor: pointer;
+}
+
+.controls label .fa-star {
+  font-size: 10px;
+  color: rgb(214, 202, 36);
+  pointer-events: none;
+}
+
+.controls label .fa-cog {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.controls .input-group-text {
+  border-radius: 0.25rem 0 0 0.25rem !important;
+}
+
+#all-favs {
+  position: relative;
+}
+
+#show-fav {
+  display: none;
+}
+
+#fav-manager {
+  position: absolute;
+  visibility: visible;
+  color: black;
+  background: white;
+  height: max-content;
+  width: 300px;
+  bottom: 40px;
+  left: 10px;
+  border-radius: 0.25rem;
+  min-height: 240px;
+  background: rgb(221, 170, 94);
+}
+
+#fav-manager .table {
+  margin: 0;
+}
+
+#fav-manager *,
+#fav-manager {
+  max-height: initial;
+}
+
+#show-fav:checked + #fav-manager {
+  visibility: visible;
+}
+
+.modal-title {
+  padding: 5px;
+}
+
+#fav-controls #fav-box {
+  height: 32px;
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+#fav-manager .modal-body {
+  padding: 4px;
+  height: 240px;
+}
+
+#fav-manager .modal-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+#fav-manager select {
+  width: 80px;
+  height: 32px;
+  padding: 0;
+  margin-left: 4px;
+}
+
+#fav-manager .modal-content .table {
+  min-width: 100%;
+}
+
+#fav-manager th,
+#fav-manager td {
+  padding: 0.3rem;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#fav-manager th {
+  min-width: 100px;
+}
+
+#fav-manager th:nth-child(2) {
+  min-width: 65px;
+}
+
+#fav-manager th:last-child {
+  min-width: 60px;
+}
+
+#fav-manager td:first-child:hover {
+  position: absolute;
+  overflow: visible;
+  height: 30px;
+  min-width: 232px;
+  z-index: 1;
+  background-color: white;
+}
+
+#fav-manager th:last-child,
+#fav-manager td:last-child {
+  text-align: center;
+}
+
+#fav-manager #addfav,
+#fav-manager span {
+  cursor: pointer;
+}
+
+#fav-manager i {
+  display: inline-block !important;
+  font-size: 20px;
+}
+
+#fav-manager input + span {
+  right: 90px;
+}
+
+#fav-manager td span + span {
+  margin-left: 10px;
+}
+
+@media screen and (max-width: 700px) {
+  .controls {
+    position: fixed;
+    width: 100%;
+    bottom: 0px;
+  }
+  #filter-control {
+    position: relative;
+    width: 154px;
+  }
+  #filter-file:focus {
+    position: absolute;
+    left: 34px;
+    width: 150px;
+  }
+  #filter-control #filter-file:focus + #clear-search {
+    right: -90px;
+  }
+  #first-page,
+  #last-page {
+    display: none;
+  }
+  #prev-page {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+  }
+  #next-page {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+  }
+}

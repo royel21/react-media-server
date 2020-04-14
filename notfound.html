@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    body {
+      display: flex;
+      color: white;
+      position: relative;
+      background-color: #14243d;
+      background: radial-gradient(ellipse at center, #14243d 0%, #030611 100%);
+      height: 100vh;
+      min-height: 100vh;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    h2 {
+      font-size: 40px;
+      color: red;
+    }
+    p {
+      padding-top: 20px;
+      padding-bottom: 20px;
+      max-width: 70%;
+      margin: 0 auto;
+      font-size: 18px;
+    }
+    #return {
+      display: inline-block;
+      color: white;
+      padding: 5px 10px;
+      font-size: 25px;
+      text-decoration: none;
+      background-color: green;
+      border-radius: 0.25rem;
+    }
+    #return:hover {
+      transform: scale(1.1);
+    }
+  </style>
+  <body>
+    <h2>Sorry page not found</h2>
+    <p>
+      Are you lost? you are trying to access the wrong page.
+    </p>
+    <div><a id="return" href="/">Return</a></div>
+  </body>
+</html>

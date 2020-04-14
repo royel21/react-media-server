@@ -1,0 +1,127 @@
+.rc-slider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: auto;
+  height: 10px;
+  cursor: pointer;
+  padding: 0 20px;
+  user-select: none;
+}
+
+.rc-slider .rc-track,
+.rc-slider .rc-progress {
+  position: relative;
+  width: 100%;
+  height: 10px;
+  background-color: wheat;
+  border-radius: 0.3rem;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25) inset;
+}
+
+.rc-slider .rc-progress {
+  background-color: aqua;
+  pointer-events: none;
+  width: 0%;
+}
+
+.rc-slider .rc-thumb {
+  display: inline-block;
+  visibility: hidden;
+  position: absolute;
+  top: calc(50% - 11px);
+  margin: 0;
+  z-index: 3;
+  height: 22px;
+  width: 22px;
+  border-radius: 50%;
+  background-color: wheat;
+  box-shadow: 0 0px 3px rgba(0, 0, 0, 0.25);
+}
+
+.rc-slider .rc-thumb:active {
+  transform: scale(1.2);
+}
+
+.slider:hover .rc-progress,
+.slider:hover.rc-track {
+  height: 10px;
+}
+
+.rc-slider:hover .rc-thumb {
+  visibility: visible;
+}
+
+.rc-slider .rc-preview {
+  display: none;
+  position: absolute;
+  left: 0;
+  bottom: 20px;
+  height: max-content;
+  width: fit-content;
+  max-width: 150px;
+  max-height: 200px;
+  background-color: white !important;
+  border-radius: 5px;
+  padding: 0 8px;
+  border: 1px solid black;
+  z-index: 1;
+}
+
+.rc-track:hover .rc-preview {
+  display: block;
+}
+
+.rc-slider .rc-preview-title {
+  border-radius: 4px;
+  color: black;
+  height: initial;
+  width: initial;
+  background-color: beige;
+  padding: 0 5px;
+}
+
+.rc-slider .rc-preview img {
+  position: relative;
+  max-height: 190px;
+  max-width: 98%;
+  left: -3px;
+  z-index: 10;
+  border-radius: 4px;
+}
+
+.rc-slider .rc-preview:after {
+  position: absolute;
+  left: calc(50% - 10px);
+}
+
+.rc-slider .rc-preview-content {
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  color: black;
+  font-weight: 600;
+}
+
+.slider:hover .rc-preview {
+  display: inline-block;
+}
+
+.rc-slider .rc-thumb:hover + .rc-preview {
+  display: none;
+}
+
+.rc-slider .rc-preview-content:after {
+  content: " ";
+  position: absolute;
+  bottom: -5.5px;
+  left: calc(50% - 7.5px);
+  background-color: whitesmoke;
+  height: 10px;
+  width: 10px;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+  transform: rotateZ(45deg);
+}

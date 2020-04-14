@@ -1,38 +1,58 @@
 {
-    "name": "react-media-server",
-    "version": "1.0.0",
-    "description": "A react Multimedia Server",
-    "main": "app.js",
-    "scripts": {
-        "start": "node app.js",
-        "nodemon": "nodemon ./app.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/royel21/react-media-server.git"
-    },
-    "keywords": [
-        "video",
-        "manga",
-        "music",
-        "react",
-        "express",
-        "nodejs"
-    ],
-    "author": "rcstudio",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/royel21/react-media-server/issues"
-    },
-    "homepage": "https://github.com/royel21/react-media-server#readme",
-    "dependencies": {
-        "audit": "0.0.6",
-        "axios": "^0.19.2",
-        "bcrypt": "^4.0.1",
-        "express": "^4.17.1",
-        "nodemon": "^2.0.2",
-        "sequelize": "^5.21.5",
-        "sharp": "^0.25.0",
-        "sqlite3": "^4.1.1"
-    }
+  "name": "react-media-server",
+  "version": "1.0.0",
+  "description": "A react Multimedia Server",
+  "main": "app.js",
+  "scripts": {
+    "start": "nf start",
+    "client": "nf start -f Profile2",
+    "admin": "nf start -f Profile3",
+    "server": "node app.js",
+    "nodemon": "nodemon ./app.js",
+    "script": "node script"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/royel21/react-media-server.git"
+  },
+  "keywords": [
+    "video",
+    "manga",
+    "music",
+    "react",
+    "express",
+    "nodejs"
+  ],
+  "author": "rcstudio",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/royel21/react-media-server/issues"
+  },
+  "homepage": "https://github.com/royel21/react-media-server#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "bcrypt": "^4.0.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "drivelist": "^8.0.10",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.1.6",
+    "express-session": "^1.17.0",
+    "fs-extra": "^9.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "node-disk-info": "^1.0.3",
+    "node-stream-zip": "^1.9.1",
+    "nodemon": "^2.0.2",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "react-icons": "^3.9.0",
+    "react-spring": "^8.0.27",
+    "sequelize": "^5.21.5",
+    "sharp": "^0.25.2",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "sqlite3": "^4.1.1",
+    "win-explorer": "file:modules/win-explorer"
+  }
 }

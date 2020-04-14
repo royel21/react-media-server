@@ -3,6 +3,10 @@ const db = require("../../models");
 const fs = require("fs-extra");
 const path = require("path");
 
+const getCoverPath = (name) => {
+  return path.join(process.cwd(), "public", "covers", "folder", name + ".jpg");
+};
+
 const getData = async (req, res) => {
   let { page, items } = req.params;
   let offset = (page - 1) * items || 0;
@@ -56,15 +60,40 @@ Router.get("/files/:folderId/:page/:items", (req, res) => {
     });
 });
 
+const editFolder = async (req, res) => {
+  let { Id, Name } = req.body;
+  let folder = await db.folder.findOne({
+    where: { Id },
+    include: { model: db.directory },
+  });
+  if (folder) {
+    try {
+      let basePath = folder.Directory.FullPath;
+
+      const oldPath = path.join(basePath, folder.Name);
+      let FullPath = path.join(basePath, Name);
+      fs.moveSync(oldPath, FullPath);
+      fs.moveSync(getCoverPath(folder.Name), getCoverPath(Name));
+      await folder.update({ Name });
+      return res.send({ success: true });
+    } catch (err) {
+      console.log(err);
+    }
+    return res.send({ success: false });
+  }
+};
+
+Router.post("/edit-folder", (req, res) => {
+  editFolder(req, res);
+});
+
 const removeFolder = async (req, res) => {
   let { Id } = req.body;
   let folder = await db.folder.findOne({ where: { Id } });
   if (folder) {
     try {
       await folder.destroy();
-      fs.removeSync(
-        path.join(process.cwd(), "public", "covers", "folder", folder.Name + ".jpg")
-      );
+      fs.removeSync(getCoverPath(folder.Name));
       return res.send({ success: true });
     } catch (err) {
       console.log(err);

@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Axios from "axios";
 
 const Modal = ({ filesData, setFilesData, file, setShowModal }) => {
   const [localFile, setLocalFile] = useState(file);
   const [error, setError] = useState("");
 
-  const updateLocalUser = e => {
+  const updateLocalUser = (e) => {
     let el = e.target;
     setLocalFile({
       ...localFile,
-      Name: el.value
+      Name: el.value,
     });
   };
 
-  const submit = e => {
+  const submit = (e) => {
     if (!localFile.Name) return setError("Name Can't be empty");
     Axios.post("/api/admin/files/edit", localFile).then(({ data }) => {
       if (!data.fail) {
         let files = [...filesData.files];
 
-        let f = files.find(ft => ft.Id === file.Id);
+        let f = files.find((ft) => ft.Id === file.Id);
         if (f) {
           f.Name = localFile.Name;
         }
@@ -36,10 +36,6 @@ const Modal = ({ filesData, setFilesData, file, setShowModal }) => {
   const closeModal = () => {
     setShowModal({ Edit: false });
   };
-
-  useEffect(() => {
-    setLocalFile(file);
-  }, [file]);
 
   return (
     <div className="modal-container">

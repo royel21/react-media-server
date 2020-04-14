@@ -46,7 +46,7 @@ module.exports.genScreenShot = async (id) => {
   let files = await db.file.findAll({
     where: { DirectoryId: id, Duration: 0 },
   });
-
+  console.log("Creating Thumbnails");
   for (let f of files) {
     let coverPath = path.join(vCover, f.Cover);
 

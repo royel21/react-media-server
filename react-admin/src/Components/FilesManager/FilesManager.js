@@ -45,6 +45,18 @@ const FilesManager = (props) => {
   useEffect(() => {
     getData(page, filter, setFilesData);
   }, [page, filter, items, getData]);
+
+  //Set files ref
+  useEffect(() => {
+    filesRef.current = { files: filesData.files, page, filter };
+  });
+
+  // Show Edit Or Remove Dialog
+  const showEditOrRemove = (e) => {
+    let tr = e.target.closest("tr");
+    let f = filesData.files.find((tf) => tf.Id === tr.id);
+    setShowModal({ ...showModal, file: f, [e.target.id]: true });
+  };
   // Set up socket callback
   useEffect(() => {
     socket.on("file-removed", (data) => {
@@ -67,18 +79,6 @@ const FilesManager = (props) => {
       delete socket._callbacks["$file-removed"];
     };
   }, [getData, props.history, socket]);
-
-  //Set files ref
-  useEffect(() => {
-    filesRef.current = { files: filesData.files, page, filter };
-  });
-
-  // Show Edit Or Remove Dialog
-  const showEditOrRemove = (e) => {
-    let tr = e.target.closest("tr");
-    let f = filesData.files.find((tf) => tf.Id === tr.id);
-    setShowModal({ ...showModal, file: f, [e.target.id]: true });
-  };
 
   // Accpet remove file
   const acceptRemoveFile = (systemDel) => {

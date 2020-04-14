@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const ModalEdit = ({ file, postRoute, callBack, setShowModal }) => {
+const ModalEdit = ({ file, callBack, setShowModal }) => {
   const [localFile, setLocalFile] = useState(file);
 
   const onFileChange = (event) => {
@@ -9,11 +9,14 @@ const ModalEdit = ({ file, postRoute, callBack, setShowModal }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(localFile);
+    if (callBack) callBack(localFile);
+    setLocalFile(setLocalFile);
+    setShowModal(false);
   };
+
   return (
-    <div className="moda-container">
-      <div className="modal card bg-dark">
+    <div className="modal-container">
+      <div className="modal card">
         <div className="modal-header">
           <h3>Edit Folder</h3>
         </div>
@@ -36,6 +39,7 @@ const ModalEdit = ({ file, postRoute, callBack, setShowModal }) => {
           </div>
           <div className="modal-footer">
             <button
+              type="button"
               className="btn"
               onClick={() => {
                 setShowModal(false);
@@ -43,7 +47,9 @@ const ModalEdit = ({ file, postRoute, callBack, setShowModal }) => {
             >
               Cancel
             </button>
-            <button className="btn">Update</button>
+            <button type="submit" className="btn">
+              Update
+            </button>
           </div>
         </form>
       </div>

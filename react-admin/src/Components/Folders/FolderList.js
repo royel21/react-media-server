@@ -1,11 +1,10 @@
 import React, { useState, Fragment } from "react";
-import Files from "./Files";
-import ModalEdit from "./ModalEdit";
-
 import { useParams } from "react-router-dom";
-import ModalRemove from "../Shares/RemoveModal";
 import Axios from "axios";
 
+import Files from "./Files";
+import ModalEdit from "./ModalEdit";
+import ModalRemove from "../Shares/RemoveModal";
 const FolderList = ({
   history,
   mData,
@@ -18,8 +17,7 @@ const FolderList = ({
   let { totalPages } = mData;
   let { page } = useParams();
   const [localFolder, setLocalFolder] = useState({});
-  const [showModalEdit, setShowModalEdit] = useState(false);
-  const [showModalRemove, setShowModalRemove] = useState(false);
+  const [showModal, setShowModal] = useState({});
 
   const goToPage = (pg) => {
     let tpg = pg < 1 ? 1 : pg > totalPages ? totalPages : pg;
@@ -36,14 +34,29 @@ const FolderList = ({
       let folder = mData.files.find((f) => f.Id === Id);
       setLocalFolder(folder);
       if (/fa-edit/gi.test(cList)) {
-        setShowModalEdit(true);
+        setShowModal({ Edit: true });
       } else {
-        setShowModalRemove(true);
+        setShowModal({ Remove: true });
       }
     } else if (folderId !== Id) {
       setCurrentFolder(Id);
       loadFiles(1);
     }
+  };
+
+  const EditFile = (_file) => {
+    let { Id, Name } = _file;
+    let files = [...mData.files];
+    let file = files.find((f) => f.Id === Id);
+
+    if (Name === file.Name) return;
+
+    Axios.post("/api/admin/folders/edit-folder", { Id, Name }).then(({ data }) => {
+      if (data.success) {
+        file.Name = Name;
+        setFoldersData({ ...mData, files });
+      }
+    });
   };
 
   const removeFile = () => {
@@ -56,25 +69,25 @@ const FolderList = ({
         if (files.length === 0 && page > 1) {
           tempPage = page - 1;
         }
-        setShowModalRemove(false);
+        setShowModal({});
         loadContent(tempPage);
       }
     });
   };
 
-  console.log("render Folder", mData);
+  console.log("render Folder");
   return (
     <Fragment>
-      {showModalEdit ? (
-        <ModalEdit file={localFolder} setShowModal={setShowModalEdit} />
+      {showModal.Edit ? (
+        <ModalEdit file={localFolder} setShowModal={setShowModal} callBack={EditFile} />
       ) : (
         ""
       )}
-      {showModalRemove ? (
+      {showModal.Remove ? (
         <ModalRemove
           file={localFolder.Name}
           removeFile={removeFile}
-          setShowModal={setShowModalRemove}
+          setShowModal={setShowModal}
           showSys={false}
         />
       ) : (

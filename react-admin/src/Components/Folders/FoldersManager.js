@@ -84,7 +84,12 @@ const FoldersManager = ({ history }) => {
           setFoldersData={setFoldersData}
           loadContent={loadContent}
         />
-        <FileList title="File List" mData={filesData} loadFiles={loadFiles} />
+        <FileList
+          title="File List"
+          mData={filesData}
+          loadFiles={loadFiles}
+          setFilesData={setFilesData}
+        />
       </div>
     </div>
   );

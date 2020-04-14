@@ -1,9 +1,16 @@
-import React, { useState } from "react";
-import Files from "./Files";
+import React, { useState, Fragment, useEffect, useContext } from "react";
 
-const FileList = ({ mData, loadFiles }) => {
+import Files from "./Files";
+import EditFileModal from "../Shares/EditFileModal";
+import ModalRemove from "../Shares/RemoveModal";
+import { SocketContext } from "../Context/SockectContext";
+
+const FileList = ({ mData, loadFiles, setFilesData }) => {
+  const socket = useContext(SocketContext);
   const [page, setPage] = useState(1);
   let totalPages = mData.totalFilePages;
+  const [localFile, setLocalFile] = useState({});
+  const [showModal, setShowModal] = useState({});
 
   const goToPage = (pg) => {
     console.log(pg);
@@ -13,18 +20,70 @@ const FileList = ({ mData, loadFiles }) => {
     return pg;
   };
 
-  const handleClick = () => {};
+  // Set up socket callback
+  useEffect(() => {
+    socket.on("file-removed", (data) => {
+      if (data.removed) {
+        let files = [...mData.files].filter((f) => f.Id !== localFile.Id);
+        setFilesData({ ...mData, files });
+      }
+    });
+
+    return () => {
+      delete socket._callbacks["$file-removed"];
+    };
+  }, [localFile]);
+
+  // Accpet remove file
+  const removeFile = (systemDel) => {
+    socket.emit("remove-file", { Id: showModal.file.Id, Del: systemDel });
+  };
+
+  const handleClick = (event) => {
+    let elem = event.target;
+    let Id = elem.closest("li").id;
+    let cList = elem.classList.toString();
+    let file = mData.files.find((f) => f.Id === Id);
+    setLocalFile(file);
+    if (/fa-edit/gi.test(cList)) {
+      setShowModal({ Edit: true });
+    } else {
+      setShowModal({ Remove: true });
+    }
+  };
 
   console.log("render Files");
 
   return (
-    <Files
-      title="Folders"
-      data={mData}
-      goToPage={goToPage}
-      page={page}
-      handleClick={handleClick}
-    />
+    <Fragment>
+      {showModal.Edit ? (
+        <EditFileModal
+          setFilesData={setFilesData}
+          filesData={mData}
+          file={localFile}
+          setShowModal={setShowModal}
+        />
+      ) : (
+        ""
+      )}
+      {showModal.Remove ? (
+        <ModalRemove
+          file={localFile.Name}
+          removeFile={removeFile}
+          setShowModal={setShowModal}
+          showSys={true}
+        />
+      ) : (
+        ""
+      )}
+      <Files
+        title="Folders"
+        data={mData}
+        goToPage={goToPage}
+        page={page}
+        handleClick={handleClick}
+      />
+    </Fragment>
   );
 };
 

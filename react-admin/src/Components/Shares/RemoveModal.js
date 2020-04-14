@@ -39,7 +39,7 @@ const RemoveModal = ({ removeFile, setShowModal, file, showSys = true }) => {
           )}
         </div>
         <div className="modal-footer">
-          <button className="btn" onClick={() => setShowModal(false)}>
+          <button className="btn" onClick={() => setShowModal({ Remove: false })}>
             Cancel
           </button>
           <button className="btn" onClick={() => removeFile(systemDel)}>

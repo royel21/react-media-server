@@ -31,7 +31,7 @@ const FileList = ({ mData, loadFiles, setFilesData }) => {
     return () => {
       delete socket._callbacks["$file-removed"];
     };
-  }, [localFile]);
+  }, [localFile, mData, setFilesData, socket]);
 
   // Accpet remove file
   const removeFile = (systemDel) => {
@@ -74,7 +74,7 @@ const FileList = ({ mData, loadFiles, setFilesData }) => {
         ""
       )}
       <Files
-        title="Folders"
+        title="Files"
         data={mData}
         goToPage={goToPage}
         page={page}

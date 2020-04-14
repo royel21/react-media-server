@@ -28,25 +28,27 @@ const FoldersManager = ({ history }) => {
     items: 0,
   });
 
-  const loadFiles = useCallback((pg) => {
-    Axios.get(`/api/admin/folders/files/${folderIdRef.current}/${pg}/${calRows()}`).then(
-      ({ data }) => {
-        setFilesData({
-          files: data.files,
-          totalPages: data.totalFilePages,
-          items: data.totalFiles,
-        });
-      }
-    );
+  const loadFiles = useCallback((pg, flt) => {
+    Axios.get(
+      `/api/admin/folders/files/${folderIdRef.current}/${pg}/${calRows()}/${flt || ""}`
+    ).then(({ data }) => {
+      console.log("Files: ", data);
+      setFilesData({
+        files: data.files,
+        totalPages: data.totalFilePages,
+        items: data.totalFiles,
+      });
+    });
   }, []);
 
   const setCurrentFolder = useCallback((Id) => {
     folderIdRef.current = Id;
   }, []);
 
-  const loadContent = useCallback((page) => {
-    Axios.get(`/api/admin/folders/${page}/${calRows()}`)
+  const loadContent = useCallback((page, flt) => {
+    Axios.get(`/api/admin/folders/${page}/${calRows()}/${flt || ""}`)
       .then(({ data }) => {
+        console.log(data);
         if (data.folders.length > 0) {
           folderIdRef.current = data.folders[0].Id;
         }

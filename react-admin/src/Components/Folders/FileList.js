@@ -6,6 +6,7 @@ import ModalRemove from "../Shares/RemoveModal";
 import { SocketContext } from "../Context/SockectContext";
 
 const FileList = ({ mData, loadFiles, setFilesData }) => {
+  let [filter, setFilter] = useState("");
   const socket = useContext(SocketContext);
   const [page, setPage] = useState(1);
   let totalPages = mData.totalFilePages;
@@ -51,6 +52,12 @@ const FileList = ({ mData, loadFiles, setFilesData }) => {
     }
   };
 
+  const fileFilter = (flt) => {
+    console.log(flt);
+    setFilter(flt);
+    loadFiles(1, flt);
+  };
+
   return (
     <Fragment>
       {showModal.Edit ? (
@@ -74,6 +81,8 @@ const FileList = ({ mData, loadFiles, setFilesData }) => {
         ""
       )}
       <Files
+        filter={filter}
+        fileFilter={fileFilter}
         title="Files"
         data={mData}
         goToPage={goToPage}

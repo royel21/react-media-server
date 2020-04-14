@@ -13,7 +13,7 @@
 }
 
 #fd-manager .list-container {
-  height: calc(100% - 80px);
+  height: calc(100% - 86px);
   overflow-y: auto;
 }
 
@@ -45,4 +45,20 @@
 }
 #fd-manager .list-group-item i:active {
   transform: scale(1.2);
+}
+
+#fd-manager .controls {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border: none;
+}
+
+#fd-manager .controls input,
+#fd-manager .controls span {
+  height: 32px;
+}
+
+#fd-manager .controls > h4 {
+  margin: 0;
 }

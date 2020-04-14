@@ -1,13 +1,24 @@
 import React from "react";
 import Pagination from "../Pagination";
+import Fileter from "../FileFilter";
 
-const Files = ({ title, data, goToPage, page, folderId, handleClick }) => {
+const Files = ({
+  title,
+  data,
+  goToPage,
+  page,
+  folderId,
+  handleClick,
+  filter,
+  fileFilter,
+}) => {
   let { files, totalPages, items } = data;
   let fileItems = files.length;
   return (
     <div className="file-list col-6">
-      <div className="sub-controls">
-        <h3 className="text-center">{`${items} - ${title}`}</h3>
+      <div className="controls">
+        <Fileter filter={filter} fileFilter={fileFilter} />
+        <h4 className="text-center">{`${items} - ${title}`}</h4>
       </div>
       <div className="list-container">
         <ul className="list-group text-dark">

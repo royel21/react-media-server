@@ -5,18 +5,18 @@ const FileFilter = ({ fileFilter, filter }) => {
   //Apply Filter
 
   const ClearFilter = () => {
-    document.getElementById("filter-file").value = "";
+    inputRef.current.value = "";
     fileFilter("");
   };
 
-  const submitFilter = e => {
+  const submitFilter = (e) => {
     if (e.keyCode === 13) {
       fileFilter(e.target.value);
     }
   };
 
   const btnFilter = () => {
-    let filter = document.getElementById("filter-file").value;
+    let filter = inputRef.current.value;
     fileFilter(filter);
   };
 

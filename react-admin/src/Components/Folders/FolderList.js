@@ -14,6 +14,7 @@ const FolderList = ({
   setFoldersData,
   loadContent,
 }) => {
+  let [filter, setFilter] = useState("");
   let { totalPages } = mData;
   let { page } = useParams();
   const [localFolder, setLocalFolder] = useState({});
@@ -75,6 +76,11 @@ const FolderList = ({
     });
   };
 
+  const fileFilter = (flt) => {
+    setFilter(flt);
+    loadContent(1, flt);
+  };
+
   return (
     <Fragment>
       {showModal.Edit ? (
@@ -93,6 +99,8 @@ const FolderList = ({
         ""
       )}
       <Files
+        filter={filter}
+        fileFilter={fileFilter}
         title="Folders"
         data={mData}
         goToPage={goToPage}

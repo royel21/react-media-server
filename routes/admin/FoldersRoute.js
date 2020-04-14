@@ -8,10 +8,17 @@ const getCoverPath = (name) => {
 };
 
 const getData = async (req, res) => {
-  let { page, items } = req.params;
+  let { page, items, filter } = req.params;
   let offset = (page - 1) * items || 0;
   let limit = items || 10;
-  let folders = await db.folder.findAndCountAll({ order: ["Name"], offset, limit });
+  let folders = await db.folder.findAndCountAll({
+    order: ["Name"],
+    offset,
+    limit,
+    where: {
+      Name: { [db.Op.like]: `%${filter || ""}%` },
+    },
+  });
 
   let files = { rows: [], count: 0 };
   if (folders.rows.length > 0) {
@@ -19,7 +26,9 @@ const getData = async (req, res) => {
       order: [db.sqlze.literal(`REPLACE(Name, '[','0')`)],
       offset: 0,
       limit,
-      where: { FolderId: folders.rows[0].Id },
+      where: {
+        FolderId: folders.rows[0].Id,
+      },
     });
   }
   let totalFolderPages = Math.ceil(folders.count / items);
@@ -34,20 +43,25 @@ const getData = async (req, res) => {
   });
 };
 
-Router.get("/:page/:items", (req, res) => {
+Router.get("/:page/:items/:filter?", (req, res) => {
   getData(req, res).catch((err) => {
     console.log(err);
   });
 });
 
-Router.get("/files/:folderId/:page/:items", (req, res) => {
-  let { folderId, page, items } = req.params;
+Router.get("/files/:folderId/:page/:items/:filter?", (req, res) => {
+  let { folderId, page, items, filter } = req.params;
   let offset = (page - 1) * items || 0;
   let limit = items || 10;
   db.file
     .findAndCountAll({
       order: [db.sqlze.literal(`REPLACE(Name, '[','0')`)],
-      where: { FolderId: folderId },
+      where: {
+        [db.Op.and]: {
+          FolderId: folderId,
+          Name: { [db.Op.like]: `%${filter || ""}%` },
+        },
+      },
       offset,
       limit,
     })

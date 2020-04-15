@@ -47,7 +47,10 @@ const VidePlayer = ({
     } else {
       player.current.pause();
     }
-    window.socket.emit("file-update-pos", { id: fileRef.current.Id, pos: progress });
+    window.socket.emit("file-update-pos", {
+      id: fileRef.current.Id,
+      pos: progress,
+    });
   };
   // Mute the player
   const onMute = (e) => {
@@ -152,19 +155,22 @@ const VidePlayer = ({
     }
   };
   const resize = () => {
-    let w = document.getElementById("player-content").offsetWidth;
-    player.current.style.height = w * 0.5625 + "px";
-    console.log("resize:", w);
+    if (document.fullscreenElement) {
+      player.current.style.height = "100%";
+    } else {
+      let w = document.getElementById("player-content").offsetWidth;
+      player.current.style.height = w * 0.5625 + "px";
+      console.log("resize:", w);
+    }
   };
   useEffect(() => {
-    console.log("effect");
     resize();
     window.addEventListener("resize", resize);
     return () => {
       window.removeEventListener("resize", resize);
     };
   }, []);
-  console.log("resize");
+
   let progressVal = formatTime(progress) + "/" + formatTime(file.Duration);
   return (
     <div id="player-container">
@@ -218,7 +224,10 @@ const VidePlayer = ({
             </div>
             <div className="v-btns">
               <span id="hide-player" onClick={onReturn}>
-                <i className="far fa-times-circle popup-msg" data-title="Close"></i>
+                <i
+                  className="far fa-times-circle popup-msg"
+                  data-title="Close"
+                ></i>
               </span>
               {btnlist ? (
                 <span
@@ -244,7 +253,9 @@ const VidePlayer = ({
                     checked={mConfig.pause}
                   />
                   <i
-                    className={`far fa-${mConfig.pause ? "play" : "pause"}-circle`}
+                    className={`far fa-${
+                      mConfig.pause ? "play" : "pause"
+                    }-circle`}
                     data-title="Pause"
                   ></i>
                 </label>
@@ -306,7 +317,10 @@ const VidePlayer = ({
                     checked={mConfig.mute}
                     onChange={onMute}
                   />
-                  <i className="fas fa-volume-up popup-msg" data-title="Mute"></i>
+                  <i
+                    className="fas fa-volume-up popup-msg"
+                    data-title="Mute"
+                  ></i>
                 </label>
               </span>
             </div>

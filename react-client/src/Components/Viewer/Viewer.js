@@ -1,4 +1,10 @@
-import React, { useEffect, useState, Fragment, useRef, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  Fragment,
+  useRef,
+  useCallback,
+} from "react";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 
@@ -13,14 +19,14 @@ import { KeyMap, handleKeyboard } from "./KeyMap";
 
 const TypeList = ["folder", "favorite"];
 
-const Viewer = props => {
+const Viewer = (props) => {
   const viewRef = useRef(null);
   const { type, id, fileId } = useParams();
 
   const [viewerData, setViewerData] = useState({
     files: [],
     isLoading: true,
-    config: {}
+    config: {},
   });
   let file = {};
 
@@ -39,39 +45,39 @@ const Viewer = props => {
   }, [type, id]);
 
   if (viewerData.files.length > 0) {
-    file = viewerData.files.find(tf => tf.Id === fileId) || {};
+    file = viewerData.files.find((tf) => tf.Id === fileId) || {};
   } else {
     file = viewerData.file || {};
   }
 
-  const goToFile = file => {
+  const goToFile = (file) => {
     props.history.push(`/viewer/${type}/${id}/${file}`);
   };
-  const prevOrNextFile = pos => {
+  const prevOrNextFile = (pos) => {
     let data = viewerData.files;
-    let fileIndex = data.findIndex(f => f.Id === fileId) + pos;
+    let fileIndex = data.findIndex((f) => f.Id === fileId) + pos;
     if (fileIndex > -1 && fileIndex < data.length) {
       goToFile(data[fileIndex].Id);
     }
   };
 
-  const updateFile = f => {
+  const updateFile = (f) => {
     let data = { ...viewerData };
-    let ff = data.files.find(of => of.Id === f.Id);
+    let ff = data.files.find((of) => of.Id === f.Id);
     ff.CurrentPos = f.CurrentPos;
     setViewerData(data);
   };
-  const nextFile = f => {
+  const nextFile = (f) => {
     if (f) updateFile(f);
     prevOrNextFile(1);
   };
 
-  const prevFile = f => {
+  const prevFile = (f) => {
     if (f) updateFile(f);
     prevOrNextFile(-1);
   };
 
-  const handleClick = e => {
+  const handleClick = (e) => {
     // let listControl = document.getElementById("p-hide");
     // if (e.target.tagName === "VIDEO") {
     //   listControl.checked = true;
@@ -79,7 +85,7 @@ const Viewer = props => {
   };
 
   const fullSreenChange = useCallback(
-    e => {
+    (e) => {
       if (
         /(android)|(iphone)/i.test(navigator.userAgent) &&
         file.Type.includes("Video")
@@ -111,11 +117,11 @@ const Viewer = props => {
   }, [fullSreenChange, viewRef]);
 
   useEffect(() => {
-    console.log(fileId, id);
+    console.log("update-recentf", fileId, id);
     if (fileId) {
       window.socket.emit("update-recentf", {
         id,
-        fileId
+        fileId,
       });
     }
   }, [fileId, id]);
@@ -146,7 +152,11 @@ const Viewer = props => {
             setFullscreen={setFullViewerScreen}
           />
           {viewerData.files.length > 0 ? (
-            <PlayList fileId={fileId} setFile={goToFile} files={viewerData.files} />
+            <PlayList
+              fileId={fileId}
+              setFile={goToFile}
+              files={viewerData.files}
+            />
           ) : (
             ""
           )}

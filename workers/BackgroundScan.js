@@ -1,5 +1,4 @@
 const WinDrive = require("win-explorer");
-const { fork } = require("child_process");
 const fs = require("fs-extra");
 const path = require("path");
 const sharp = require("sharp");
@@ -22,13 +21,13 @@ var DirectoryId;
 var folderCovers = [];
 
 const createFolderAndCover = async (dir, files) => {
-  let firstFile = files.find(a => allExt.test(a.FileName));
+  let firstFile = files.find((a) => allExt.test(a.FileName));
   if (!firstFile) return "";
 
   let Name = path.basename(dir);
   let FolderCover = path.join(coverPath, Name + ".jpg");
   if (!fs.existsSync(FolderCover)) {
-    let img = files.find(a => /.(jpg|jpeg|png|gif|webp)/i.test(a.FileName));
+    let img = files.find((a) => /.(jpg|jpeg|png|gif|webp)/i.test(a.FileName));
 
     if (img) {
       await sharp(path.join(dir, img.FileName))
@@ -41,7 +40,7 @@ const createFolderAndCover = async (dir, files) => {
           folder: true,
           filePath: path.join(dir, firstFile.FileName),
           coverPath: FolderCover,
-          isManga: /rar|zip/gi.test(firstFile.FileName)
+          isManga: /rar|zip/gi.test(firstFile.FileName),
         });
       }
     }
@@ -49,9 +48,16 @@ const createFolderAndCover = async (dir, files) => {
   //Create Folder
   let folder = await db.folder.findOne({ where: { Name } });
 
+  let FileCount = files.filter((f) => allExt.test(f.FileName)).length;
   if (!folder) {
     let CreatedAt = WinDrive.ListFiles(path.resolve(dir), { oneFile: true }).LastModified;
-    folder = await db.folder.create({ Name, DirectoryId, Cover: FolderCover, CreatedAt });
+    folder = await db.folder.create({
+      Name,
+      DirectoryId,
+      Cover: FolderCover,
+      CreatedAt,
+      FileCount,
+    });
   }
 
   return folder.Id;
@@ -60,19 +66,17 @@ const createFolderAndCover = async (dir, files) => {
 var tempFiles = [];
 const PopulateDB = async (folder, files, FolderId) => {
   let filteredFile = files.filter(
-    f => f.isDirectory || (allExt.test(f.FileName) && !f.isHidden)
+    (f) => f.isDirectory || (allExt.test(f.FileName) && !f.isHidden)
   );
   for (let f of filteredFile) {
     try {
       if (!f.isDirectory) {
-        let Id = Math.random()
-          .toString(36)
-          .slice(-5);
-        let found = tempFiles.filter(v => v.Name === f.FileName);
+        let Id = Math.random().toString(36).slice(-5);
+        let found = tempFiles.filter((v) => v.Name === f.FileName);
         let vfound = await db.file.findAll({
           where: {
-            [db.Op.or]: [{ Id }, { Name: f.FileName }]
-          }
+            [db.Op.or]: [{ Id }, { Name: f.FileName }],
+          },
         });
 
         if (found.length === 0 && vfound.length === 0) {
@@ -84,7 +88,7 @@ const PopulateDB = async (folder, files, FolderId) => {
             DirectoryId,
             FolderId,
             Size: f.Size,
-            CreatedAt: f.LastModified
+            CreatedAt: f.LastModified,
           });
         }
       } else {
@@ -108,14 +112,14 @@ const PopulateDB = async (folder, files, FolderId) => {
   }
 };
 
-const removeOrphanFiles = async DirId => {
+const removeOrphanFiles = async (DirId) => {
   let files = await db.file.findAll({ where: { DirectoryId: DirId } });
   for (let f of files) {
     if (!fs.existsSync(path.join(f.FullPath, f.Name))) await f.destroy();
   }
 };
 
-const scanDirectory = async data => {
+const scanDirectory = async (data) => {
   await removeOrphanFiles(data.id);
 
   DirectoryId = data.id;
@@ -123,8 +127,8 @@ const scanDirectory = async data => {
   var fis = WinDrive.ListFilesRO(data.dir);
   let folderId;
 
-  if (fis.filter(f => f.extension !== "none").length > 0) {
-    if (fis.filter(f => f.extension !== undefined).length > 0) {
+  if (fis.filter((f) => f.extension !== "none").length > 0) {
+    if (fis.filter((f) => f.extension !== undefined).length > 0) {
       folderId = await createFolderAndCover(data.dir, fis);
     }
     try {
@@ -155,7 +159,7 @@ const processJobs = async () => {
   process.exit();
 };
 var running = false;
-process.on("message", data => {
+process.on("message", (data) => {
   pendingJobs.push(data);
   db.directory.update({ IsLoading: true }, { where: { Id: data.id } });
   if (!running) {

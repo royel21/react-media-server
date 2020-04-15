@@ -14,7 +14,7 @@ module.exports.updateConfig = async (user, data, db) => {
   }
 };
 
-const removeById = function(arr, Id) {
+const removeById = function (arr, Id) {
   var i = arr.length;
   while (i--) {
     if (arr[i] instanceof Object && arr[i].Id == Id) {
@@ -33,12 +33,12 @@ module.exports.updateRecentFolders = async (user, data, db) => {
         "Cover",
         [
           db.sqlze.literal(`(Select count(*) from Files where FolderId == Folders.Id)`),
-          "FileCount"
-        ]
+          "FileCount",
+        ],
       ],
-      where: { Id: data.id }
+      where: { Id: data.id },
     });
-    console.log(data);
+    console.log("User-Update:", data);
     let Config = { ...user.UserConfig.Config };
     let recentsF = [...Config.recentFolders];
     let recent = removeById(recentsF, data.id);
@@ -47,7 +47,7 @@ module.exports.updateRecentFolders = async (user, data, db) => {
     if (!recent) {
       recent = {
         ...folder.dataValues,
-        FileId: data.fileId
+        FileId: data.fileId,
       };
     } else {
       //Update old recent
@@ -58,7 +58,7 @@ module.exports.updateRecentFolders = async (user, data, db) => {
     if (recentsF.length > 18) Config.recentFolders.shift();
 
     await user.UserConfig.update({
-      Config: { ...Config, recentFolders: recentsF }
+      Config: { ...Config, recentFolders: recentsF },
     });
   }
 };

@@ -16,7 +16,7 @@ const VidePlayer = ({
   btnlist,
   nextFile,
   prevFile,
-  setFullscreen
+  setFullscreen,
 }) => {
   const history = useHistory();
   // Context
@@ -43,36 +43,36 @@ const VidePlayer = ({
   const playPause = () => {
     setMConfig({ ...mConfig, pause: !player.current.paused });
     if (player.current.paused) {
-      player.current.play().catch(err => {});
+      player.current.play().catch((err) => {});
     } else {
       player.current.pause();
     }
     window.socket.emit("file-update-pos", { id: fileRef.current.Id, pos: progress });
   };
   // Mute the player
-  const onMute = e => {
+  const onMute = (e) => {
     setMConfig({ ...mConfig, mute: e.target.checked });
   };
   // change volumen
-  const onVolChange = e => {
+  const onVolChange = (e) => {
     setMConfig({ ...mConfig, volume: parseFloat(e.target.value) });
   };
   // update the progressbar
-  const onProgress = e => {
+  const onProgress = (e) => {
     setProgress(e.target.currentTime);
   };
   // seek playback position
-  const onSeek = value => {
+  const onSeek = (value) => {
     player.current.currentTime = value;
   };
   // config info after video is loaded
-  const onMeta = e => {
+  const onMeta = (e) => {
     player.current.currentTime = file.CurrentPos;
     setIsLoading(false);
   };
 
   // handle wheel scroll to change volumen
-  const onWheel = e => {
+  const onWheel = (e) => {
     let { volume } = mConfig;
     volume += e.deltaY < 0 ? 0.05 : -0.05;
     volume = volume < 0 ? 0 : volume > 1 ? 1 : volume;
@@ -85,7 +85,7 @@ const VidePlayer = ({
     if (lastLoc) history.push(lastLoc);
   };
 
-  const controlFocus = e => {
+  const controlFocus = (e) => {
     let ctrls = document.querySelector(".v-controls");
     let progress2 = ctrls.previousElementSibling;
 
@@ -113,12 +113,12 @@ const VidePlayer = ({
     setMConfig({ ...mConfig, volume: vol < 0 ? 0 : vol });
   };
 
-  KeyMap.SkipForward.action = isCtrl => {
+  KeyMap.SkipForward.action = (isCtrl) => {
     let next = progress + (isCtrl ? 10 : 5);
     onSeek(next > file.Duration ? file.Duration : next);
   };
 
-  KeyMap.SkipBack.action = isCtrl => {
+  KeyMap.SkipBack.action = (isCtrl) => {
     let next = progress - (isCtrl ? 10 : 5);
     onSeek(next < 0 ? 0 : next);
   };
@@ -131,7 +131,7 @@ const VidePlayer = ({
     window.socket.emit("video-config", { config: mConfig });
   }, [mConfig]);
 
-  const hideMenu = e => {
+  const hideMenu = (e) => {
     e.preventDefault();
   };
 
@@ -151,6 +151,20 @@ const VidePlayer = ({
       }, 4000);
     }
   };
+  const resize = () => {
+    let w = document.getElementById("player-content").offsetWidth;
+    player.current.style.height = w * 0.5625 + "px";
+    console.log("resize:", w);
+  };
+  useEffect(() => {
+    console.log("effect");
+    resize();
+    window.addEventListener("resize", resize);
+    return () => {
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+  console.log("resize");
   let progressVal = formatTime(progress) + "/" + formatTime(file.Duration);
   return (
     <div id="player-container">

@@ -1,16 +1,16 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { formatTime } from "../Shares/utils";
+import { formatTime } from "../../Shares/utils";
 
 const PlayList = ({ files, setFile, fileId, hideList }) => {
   const [filter, setFilter] = useState("");
-  const filterPlayList = e => {
+  const filterPlayList = (e) => {
     setFilter(e.target.value);
   };
 
   const clearFilter = () => {
     setFilter("");
   };
-  const selectFile = e => {
+  const selectFile = (e) => {
     let li = e.target.closest("li");
     if (li) {
       setFile(li.id);
@@ -26,8 +26,8 @@ const PlayList = ({ files, setFile, fileId, hideList }) => {
         <div id="p-list">
           <ul className="list">
             {files
-              .filter(f => f.Name.includes(filter.toLocaleLowerCase()))
-              .map(item => (
+              .filter((f) => f.Name.includes(filter.toLocaleLowerCase()))
+              .map((item) => (
                 <li
                   id={item.Id}
                   key={item.Id}
@@ -58,7 +58,7 @@ const PlayList = ({ files, setFile, fileId, hideList }) => {
               <i className="fas fa-times-circle"></i>
             </span>
           </div>
-          <span id="p-items">{`${files.findIndex(i => i.Id === fileId) + 1}/${
+          <span id="p-items">{`${files.findIndex((i) => i.Id === fileId) + 1}/${
             files.length
           }`}</span>
         </div>

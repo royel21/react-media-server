@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  Fragment,
-  useRef,
-  useCallback,
-} from "react";
+import React, { useEffect, useState, Fragment, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 
@@ -12,9 +6,9 @@ import "./Viewer.css";
 // Components
 import VidePlayer from "./VideoPlayer";
 import PlayList from "./PlayList";
-import Loading from "../Shares/Loading";
+import Loading from "../../Shares/Loading";
 // Utils
-import { setfullscreen } from "../Shares/utils";
+import { setfullscreen } from "../../Shares/utils";
 import { KeyMap, handleKeyboard } from "./KeyMap";
 
 const TypeList = ["folder", "favorite"];
@@ -152,11 +146,7 @@ const Viewer = (props) => {
             setFullscreen={setFullViewerScreen}
           />
           {viewerData.files.length > 0 ? (
-            <PlayList
-              fileId={fileId}
-              setFile={goToFile}
-              files={viewerData.files}
-            />
+            <PlayList fileId={fileId} setFile={goToFile} files={viewerData.files} />
           ) : (
             ""
           )}

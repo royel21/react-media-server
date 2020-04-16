@@ -1,15 +1,15 @@
 import React, { useRef, useState, useCallback } from "react";
-import { map } from "../Shares/utils";
+import { map } from "../../Shares/utils";
 
 let isMdown = { is: false };
 
 const progressStyle = {
   full: {
-    borderRadius: "0.3rem"
+    borderRadius: "0.3rem",
   },
   inProgress: {
-    borderRadius: "0.3rem 0px 0px 0.3rem"
-  }
+    borderRadius: "0.3rem 0px 0px 0.3rem",
+  },
 };
 
 const Slider = ({ min, max, value, onChange, previewContent, prew }) => {
@@ -19,7 +19,7 @@ const Slider = ({ min, max, value, onChange, previewContent, prew }) => {
   const previewRef = useRef({ current: { offsetWidth: 0 } });
   const progress = map(value, min, max, 0, 100);
 
-  const onMDown = e => {
+  const onMDown = (e) => {
     isMdown = { is: true, id: uniqId };
     let xpos;
 
@@ -37,7 +37,7 @@ const Slider = ({ min, max, value, onChange, previewContent, prew }) => {
   };
 
   const updateValue = useCallback(
-    val => {
+    (val) => {
       let tempVal = Number(
         map(val - 1, 0, sliderRef.current.offsetWidth - 2, min, max).toFixed(2)
       );
@@ -50,7 +50,7 @@ const Slider = ({ min, max, value, onChange, previewContent, prew }) => {
   );
 
   const globalMMove = useCallback(
-    e => {
+    (e) => {
       if (
         (isMdown.is && e.target.id === uniqId) ||
         (e.type === "touchmove" && e.touches[0].target.id === uniqId)
@@ -69,7 +69,7 @@ const Slider = ({ min, max, value, onChange, previewContent, prew }) => {
     [updateValue, uniqId]
   );
 
-  const onPreview = e => {
+  const onPreview = (e) => {
     if (prew) {
       var newPos = Math.floor(e.pageX - sliderRef.current.getBoundingClientRect().left);
       var pos = map(newPos - 1, 0, sliderRef.current.offsetWidth - 2, 0, 100).toFixed(0);
@@ -81,13 +81,13 @@ const Slider = ({ min, max, value, onChange, previewContent, prew }) => {
     }
   };
 
-  document.onmouseup = e => {
+  document.onmouseup = (e) => {
     isMdown = false;
     document.removeEventListener("mousemove", globalMMove);
     document.removeEventListener("touchmove", globalMMove);
   };
 
-  const handleThumb = e => {
+  const handleThumb = (e) => {
     isMdown = { is: true, id: uniqId };
     if (e.nativeEvent.type === "touchstart") {
       document.addEventListener("touchmove", globalMMove);
@@ -114,7 +114,7 @@ const Slider = ({ min, max, value, onChange, previewContent, prew }) => {
             ...(Math.round(progress) === 100
               ? progressStyle.full
               : progressStyle.inProgress),
-            width: (progress > 0.3 ? progress : 0) + "%"
+            width: (progress > 0.3 ? progress : 0) + "%",
           }}
         ></div>
         <span
@@ -128,7 +128,7 @@ const Slider = ({ min, max, value, onChange, previewContent, prew }) => {
             ref={previewRef}
             data-title="00:00"
             style={{
-              left: `calc(${previewData.pos}% - ${previewRef.current.offsetWidth / 2}px)`
+              left: `calc(${previewData.pos}% - ${previewRef.current.offsetWidth / 2}px)`,
             }}
           >
             <span className="rc-preview-content">

@@ -1,6 +1,6 @@
 import React, { useState, Fragment, useContext } from "react";
 import Axios from "axios";
-import { FavoriteContext } from "../../Context/FavoriteContext";
+import { FavoriteContext } from "../../../Context/FavoriteContext";
 
 const FavoritesManager = ({ id, loadFavorite }) => {
   const { favorites, setFavorites } = useContext(FavoriteContext);
@@ -9,19 +9,19 @@ const FavoritesManager = ({ id, loadFavorite }) => {
   const [currentFav, setCurrentFav] = useState({
     Id: "",
     Name: "",
-    Type: "Manga"
+    Type: "Manga",
   });
 
   const [serverError, setServerError] = useState("");
 
-  const updateCurrentFav = e => {
+  const updateCurrentFav = (e) => {
     let tr = e.target.closest("tr");
     let input = e.target;
     let fav = {};
 
     if (tr) {
       fav = {
-        ...favorites.find(f => f.Id === tr.id)
+        ...favorites.find((f) => f.Id === tr.id),
       };
       fav.Name = tr.querySelector("td:first-child").textContent;
     } else {
@@ -35,7 +35,7 @@ const FavoritesManager = ({ id, loadFavorite }) => {
     if (!currentFav.Name) return;
     Axios.post("/api/files/favorites/add-edit", currentFav).then(({ data }) => {
       if (data.Id) {
-        let favs = favorites.filter(f => f.Id !== currentFav.Id);
+        let favs = favorites.filter((f) => f.Id !== currentFav.Id);
         favs.push(data);
         setFavorites(favs.sort((a, b) => a.Name.localeCompare(b.Name)));
         setCurrentFav({ Id: "", Name: "", Type: "Manga" });
@@ -45,19 +45,19 @@ const FavoritesManager = ({ id, loadFavorite }) => {
     });
   };
 
-  const clearFav = e => {
+  const clearFav = (e) => {
     setCurrentFav({ Id: "", Name: "", Type: "Manga" });
     setServerError("");
   };
 
-  const remove = e => {
+  const remove = (e) => {
     let tr = e.target.closest("tr");
     let Type = tr.querySelector("td:nth-child(2)").textContent;
     Axios.delete("/api/files/favorites/remove", {
-      data: { Id: tr.id, Type }
+      data: { Id: tr.id, Type },
     }).then(({ data }) => {
       if (data.removed) {
-        setFavorites(favorites.filter(f => f.Id !== tr.id));
+        setFavorites(favorites.filter((f) => f.Id !== tr.id));
         setServerError("");
       } else {
         setServerError(data.msg);
@@ -82,7 +82,7 @@ const FavoritesManager = ({ id, loadFavorite }) => {
                   className="form-control"
                   value={currentFav.Name}
                   onChange={updateCurrentFav}
-                  onKeyDown={e => {
+                  onKeyDown={(e) => {
                     if (e.keyCode === 13) saveFav();
                     e.target.focus();
                   }}
@@ -94,7 +94,7 @@ const FavoritesManager = ({ id, loadFavorite }) => {
                 </span>
                 <select
                   className="form-control"
-                  onChange={e => {
+                  onChange={(e) => {
                     let curFav = { ...currentFav };
                     curFav.Type = e.target.value;
                     setCurrentFav(curFav);
@@ -119,7 +119,7 @@ const FavoritesManager = ({ id, loadFavorite }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {favorites.map(f => (
+                  {favorites.map((f) => (
                     <tr key={f.Id} id={f.Id}>
                       <td>{f.Name}</td>
                       <td>{f.Type}</td>
@@ -158,7 +158,7 @@ const FavoritesManager = ({ id, loadFavorite }) => {
           id="favs"
           className="form-control"
           value={id}
-          onChange={e => {
+          onChange={(e) => {
             loadFavorite(e.target.value);
           }}
         >

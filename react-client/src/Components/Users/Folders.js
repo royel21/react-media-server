@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
-import FilesList from "./Shares/FilesList";
+import FilesList from "../Shares/FilesList";
 import { useParams } from "react-router-dom";
 
-const Folders = props => {
+const Folders = (props) => {
   const { id } = useParams();
 
   let exitFolder = useCallback(() => {

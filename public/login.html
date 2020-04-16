@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/all.min.css" />
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/login.css" />
     <title>Document</title>
@@ -56,7 +57,7 @@
     </div>
     <script src="/js/axios.min.js"></script>
     <script>
-      const handleSubmit = e => {
+      const handleSubmit = (e) => {
         e.preventDefault();
         let name = e.target.querySelector("#name").value;
         let password = e.target.querySelector("#password").value;
@@ -68,7 +69,8 @@
             if (name) {
               document.getElementById("name-errors").textContent = "User can't be empty";
             } else {
-              document.getElementById("pasword-errors").textContent = "Password can't be empty";
+              document.getElementById("pasword-errors").textContent =
+                "Password can't be empty";
             }
           }
           console.log(data);

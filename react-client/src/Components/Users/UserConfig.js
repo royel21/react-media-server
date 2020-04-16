@@ -1,11 +1,11 @@
 import React, { useContext, useState, Fragment } from "react";
 
-import { PageConfigContext } from "../Context/PageConfigContext";
+import { PageConfigContext } from "../../Context/PageConfigContext";
 
 const UserConfig = ({ User }) => {
   const { pageConfig, setPageConfig } = useContext(PageConfigContext);
   const [localConfig, setLocalConfig] = useState(pageConfig);
-  const filePerPage = e => {
+  const filePerPage = (e) => {
     let val = e.target.value;
     val = val >= 0 ? val : 0;
     val = val <= 501 ? val : 500;
@@ -31,10 +31,10 @@ const UserConfig = ({ User }) => {
             <select
               name="orderby"
               id="order-select"
-              onChange={e =>
+              onChange={(e) =>
                 setLocalConfig({
                   order: e.target.value,
-                  items: pageConfig.items
+                  items: pageConfig.items,
                 })
               }
             >

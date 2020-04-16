@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Files from "../Shares/Files";
-import { fileKeypress, fileClicks } from "../Shares/FileEventsHandler";
-import { getFilesPerPage } from "../Shares/utils";
+import Files from "../../Shares/Files";
+import { fileKeypress, fileClicks } from "../../Shares/FileEventsHandler";
+import { getFilesPerPage } from "../../Shares/utils";
 
 import "./Home.css";
 import Axios from "axios";
@@ -9,20 +9,20 @@ import Axios from "axios";
 const Home = ({ history }) => {
   const [recents, setRecents] = useState({
     files: [],
-    folders: []
+    folders: [],
   });
 
   useEffect(() => {
     Axios.get("/api/users/userconfig").then(({ data }) => {
       if (data.recentFolders) {
         setRecents({
-          folders: data.recentFolders
+          folders: data.recentFolders,
         });
       }
     });
   }, [setRecents]);
 
-  const processFile = file => {
+  const processFile = (file) => {
     localStorage.setItem("lastLoc", history.location.pathname);
     switch (file.dataset.type) {
       case "Manga": {
@@ -32,7 +32,7 @@ const Home = ({ history }) => {
         break;
       }
       default: {
-        let folder = recents.folders.find(f => f.Id === file.id);
+        let folder = recents.folders.find((f) => f.Id === file.id);
         history.push(`/viewer/folder/${folder.Id}/${folder.FileId}`);
       }
     }
@@ -47,11 +47,11 @@ const Home = ({ history }) => {
         <div
           className="files-list"
           style={{ maxHeight: 540, padding: 0 }}
-          onClick={e => {
+          onClick={(e) => {
             e.persist();
             fileClicks(e.target, processFile);
           }}
-          onKeyDown={e => {
+          onKeyDown={(e) => {
             e.persist();
             fileKeypress(e, null, null, processFile);
           }}

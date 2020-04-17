@@ -1,2 +1,0 @@
-nodemon: npm run nodemon
-react-admin: cd ./react-admin && npm start

@@ -1,0 +1,89 @@
+#admin-content .modal {
+  display: block;
+  position: fixed;
+  top: calc(50% - 150px);
+  left: calc(50% - 175px);
+  z-index: 99;
+  min-height: initial;
+  min-width: initial;
+  height: max-content;
+  width: 350px;
+  background-color: cadetblue;
+}
+#admin-content .modal .errors {
+  color: rgb(226, 35, 35);
+  font-size: 20px;
+}
+#admin-content .modal label,
+#admin-content .modal .form-control {
+  max-height: 34px;
+  padding: 5px;
+  margin: 4px 0;
+}
+
+#admin-content .modal label {
+  width: 55px;
+  justify-content: space-evenly;
+  user-select: none;
+  font-weight: 600;
+}
+
+#admin-content #remove label {
+  width: 155px;
+}
+
+#admin-content .modal .second-ctrl input {
+  display: none;
+}
+#admin-content .modal .checkadult {
+  text-align: center;
+  cursor: pointer;
+}
+
+#admin-content .modal label i {
+  font-size: 20px;
+}
+.second-ctrl input:checked + label i:before {
+  content: "\f00c";
+}
+
+#admin-content .modal-header {
+  display: flex;
+  padding: 5px;
+  justify-content: center;
+  user-select: none;
+}
+#admin-content .modal-header h3 {
+  margin-bottom: 0;
+}
+
+#admin-content .input-grouping {
+  display: flex;
+  justify-content: space-evenly;
+}
+#admin-content .input-grouping .second-ctrl {
+  margin-left: 5px;
+}
+
+#admin-content .modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+}
+
+#admin-content .modal-footer .btn {
+  min-width: 75px;
+  margin: 0 10%;
+}
+
+#admin-content .remove-error {
+  position: fixed;
+  top: 45px;
+  right: 25px;
+  color: rgb(226, 35, 35);
+  font-size: 20px;
+  font-weight: 600;
+  background-color: ghostwhite;
+  padding: 0 5px;
+  border-radius: 0.25rem;
+}

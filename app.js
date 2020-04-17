@@ -14,9 +14,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use(express.static(__dirname + "/public"));
-app.use(express.static(__dirname + "/react-client/build"));
-app.use(express.static(__dirname + "/react-admin/build"));
+app.use(express.static(__dirname + "/images"));
+app.use(express.static(__dirname + "/build"));
 
 const userRoutes = require("./routes/UserRoutes");
 const filesRoutes = require("./routes/FilesRoutes");
@@ -42,6 +41,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// it is here because is needed for login before access the other routes;
+app.use("/api/users", userRoutes);
+
 app.use((req, res, next) => {
   if (!/login|api\/users\/login/gi.test(req.url) && !req.user) {
     return res.redirect("/login");
@@ -50,13 +52,6 @@ app.use((req, res, next) => {
     app.locals.user = req.user;
   }
   return next();
-});
-
-// it is here because is needed for login before access the other routes;
-app.use("/api/users", userRoutes);
-
-app.use("/login", (req, res) => {
-  return res.sendFile(path.join(__dirname + "/public/login.html"));
 });
 
 app.use("/api/files/favorites", favoriteRoutes);
@@ -75,19 +70,8 @@ app.use("/api/admin/directories", DirectoriesRoute);
 app.use("/api/admin/files", FilesManagerRoute);
 app.use("/api/admin/folders", FoldersRoute);
 
-app.use("/admin", (req, res) => {
-  if (!req.user.Role.includes("Administrator")) {
-    return res.redirect("/notfound");
-  }
-  return res.sendFile(path.join(__dirname + "/react-admin/build/index.html"));
-});
-
-app.get("/notfound", (req, res) => {
-  return res.sendFile(path.join(__dirname + "/notfound.html"));
-});
-
 app.get("/*", (req, res) => {
-  return res.sendFile(path.join(__dirname + "/react-client/build/index.html"));
+  return res.sendFile(path.join(__dirname + "/build/index.html"));
 });
 
 app.use((e, req, res, next) => {

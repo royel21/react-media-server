@@ -139,7 +139,7 @@ module.exports.removeFile = async ({ Id, Del }) => {
       if (Del) {
         let cover = path.join(
           process.cwd(),
-          "public",
+          "images",
           "covers",
           file.Type,
           file.Name + ".jpg"

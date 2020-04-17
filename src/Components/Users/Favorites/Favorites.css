@@ -1,0 +1,123 @@
+#fav-manager {
+  position: absolute;
+  visibility: visible;
+  color: black;
+  background: white;
+  height: max-content;
+  width: 300px;
+  bottom: 40px;
+  left: 10px;
+  border-radius: 0.25rem;
+  min-height: 240px;
+  background: rgb(221, 170, 94);
+}
+
+#fav-manager .table {
+  margin: 0;
+}
+
+#fav-manager *,
+#fav-manager {
+  max-height: initial;
+}
+
+#show-fav:checked + #fav-manager {
+  visibility: visible;
+}
+
+.modal-title {
+  padding: 5px;
+}
+
+#fav-controls #fav-box {
+  height: 32px;
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+#user-content .controls #all-favs .input-group-text {
+  border-radius: 0.25rem !important;
+}
+
+#fav-manager .modal-body {
+  padding: 4px;
+  height: 240px;
+}
+
+#fav-manager .modal-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+#fav-manager select {
+  width: 80px;
+  height: 32px;
+  padding: 0;
+  margin-left: 4px;
+}
+
+#fav-manager .modal-content .table {
+  min-width: 100%;
+}
+
+#fav-manager th,
+#fav-manager td {
+  padding: 0.3rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#fav-manager th:last-child {
+  min-width: 60px;
+}
+#fav-manager th:first-child,
+#fav-manager td:first-child {
+  text-align: left;
+}
+#fav-manager td:first-child:hover {
+  position: absolute;
+  overflow: visible;
+  background-color: white;
+  text-align: left;
+  padding-left: 10px;
+  height: 30px;
+  min-width: 100%;
+  z-index: 1;
+  cursor: pointer;
+}
+
+#fav-manager th:last-child,
+#fav-manager td:last-child {
+  text-align: center;
+}
+
+#fav-manager #addfav,
+#fav-manager span {
+  cursor: pointer;
+}
+
+#fav-manager i {
+  display: inline-block !important;
+  font-size: 20px;
+}
+
+#fav-manager input + span {
+  right: 90px;
+}
+
+#fav-manager td span + span {
+  margin-left: 10px;
+}
+
+#fav-manager td:nth-child(2),
+#fav-manager th:nth-child(2),
+#fav-manager td:nth-child(3),
+#fav-manager th:nth-child(3) {
+  width: 50px;
+}
+#fav-manager .active:not(:hover) .fa-edit,
+#fav-manager .active:not(:hover) {
+  background-color: rgba(20, 139, 236, 0.925);
+  color: white;
+}

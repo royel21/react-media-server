@@ -1,0 +1,131 @@
+#d-manager {
+  height: 100%;
+}
+
+#tab-directories h3 {
+  text-align: center;
+}
+#dirs,
+#disks {
+  position: absolute;
+  top: 15px;
+}
+#dirs {
+  left: 10px;
+}
+
+#disks {
+  right: 10px;
+}
+
+input[type="radio"]:checked + label span {
+  display: inline-block;
+  border-bottom: 1px solid;
+  padding-bottom: 2px;
+}
+
+#tabs-content {
+  height: 100%;
+  padding: 0 8px;
+  overflow-y: auto;
+}
+
+.controls.nav label {
+  display: inline-block;
+  margin: 0;
+  border-bottom: 1px solid;
+  cursor: pointer;
+  padding-bottom: 0.2rem;
+}
+
+.controls .nav-link .fas {
+  font-size: 30px;
+}
+
+.controls.nav label:hover {
+  background-color: #007bff27;
+}
+.nav input[type="radio"]:checked + label:hover,
+.nav input[type="radio"]:checked + label {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+  border: 1px solid;
+}
+
+/* Tree Style */
+ul,
+.tree-view {
+  list-style-type: none;
+  font-weight: bold;
+  margin: 0;
+}
+
+.tree-title,
+.tree-view .tree-item span {
+  font-size: 1.4rem;
+  user-select: none;
+}
+
+.tree-item {
+  position: relative;
+}
+
+.caret {
+  position: absolute;
+  left: -25px;
+  cursor: pointer;
+  margin-right: 5px;
+  transform: rotate(90deg);
+}
+
+.caret:last-child {
+  transform: rotate(0);
+}
+
+.tree-item .dir {
+  position: relative;
+  cursor: pointer;
+}
+.tree-item .dir:active {
+  color: lightblue;
+}
+
+.tree-item .dir:hover:before {
+  content: " ";
+  position: absolute;
+  top: 8.5px;
+  right: -18px;
+  width: 10px;
+  height: 10px;
+  background-color: #ff922b;
+  transform: rotate(130deg);
+  z-index: 0;
+}
+
+.tree-item .dir:hover:after {
+  content: "Click To Add";
+  position: absolute;
+  right: -108px;
+  top: 0px;
+  color: white;
+  width: max-content;
+  font-size: 15px;
+  padding: 3px 4px;
+  border-radius: 5px;
+  background-color: #ff922b;
+  z-index: 3;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+.event-msg {
+  position: absolute;
+  right: 20px;
+  top: 57px;
+  padding: 0 5px;
+  border-radius: 0.25rem;
+  font-size: 1.4rem;
+}

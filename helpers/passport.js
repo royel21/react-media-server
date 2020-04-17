@@ -1,7 +1,7 @@
 let LocalStrategy = require("passport-local").Strategy;
 let db = require("../models");
 
-module.exports = passport => {
+module.exports = (passport) => {
   passport.serializeUser((user, done) => {
     return done(null, user.Name);
   });
@@ -10,25 +10,25 @@ module.exports = passport => {
       .findOne({
         order: [db.sqlze.literal("LOWER(Favorites.Name)")],
         where: {
-          Name: username
+          Name: username,
         },
         include: [
           { model: db.userConfig },
           { model: db.recent },
-          { model: db.favorite, attributes: ["Id", "Name", "Type"] }
-        ]
+          { model: db.favorite, attributes: ["Id", "Name", "Type"] },
+        ],
       })
-      .then(user => {
+      .then((user) => {
         if (user) {
           return done(null, user);
         } else {
           return done(null, false, {
             type: "user",
-            message: `${username} is no authorized`
+            message: `${username} is no authorized`,
           });
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         return err;
       });
@@ -38,37 +38,41 @@ module.exports = passport => {
     new LocalStrategy(
       {
         usernameField: "username",
-        passwordField: "password"
+        passwordField: "password",
       },
-      function(username, password, done) {
+      function (username, password, done) {
         return db.user
           .findOne({
             order: [db.sqlze.literal("LOWER(Favorites.Name)")],
             where: {
-              Name: username
+              Name: username,
             },
-            include: { model: db.favorite, attributes: ["Id", "Name", "Type"] }
+            include: [
+              { model: db.userConfig },
+              { model: db.recent },
+              { model: db.favorite, attributes: ["Id", "Name", "Type"] },
+            ],
           })
-          .then(user => {
+          .then((user) => {
             if (user) {
-              user.validPassword(password).then(result => {
+              user.validPassword(password).then((result) => {
                 if (result) {
                   done(null, user);
                 } else {
                   done(null, false, {
                     type: "pass",
-                    message: "Password Incorrect"
+                    message: "Password Incorrect",
                   });
                 }
               });
             } else {
               return done(null, false, {
                 type: "user",
-                message: `${username} is no authorized`
+                message: `${username} is no authorized`,
               });
             }
           })
-          .catch(err => {
+          .catch((err) => {
             done(err, false);
             return err;
           });

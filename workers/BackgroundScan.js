@@ -11,10 +11,10 @@ const { genScreenShot, foldersThumbNails } = require("./generate-screenshot");
 const allExt = /.(avi|avi2|mp4|mkv|ogg|webm|rar|zip)/i;
 
 //Create all Folders Needed
-const coverPath = path.join("./public", "covers", "Folder");
+const coverPath = path.join("./images", "covers", "Folder");
 fs.mkdirsSync(coverPath);
-fs.mkdirsSync(path.resolve("./public", "covers", "Manga"));
-fs.mkdirsSync(path.resolve("./public", "covers", "Video"));
+fs.mkdirsSync(path.resolve("./images", "covers", "Manga"));
+fs.mkdirsSync(path.resolve("./images", "covers", "Video"));
 
 var DirectoryId;
 

@@ -7,7 +7,7 @@ const thumbnails = require("../modules/thumbsnail");
 var ffmpeg = "ffmpeg";
 var ffprobe = "ffprobe";
 
-var vCover = path.resolve("./public");
+var vCover = path.resolve("./images");
 
 const getVideoDuration = async (vPath) => {
   try {

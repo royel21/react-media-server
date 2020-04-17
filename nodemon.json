@@ -6,8 +6,7 @@
     "public/covers/videos",
     "public/covers/mangas",
     "public/covers/folders",
-    "react-client",
-    "react-admin",
+    "src/**/*",
     "script.js",
     "files copy.db"
   ],

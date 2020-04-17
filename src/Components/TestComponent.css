@@ -1,0 +1,45 @@
+#manga-viewer {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+#manga-viewer .img-current, #manga-viewer .viewer {
+    height: 100%;
+    width: 100%;
+}
+
+#manga-viewer .img-current {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+    transform: scaleX(0.65);
+}
+
+#manga-viewer .img-current img {
+    height: 100%;
+    max-width: 100%;
+    pointer-events: none;
+    user-select: none;
+}
+
+#manga-viewer .controls {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+#manga-viewer .controls>span {
+    padding: 4px 8px;
+    max-height: initial;
+}
+
+#manga-viewer i {
+    font-size: 25px;
+    transition: 0.1s all;
+}

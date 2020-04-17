@@ -12,7 +12,7 @@ modules/win-explorer/bin
 /coverage
 
 # production
-/images/covers/
+/images/
 /build
 files.db
 

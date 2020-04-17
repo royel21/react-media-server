@@ -10,6 +10,7 @@ import UsersRoutes from "./Users/UsersRoutes";
 import AdminRoute from "./Admins/AdminRoute";
 import SockectContextProvider from "./Context/SockectContext";
 import UserContextProvider from "./Context/UserContext";
+import TestComponent from "./TestComponent";
 
 function App() {
   const socketRef = useRef();
@@ -39,15 +40,21 @@ function App() {
       ) : User.isAutenticated ? (
         <UserContextProvider history={history} User={User} setUser={setUser}>
           <SockectContextProvider socket={socketRef.current}>
-            {!User.role.includes("Administrator") ? (
+            {
+              /* {!User.role.includes("Administrator") ? (
               <Route path="/*" component={UsersRoutes} />
             ) : (
               <Route path="/*" component={AdminRoute} />
-            )}
+            )} */
+              <TestComponent />
+            }
           </SockectContextProvider>
         </UserContextProvider>
       ) : (
-        <Route path="/*" render={(props) => <Login {...props} setUser={setUser} />} />
+        <Route
+          path="/*"
+          render={(props) => <Login {...props} setUser={setUser} />}
+        />
       )}
     </Router>
   );

@@ -10,15 +10,7 @@ import { KeyMap } from "../../Shares/KeyMap";
 import { useHistory } from "react-router-dom";
 import useGesture from "../hooks/useGesture";
 
-const VidePlayer = ({
-  configMedia,
-  file,
-  btnlist,
-  nextFile,
-  prevFile,
-  setFullscreen,
-  socket,
-}) => {
+const VidePlayer = ({ configMedia, file, btnlist, socket }) => {
   const history = useHistory();
   // Context
   // Element References
@@ -141,7 +133,7 @@ const VidePlayer = ({
 
   const { onTouchStart, onTouchEnd, onTouchMove } = useGesture(
     player,
-    setFullscreen,
+    KeyMap.Fullscreen.action,
     playPause,
     mConfig,
     setMConfig
@@ -225,13 +217,20 @@ const VidePlayer = ({
             </div>
             <div className="v-btns">
               <span id="hide-player" onClick={onReturn}>
-                <i className="far fa-times-circle popup-msg" data-title="Close"></i>
+                <i
+                  className="far fa-times-circle popup-msg"
+                  data-title="Close"
+                ></i>
               </span>
               {btnlist ? (
                 <span
                   id="v-prev"
                   onClick={() => {
-                    prevFile({ Id: file.Id, CurrentPos: progress });
+                    KeyMap.PrevFile.action &&
+                      KeyMap.PrevFile.action({
+                        Id: file.Id,
+                        CurrentPos: progress,
+                      });
                   }}
                 >
                   <i
@@ -251,7 +250,9 @@ const VidePlayer = ({
                     checked={mConfig.pause}
                   />
                   <i
-                    className={`far fa-${mConfig.pause ? "play" : "pause"}-circle`}
+                    className={`far fa-${
+                      mConfig.pause ? "play" : "pause"
+                    }-circle`}
                     data-title="Pause"
                   ></i>
                 </label>
@@ -260,7 +261,11 @@ const VidePlayer = ({
                 <span
                   id="v-next"
                   onClick={() => {
-                    nextFile({ Id: file.Id, CurrentPos: progress });
+                    KeyMap.NextFile.action &&
+                      KeyMap.NextFile.action({
+                        Id: file.Id,
+                        CurrentPos: progress,
+                      });
                   }}
                 >
                   <i
@@ -271,7 +276,7 @@ const VidePlayer = ({
               ) : (
                 ""
               )}
-              <span className="btn-fullscr" onClick={setFullscreen}>
+              <span className="btn-fullscr" onClick={KeyMap.Fullscreen.action}>
                 <i
                   className="fas fa-expand-arrows-alt popup-msg"
                   data-title="Full Screen"
@@ -295,16 +300,6 @@ const VidePlayer = ({
                   value={mConfig.volume}
                   onChange={onVolChange}
                 />
-                {/* <Slider
-                  id="player-vol"
-                  min={0}
-                  max={1}
-                  value={mConfig.volume}
-                  onChange={onVolChange}
-                  step={0.01}
-                  valueLabelDisplay="auto"
-                  valueLabelFormat={volFormat}
-                /> */}
                 <label htmlFor="v-mute">
                   <input
                     type="checkbox"
@@ -313,7 +308,10 @@ const VidePlayer = ({
                     checked={mConfig.mute}
                     onChange={onMute}
                   />
-                  <i className="fas fa-volume-up popup-msg" data-title="Mute"></i>
+                  <i
+                    className="fas fa-volume-up popup-msg"
+                    data-title="Mute"
+                  ></i>
                 </label>
               </span>
             </div>

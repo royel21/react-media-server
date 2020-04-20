@@ -18,6 +18,7 @@ import Loading from "../Shares/Loading";
 import { setfullscreen } from "../Shares/utils";
 import { KeyMap, handleKeyboard } from "../../Shares/KeyMap";
 import { SocketContext } from "../../Context/SockectContext";
+import MangaViewer from "./MangaViewer";
 
 const TypeList = ["folder", "favorite"];
 
@@ -145,17 +146,26 @@ const Viewer = (props) => {
           tabIndex={0}
         >
           <div id="clock"></div>
-          <VidePlayer
-            configMedia={viewerData.config.video}
-            file={file}
-            btnlist={fileId}
-            prevFile={prevFile}
-            nextFile={nextFile}
-            setFullscreen={setFullViewerScreen}
-            socket={socket}
-          />
+          {type.includes("manga") ? (
+            <MangaViewer
+              configMedia={viewerData.config.manga}
+              file={file}
+              socket={socket}
+            />
+          ) : (
+            <VidePlayer
+              configMedia={viewerData.config.video}
+              file={file}
+              btnlist={fileId}
+              socket={socket}
+            />
+          )}
           {viewerData.files.length > 0 ? (
-            <PlayList fileId={fileId} setFile={goToFile} files={viewerData.files} />
+            <PlayList
+              fileId={fileId}
+              setFile={goToFile}
+              files={viewerData.files}
+            />
           ) : (
             ""
           )}

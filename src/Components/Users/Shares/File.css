@@ -48,11 +48,23 @@
   box-shadow: 0 0 10px;
 }
 
+.file-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.4em;
+  height: 26px;
+  z-index: 1;
+  user-select: none;
+  cursor: initial;
+}
+
 .file-progress {
   font-size: 14px;
   font-family: monospace;
   font-weight: 600;
   pointer-events: none;
+  height: fit-content;
 }
 [data-type="Folder"] .file-progress {
   display: inline-block;
@@ -61,16 +73,9 @@
   border-radius: 0.25rem;
 }
 
-.file-btns {
-  display: flex;
-  justify-content: space-between;
-  font-size: 1.4em;
-  height: 26px;
-  z-index: 1;
-  user-select: none;
-  cursor: initial;
+.file-btn-left:empty {
+  display: none;
 }
-
 .file-btns i {
   cursor: pointer;
 }

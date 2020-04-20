@@ -10,7 +10,6 @@ import UsersRoutes from "./Users/UsersRoutes";
 import AdminRoute from "./Admins/AdminRoute";
 import SockectContextProvider from "./Context/SockectContext";
 import UserContextProvider from "./Context/UserContext";
-import TestComponent from "./TestComponent";
 
 function App() {
   const socketRef = useRef();
@@ -51,26 +50,18 @@ function App() {
       ) : User.isAutenticated ? (
         <UserContextProvider history={history} User={User} setUser={setUser}>
           <SockectContextProvider socket={socketRef.current}>
-            {
-              !User.role.includes("Administrator") ? (
-                <Route path="/*" component={UsersRoutes} />
-              ) : (
-                <Route path="/*" component={AdminRoute} />
-              )
-              // <TestComponent
-              //   file={{
-              //     Id: "ukkmh",
-              //     Name: "Rent girls 出租女郎 Chinese Rsiky.zip",
-              //     Cover: "/covers/Manga/Rent girls 出租女郎 Chinese Rsiky.zip.jpg",
-              //     CurrentPos: 0,
-              //     Duration: 774.0,
-              //   }}
-              // />
-            }
+            {!User.role.includes("Administrator") ? (
+              <Route path="/*" component={UsersRoutes} />
+            ) : (
+              <Route path="/*" component={AdminRoute} />
+            )}
           </SockectContextProvider>
         </UserContextProvider>
       ) : (
-        <Route path="/*" render={(props) => <Login {...props} setUser={setUser} />} />
+        <Route
+          path="/*"
+          render={(props) => <Login {...props} setUser={setUser} />}
+        />
       )}
     </Router>
   );

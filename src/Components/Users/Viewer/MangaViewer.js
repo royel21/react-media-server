@@ -1,9 +1,9 @@
 import React, { useEffect, useContext, useRef, useCallback } from "react";
-import "./TestComponent.css";
+import "./MangaViewer.css";
 import { useState } from "react";
-import { SocketContext } from "./Context/SockectContext";
-import PageInput from "./Shares/PageInput";
-import { KeyMap, handleKeyboard } from "./Shares/KeyMap";
+import { SocketContext } from "../../Context/SockectContext";
+import PageInput from "../../Shares/PageInput";
+import { KeyMap, handleKeyboard } from "../../Shares/KeyMap";
 
 const IndexOfUndefined = function (arr, from, dir) {
   var i = from;
@@ -17,7 +17,7 @@ const IndexOfUndefined = function (arr, from, dir) {
   }
 };
 
-const TestComponent = ({ file }) => {
+const MangaViewer = ({ file }) => {
   let size = file.Duration;
   const socket = useContext(SocketContext);
   //References
@@ -171,7 +171,9 @@ const TestComponent = ({ file }) => {
                 if (!firstObverser.current && entry.isIntersecting) {
                   pg = parseInt(entry.target.id);
 
-                  if (!contentRef.current[pg + (pg > pageRef.current ? 5 : -5)]) {
+                  if (
+                    !contentRef.current[pg + (pg > pageRef.current ? 5 : -5)]
+                  ) {
                     loadMore = true;
                   }
                 }
@@ -256,7 +258,9 @@ const TestComponent = ({ file }) => {
         >
           {!webtoon ? (
             <img
-              src={content[page] ? "data:img/jpeg;base64, " + content[page] : ""}
+              src={
+                content[page] ? "data:img/jpeg;base64, " + content[page] : ""
+              }
               alt=""
             />
           ) : (
@@ -268,7 +272,9 @@ const TestComponent = ({ file }) => {
                 let img = data ? "data:img/jpeg;base64, " + data : "";
                 return (
                   <img
-                    className={page === i ? "current-img" : !data ? "empty-img" : ""}
+                    className={
+                      page === i ? "current-img" : !data ? "empty-img" : ""
+                    }
                     key={i}
                     id={i}
                     src={img}
@@ -315,4 +321,4 @@ const TestComponent = ({ file }) => {
   );
 };
 
-export default TestComponent;
+export default MangaViewer;

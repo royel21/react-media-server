@@ -42,3 +42,12 @@
 -- from Files
 -- Where
 --   Duration = 0;
+-- SQLite
+SELECT
+  Id,
+  Name,
+  Duration,
+  Cover
+FROM `Files`
+where
+  Type = 'Manga';

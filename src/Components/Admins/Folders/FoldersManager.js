@@ -30,11 +30,8 @@ const FoldersManager = ({ history }) => {
 
   const loadFiles = useCallback((pg, flt) => {
     Axios.get(
-      `/api/admin/folders/files/${folderIdRef.current}/${pg}/${calRows()}/${
-        flt || ""
-      }`
+      `/api/admin/folders/files/${folderIdRef.current}/${pg}/${calRows()}/${flt || ""}`
     ).then(({ data }) => {
-      console.log("Files: ", data);
       setFilesData({
         files: data.files,
         totalPages: data.totalFilePages,

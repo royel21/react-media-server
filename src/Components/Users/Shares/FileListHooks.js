@@ -67,7 +67,7 @@ const FileListHooks = ({ id, history, type }) => {
   };
 
   const fileFilter = useCallback(() => {
-    let input = document.getElementById("filter-file");
+    let input = document.querySelector(".filter-file");
     let fltr = input && input.value;
     pushHistory(1, fltr, id);
   }, [id, pushHistory]);

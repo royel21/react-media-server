@@ -28,7 +28,6 @@ const createFolderAndCover = async (dir, files) => {
   let FolderCover = path.join(coverPath, Name + ".jpg");
   if (!fs.existsSync(FolderCover)) {
     let img = files.find((a) => /.(jpg|jpeg|png|gif|webp)/i.test(a.FileName));
-
     if (img) {
       await sharp(path.join(dir, img.FileName))
         .jpeg({ quality: 75 })

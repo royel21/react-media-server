@@ -16,7 +16,7 @@ import PlayList from "./PlayList";
 import Loading from "../Shares/Loading";
 // Utils
 import { setfullscreen } from "../Shares/utils";
-import { KeyMap, handleKeyboard } from "./KeyMap";
+import { KeyMap, handleKeyboard } from "../../Shares/KeyMap";
 import { SocketContext } from "../../Context/SockectContext";
 
 const TypeList = ["folder", "favorite"];
@@ -155,11 +155,7 @@ const Viewer = (props) => {
             socket={socket}
           />
           {viewerData.files.length > 0 ? (
-            <PlayList
-              fileId={fileId}
-              setFile={goToFile}
-              files={viewerData.files}
-            />
+            <PlayList fileId={fileId} setFile={goToFile} files={viewerData.files} />
           ) : (
             ""
           )}

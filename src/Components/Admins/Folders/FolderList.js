@@ -22,8 +22,9 @@ const FolderList = ({
   const [showModal, setShowModal] = useState({});
 
   const goToPage = (pg) => {
+    if (pg === page) return;
     let tpg = pg < 1 ? 1 : pg > totalPages ? totalPages : pg;
-    if (pg > 0 && pg < totalPages + 1) history.push(`/admin/folders/${tpg}`);
+    if (pg > 0 && pg < totalPages + 1) history.push(`/folders/${tpg}`);
     return pg;
   };
 

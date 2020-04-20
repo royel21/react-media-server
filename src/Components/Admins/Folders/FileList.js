@@ -15,6 +15,7 @@ const FileList = ({ mData, loadFiles, setFilesData }) => {
   const [showModal, setShowModal] = useState({});
 
   const goToPage = (pg) => {
+    if (pg === page) return;
     pg = pg < 1 ? 1 : pg > totalPages ? totalPages : pg;
     setPage(pg);
     loadFiles(pg);
@@ -23,7 +24,8 @@ const FileList = ({ mData, loadFiles, setFilesData }) => {
 
   // Accpet remove file
   const removeFile = (systemDel) => {
-    socket.emit("remove-file", { Id: showModal.file.Id, Del: systemDel });
+    socket.emit("remove-file", { Id: localFile.Id, Del: systemDel });
+    setShowModal({});
   };
 
   const handleClick = (event) => {

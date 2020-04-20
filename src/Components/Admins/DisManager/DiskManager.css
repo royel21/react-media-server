@@ -71,15 +71,17 @@ ul,
   position: relative;
 }
 
-.caret {
+.tree-view .tree-item .caret {
   position: absolute;
+  top: 0;
   left: -25px;
   cursor: pointer;
   margin-right: 5px;
   transform: rotate(90deg);
+  font-size: 1.1rem;
 }
 
-.caret:last-child {
+.tree-view .tree-item .caret:last-child {
   transform: rotate(0);
 }
 

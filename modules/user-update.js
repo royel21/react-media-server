@@ -1,16 +1,32 @@
-module.exports.updateConfig = async (user, data, db) => {
-  // Update User Video Config
-  if (user) {
-    let Config = { ...user.UserConfig.Config };
+var db;
+module.exports.setDb = (_db) => {
+  db = _db;
+};
 
-    let { volume, mute, pause } = data.config;
-    if (Config.video) {
-      Config.video.volume = volume;
-      Config.video.mute = mute;
-      Config.video.pause = pause;
+module.exports.updateFileView = async (data) => {
+  let file = db.file.findByPk(data.id);
+  if (file) {
+    await file.update({ ViewCount: file.ViewCount + 1 });
+  }
+};
 
-      await db.userConfig.update({ Config }, { where: { UserId: user.Id } });
-    }
+module.exports.updateFilePos = async (data, user) => {
+  let recent = await db.recentFile.findOrCreate({
+    where: { FileId: data.id, RecentId: user.Recent.Id },
+  });
+  await recent[0].update({ LastRead: new Date(), LastPos: data.pos || 0 });
+};
+
+module.exports.updateConfig = async (data, user) => {
+  let Config = { ...user.UserConfig.Config };
+
+  let { volume, mute, pause } = data.config;
+  if (Config.video) {
+    Config.video.volume = volume;
+    Config.video.mute = mute;
+    Config.video.pause = pause;
+
+    await db.userConfig.update({ Config }, { where: { UserId: user.Id } });
   }
 };
 
@@ -23,38 +39,32 @@ const removeById = function (arr, Id) {
   }
 };
 
-module.exports.updateRecentFolders = async (user, data, db) => {
-  if (user) {
-    let folder = await db.folder.findOne({
-      attributes: ["Id", "Name", "Type", "Cover", "FileCount"],
-      where: { Id: data.id },
-    });
+module.exports.updateRecentFolders = async (data, user) => {
+  let folder = await db.folder.findOne({
+    attributes: ["Id", "Name", "Type", "Cover", "FileCount"],
+    where: { Id: data.id },
+  });
 
-    if (!folder) return;
+  if (!folder) return;
 
-    console.log("User-Update:", data);
-    let Config = { ...user.UserConfig.Config };
-    let recentsF = [...Config.recentFolders];
-    let recent = removeById(recentsF, data.id);
-    // Create a recent
-    if (!recent) {
-      recent = {
-        ...folder.dataValues,
-        FileId: data.fileId,
-      };
-      console.log("create-rfolder");
-    } else {
-      //Update old recent
-      recent.FileId = data.fileId;
-      console.log("update-rfolder");
-    }
-    recentsF.unshift(recent);
-    //Remove if over 50
-    if (recentsF.length > 18) recentsF.pop();
-
-    console.log("updateFolder: ", recentsF.length);
-    await user.UserConfig.update({
-      Config: { ...Config, recentFolders: recentsF },
-    });
+  let Config = { ...user.UserConfig.Config };
+  let recentsF = [...Config.recentFolders];
+  let recent = removeById(recentsF, data.id);
+  // Create a recent
+  if (!recent) {
+    recent = {
+      ...folder.dataValues,
+      FileId: data.fileId,
+    };
+  } else {
+    //Update old recent
+    recent.FileId = data.fileId;
   }
+  recentsF.unshift(recent);
+  //Remove if over 50
+  if (recentsF.length > 18) recentsF.pop();
+
+  await user.UserConfig.update({
+    Config: { ...Config, recentFolders: recentsF },
+  });
 };

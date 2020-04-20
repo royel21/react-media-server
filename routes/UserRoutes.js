@@ -3,6 +3,7 @@ const Router = require("express").Router();
 const passport = require("passport");
 const sendUser = (res, user = { UserConfig: { dataValues: {} } }) => {
   return res.json({
+    Id: user.Id,
     role: user.Role || "",
     username: user.Name || "",
     isAutenticated: user !== undefined,

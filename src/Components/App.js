@@ -15,6 +15,7 @@ import TestComponent from "./TestComponent";
 function App() {
   const socketRef = useRef();
   const [User, setUser] = useState({
+    Id: "",
     username: "",
     role: "",
     isAutenticated: false,
@@ -28,11 +29,21 @@ function App() {
       axios.get("/api/users/getuser").then((resp) => {
         setUser({ ...resp.data, isAutenticating: false });
       });
-      if (!socketRef.current) {
-        socketRef.current = socketIOClient("/");
-      }
     }
+
+    history.replace("/");
   }, [User.isAutenticated]);
+  //handle socket connection
+  if (User.isAutenticated && !socketRef.current) {
+    socketRef.current = socketIOClient("/");
+    console.log("Create socket");
+  } else if (socketRef.current) {
+    //close socket connection if logout
+    socketRef.current.close();
+    socketRef.current = null;
+    console.log("Close socket");
+  }
+
   return (
     <Router history={history}>
       {User.isAutenticating ? (
@@ -41,20 +52,25 @@ function App() {
         <UserContextProvider history={history} User={User} setUser={setUser}>
           <SockectContextProvider socket={socketRef.current}>
             {
-              /* {!User.role.includes("Administrator") ? (
-              <Route path="/*" component={UsersRoutes} />
-            ) : (
-              <Route path="/*" component={AdminRoute} />
-            )} */
-              <TestComponent />
+              !User.role.includes("Administrator") ? (
+                <Route path="/*" component={UsersRoutes} />
+              ) : (
+                <Route path="/*" component={AdminRoute} />
+              )
+              // <TestComponent
+              //   file={{
+              //     Id: "ukkmh",
+              //     Name: "Rent girls 出租女郎 Chinese Rsiky.zip",
+              //     Cover: "/covers/Manga/Rent girls 出租女郎 Chinese Rsiky.zip.jpg",
+              //     CurrentPos: 0,
+              //     Duration: 774.0,
+              //   }}
+              // />
             }
           </SockectContextProvider>
         </UserContextProvider>
       ) : (
-        <Route
-          path="/*"
-          render={(props) => <Login {...props} setUser={setUser} />}
-        />
+        <Route path="/*" render={(props) => <Login {...props} setUser={setUser} />} />
       )}
     </Router>
   );

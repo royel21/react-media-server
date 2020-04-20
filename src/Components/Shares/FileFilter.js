@@ -35,7 +35,6 @@ const FileFilter = ({ fileFilter, filter }) => {
         </span>
       </div>
       <input
-        id="filter-file"
         type="text"
         className="form-control filter-file"
         placeholder="Filter"

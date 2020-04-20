@@ -3,7 +3,7 @@ const initialData = {
   endPosX: 0,
   startY: 0,
   endY: 0,
-  time: 0
+  time: 0,
 };
 
 var startClick = 0;
@@ -14,7 +14,7 @@ var touchData = { ...initialData };
 const useGesture = (player, setFullscreen, playPause, mCfg, setMConfig) => {
   //   const [touchData, setTouchData] = useState(initialData);
 
-  const onTouchStart = e => {
+  const onTouchStart = (e) => {
     touching = true;
     let time = e.timeStamp;
     if (e.type !== "mousedown") {
@@ -23,7 +23,7 @@ const useGesture = (player, setFullscreen, playPause, mCfg, setMConfig) => {
     } else {
       startClick++;
       if (startClick === 1) {
-        setTimeout(function() {
+        setTimeout(function () {
           if (startClick === 1) {
             playPause();
           } else {
@@ -35,7 +35,7 @@ const useGesture = (player, setFullscreen, playPause, mCfg, setMConfig) => {
     }
   };
 
-  const onTouchMove = e => {
+  const onTouchMove = (e) => {
     if (touching) {
       let { pageX, pageY } = e.touches[0];
       //   setTouchData({ ...touchData, endX: pageX, endY: pageY });
@@ -49,7 +49,7 @@ const useGesture = (player, setFullscreen, playPause, mCfg, setMConfig) => {
         gestureDir = 2;
       }
 
-      if (gestureDir === 1) {
+      if (gestureDir === 1 && !player.current.seeking) {
         if (deltaX > 20 || deltaX < -20) {
           let { duration, currentTime } = player.current;
           let seek = currentTime + (deltaX > 0 ? 5 : -5);
@@ -66,7 +66,7 @@ const useGesture = (player, setFullscreen, playPause, mCfg, setMConfig) => {
     }
   };
 
-  const onTouchEnd = e => {
+  const onTouchEnd = (e) => {
     touching = false;
     if (e.type === "touchend") {
     }

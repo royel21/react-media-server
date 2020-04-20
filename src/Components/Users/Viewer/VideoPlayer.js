@@ -6,7 +6,7 @@ import "./slider.css";
 import "./VideoPlayer.css";
 
 import { formatTime } from "../Shares/utils";
-import { KeyMap } from "./KeyMap";
+import { KeyMap } from "../../Shares/KeyMap";
 import { useHistory } from "react-router-dom";
 import useGesture from "../hooks/useGesture";
 
@@ -225,10 +225,7 @@ const VidePlayer = ({
             </div>
             <div className="v-btns">
               <span id="hide-player" onClick={onReturn}>
-                <i
-                  className="far fa-times-circle popup-msg"
-                  data-title="Close"
-                ></i>
+                <i className="far fa-times-circle popup-msg" data-title="Close"></i>
               </span>
               {btnlist ? (
                 <span
@@ -254,9 +251,7 @@ const VidePlayer = ({
                     checked={mConfig.pause}
                   />
                   <i
-                    className={`far fa-${
-                      mConfig.pause ? "play" : "pause"
-                    }-circle`}
+                    className={`far fa-${mConfig.pause ? "play" : "pause"}-circle`}
                     data-title="Pause"
                   ></i>
                 </label>
@@ -318,10 +313,7 @@ const VidePlayer = ({
                     checked={mConfig.mute}
                     onChange={onMute}
                   />
-                  <i
-                    className="fas fa-volume-up popup-msg"
-                    data-title="Mute"
-                  ></i>
+                  <i className="fas fa-volume-up popup-msg" data-title="Mute"></i>
                 </label>
               </span>
             </div>

@@ -15,7 +15,7 @@ const isMobile = /(android)|(iphone)/i.test(navigator.userAgent);
 const scrollW = isMobile ? 15 : 0;
 const itemW = isMobile ? 170 : 200;
 
-export const getFilesPerPage = i => {
+export const getFilesPerPage = (i) => {
   let fList = document.querySelector(".files-list");
   let items = 9;
   if (fList) {
@@ -44,7 +44,7 @@ export const PageTitles = {
   videos: "Videos",
   folders: "Folders",
   favorites: "Favorites",
-  "folder-content": "Folder-content"
+  "folder-content": "Folder-content",
 };
 
 export const FileTypes = {
@@ -53,27 +53,27 @@ export const FileTypes = {
     class: "book-open",
     formatter(a, b) {
       return `${a}/${b}`;
-    }
+    },
   },
   Video: {
     type: "videos",
     class: "play-circle",
     formatter(a, b) {
       return `${formatTime(a)}/${formatTime(b)}`;
-    }
+    },
   },
   Folder: {
     type: "folders",
     class: "folder-open",
     formatter() {
       return "";
-    }
-  }
+    },
+  },
 };
 
 var lastEl = null;
 
-export const setfullscreen = element => {
+export const setfullscreen = (element) => {
   try {
     if (lastEl && element.tagName !== "BODY") {
       if (document.fullscreenElement.tagName === "BODY") {
@@ -99,35 +99,33 @@ export const setfullscreen = element => {
   }
 };
 
-export const map = function(value, in_min, in_max, out_min, out_max) {
+export const map = function (value, in_min, in_max, out_min, out_max) {
   return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
 };
 
 export const ProcessFile = (file, history) => {
-  localStorage.setItem("lastLoc", history.location.pathname);
   switch (file.dataset.type) {
-    case "Manga": {
-      break;
-    }
+    case "Manga":
     case "Video": {
+      localStorage.setItem("lastLoc", history.location.pathname);
       let tdata = history.location.pathname.split("/");
       let playType = tdata[1];
       let id = tdata[2];
-      let url = `/viewer/`;
 
-      if (["folder-content", "favorites"].includes(playType)) {
+      let url = `/viewer/`;
+      if (id) {
         url += `${playType.replace("-content", "")}/${id}/${file.id}`;
       } else {
-        url += `video/${file.id}`;
+        url += `file/${file.id}`;
       }
 
-      history.push(url, { fileId: file.id });
+      history.push(url);
       break;
     }
     default: {
       window.local.setObject("folder", {
         folder: file.id,
-        pathname: window.location.pathname
+        pathname: window.location.pathname,
       });
       history.push(`/folder-content/${file.id}/1`);
     }

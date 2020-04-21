@@ -31,15 +31,15 @@ const PlayList = ({ files, setFile, fileId, hideList }) => {
                 <li
                   id={item.Id}
                   key={item.Id}
-                  className={
-                    "list-item " + (item.Id === fileId ? "active" : "")
-                  }
+                  className={"list-item " + (item.Id === fileId ? "active" : "")}
                   onClick={selectFile}
                 >
                   <span className="cover">
                     <img src={item.Cover} alt="" />
                     <span className="duration">
-                      {formatTime(item.Duration)}
+                      {item.Type.includes("Manga")
+                        ? `${item.CurrentPos + 1}/${item.Duration}`
+                        : formatTime(item.Duration)}
                     </span>
                   </span>
                   <span className="l-name">{item.Name}</span>

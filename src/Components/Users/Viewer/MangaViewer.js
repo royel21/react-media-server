@@ -4,83 +4,106 @@ import { useState } from "react";
 import { SocketContext } from "../../Context/SockectContext";
 import PageInput from "../../Shares/PageInput";
 import { KeyMap, handleKeyboard } from "../../Shares/KeyMap";
+import { useHistory } from "react-router-dom";
+import { scrollInView, webtoonLoader } from "./Webtoon";
 
 const IndexOfUndefined = function (arr, from, dir) {
   var i = from;
-  if (from < 0) return 0;
-
   while (true) {
-    if (!arr[i] || !i) {
+    if (!arr[i]) {
       return i;
     }
     i += dir;
   }
 };
 
-const MangaViewer = ({ file }) => {
-  let size = file.Duration;
+const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
+  const history = useHistory();
+  const { PrevFile, NextFile, Fullscreen } = KeyMap;
+  let size = Duration;
   const socket = useContext(SocketContext);
   //References
   const contentRef = useRef([]);
-  const loadingRef = useRef(false);
+  const loadingRef = useRef(true);
+  const pageRef = useRef({ id: Id, pos: CurrentPos });
   const observer = useRef();
-  const pageRef = useRef(400);
+  const divRef = useRef();
+  const scrollRef = useRef(false);
   //States
-  const [page, setPage] = useState(pageRef.current);
   const [webtoon, setWebtoon] = useState(false);
-  const [content, setContent] = useState([]);
-  const firstObverser = useRef(true);
-  const mouseRef = useRef(false);
-  const imgContainerRef = useRef();
+  const [pageData, setPageData] = useState({
+    page: CurrentPos,
+    loading: true,
+  });
   //Copy content to ref
 
   const loadImages = useCallback(
     (pg, toPage, dir = 1) => {
       loadingRef.current = true;
-      let i = IndexOfUndefined(contentRef.current, pg, dir);
-      if (dir === -1) {
-        i = i - 10;
+      let i = IndexOfUndefined(contentRef.current, pg, dir, Duration);
+      console.log("i val:", i);
+      if (i >= Duration || i <= -1) return;
+      if (dir < 0) {
+        i = i - toPage;
+        toPage = pg;
       }
-      socket.emit("loadzip-image", { Id: file.Id, fromPage: i, toPage });
+      i = i < 0 ? 0 : i;
+      socket.emit("loadzip-image", { Id, fromPage: i, toPage });
     },
-    [socket, file.Id]
+    [socket, Id, Duration]
   );
+  //Next File
+  const prevFile = () => {
+    console.log("nextFile");
+    PrevFile.action && PrevFile.action({ Id, CurrentPos: pageData.page });
+  };
+  //Next File
+  const nextFile = () => {
+    console.log("nextFile");
+    NextFile.action && NextFile.action({ Id, CurrentPos: pageData.page });
+  };
 
-  const nextPage = () => {
+  const prevPage = () => {
     if (!webtoon) {
-      let pg = page + 1;
-      if (pg < size) {
-        pageRef.current = pg;
-        setPage(pg);
-        if (!content[pg + 10] && pg + 10 < size && !loadingRef.current) {
-          console.log("load more");
-          loadImages(pg, 10);
+      let pg = pageData.page - 1;
+      if (pg > -1) {
+        pageRef.current.pos = pg;
+        setPageData({ ...pageData, page: pg });
+        if (!contentRef.current[pg - 10] && !loadingRef.current) {
+          loadImages(pg, 10, -1);
         }
+      } else {
+        prevFile();
       }
     }
   };
-  const prevPage = () => {
+  const nextPage = () => {
     if (!webtoon) {
-      let pg = page - 1;
-      if (pg > -1) {
-        setPage(pg);
-
-        if (page > 0 && !content[pg - 10] && !loadingRef.current) {
-          loadImages(pg, 10, -1);
+      let pg = pageData.page + 1;
+      if (pg < size) {
+        pageRef.current.pos = pg;
+        setPageData({ ...pageData, page: pg });
+        if (!contentRef.current[pg + 10] && !loadingRef.current) {
+          loadImages(pg, 10);
         }
-        pageRef.current = pg;
+      } else {
+        nextFile();
       }
     }
   };
 
   const onProgressClick = (event) => {
-    PageInput(event.target, page, file.Duration, (nextPage) => {
-      let pg = nextPage < 0 ? 0 : nextPage > size ? size : nextPage;
+    event.stopPropagation();
+    PageInput(event.target, pageData.page, size, (nextPage) => {
+      let pg = nextPage < 0 ? 0 : nextPage >= size ? size - 1 : nextPage;
       if (!loadingRef.current) {
         loadImages(pg - 5, 10);
-        setPage(pg);
-
-        if (webtoon) scrollInView(pg);
+        setPageData({ page: pg, loading: false });
+      }
+      pageRef.current.pos = pg;
+      if (webtoon) {
+        scrollRef.current = true;
+        scrollInView(pageRef.current.pos);
       }
       return pg;
     });
@@ -94,7 +117,6 @@ const MangaViewer = ({ file }) => {
         prevPage();
       }
     }
-    mouseRef.current = true;
     e.preventDefault();
   };
 
@@ -103,135 +125,6 @@ const MangaViewer = ({ file }) => {
     return false;
   };
 
-  const handleMouseUp = (e) => {
-    // socket.emit("loadzip-image", {
-    //   Id: file.Id,
-    //   fromPage: pageRef.current - 4,
-    //   toPage: 8,
-    // });
-    // scrollInView(pageRef.current);
-  };
-
-  const scrollInView = useCallback((num) => {
-    firstObverser.current = true;
-    let currentimg = document.querySelectorAll(".img-current img")[num];
-    if (currentimg) {
-      currentimg.scrollIntoView();
-      let tout = setTimeout(() => {
-        console.log("scrolling");
-        clearTimeout(tout);
-        firstObverser.current = false;
-      }, 10);
-    }
-  }, []);
-
-  useEffect(() => {
-    socket.on("image-loaded", (data) => {
-      if (!data.error) {
-        contentRef.current[data.page] = data.img;
-      }
-    });
-    socket.on("m-finish", () => {
-      console.log("finish");
-      firstObverser.current = true;
-      setContent([...contentRef.current]);
-      loadingRef.current = false;
-      setPage(parseInt(pageRef.current));
-    });
-
-    if (socket._callbacks["$image-loaded"]) {
-      socket.emit("loadzip-image", {
-        Id: file.Id,
-        fromPage: pageRef.current - 5,
-        toPage: 10,
-      });
-    }
-    return () => {
-      delete socket._callbacks["$image-loaded"];
-      delete socket._callbacks["$m-finish"];
-    };
-  }, [socket, file.Id]);
-
-  useEffect(() => {
-    if (observer.current) {
-      observer.current.disconnect();
-    }
-
-    if (webtoon) {
-      let imgs = document.querySelectorAll(".img-current img");
-      // let inView = [];
-      let loadMore = false;
-      var scrTout;
-      if (!observer.current) {
-        observer.current = new IntersectionObserver(
-          (entries) => {
-            if (entries.length < imgs.length) {
-              let pg;
-              for (let entry of entries) {
-                if (!firstObverser.current && entry.isIntersecting) {
-                  pg = parseInt(entry.target.id);
-
-                  if (
-                    !contentRef.current[pg + (pg > pageRef.current ? 5 : -5)]
-                  ) {
-                    loadMore = true;
-                  }
-                }
-              }
-              console.log("page:", pg, loadMore, !loadingRef.current);
-
-              if (scrTout) {
-                clearTimeout(scrTout);
-                loadingRef.current = false;
-              }
-
-              if (loadMore && !loadingRef.current) {
-                loadMore = false;
-                let curPage = pageRef.current;
-                console.log("current:", pg, curPage);
-                scrTout = setTimeout(() => {
-                  if (pg > curPage) {
-                    loadImages(pg, 8);
-                  } else {
-                    loadImages(pg - 8, 8);
-                  }
-                  clearTimeout(scrTout);
-                  scrTout = null;
-                }, 50);
-              }
-
-              if (pg) {
-                pageRef.current = pg;
-                console.log("currentP:", pageRef.current);
-                let cP = document.querySelector(".current-page");
-                if (cP) cP.textContent = `${pg} / ${size}`;
-              }
-
-              firstObverser.current = false;
-            }
-          },
-          {
-            root: imgContainerRef.current,
-            rootMargin: window.innerHeight * 2 + "px",
-            threshold: 0,
-          }
-        );
-      }
-
-      imgs.forEach((lazyImg) => {
-        observer.current.observe(lazyImg);
-      });
-      if (!loadingRef.current) {
-        scrollInView(pageRef.current);
-      }
-
-      if (loadingRef.current) {
-        loadingRef.current = false;
-      }
-    } else {
-      setPage(parseInt(pageRef.current));
-    }
-  }, [webtoon, setPage, loadImages, size, socket, file.Id, scrollInView]);
   if (!webtoon) {
     KeyMap.SkipForward.action = nextPage;
     KeyMap.SkipBack.action = prevPage;
@@ -240,52 +133,111 @@ const MangaViewer = ({ file }) => {
     KeyMap.SkipBack.action = null;
   }
 
+  const onReturn = () => {
+    let lastLoc = localStorage.getItem("lastLoc");
+    if (lastLoc) history.push(lastLoc);
+  };
+
+  useEffect(() => {
+    contentRef.current = [];
+    socket.on("image-loaded", (data) => {
+      if (!data.error) {
+        contentRef.current[data.page] = data.img;
+        if (data.page === CurrentPos) {
+          setPageData({
+            page: pageRef.current.pos,
+            loading: false,
+          });
+        }
+      }
+    });
+
+    socket.on("m-finish", () => {
+      console.log("finish");
+      loadingRef.current = false;
+      // if (!webtoon) {
+      //   setPageData({
+      //     page: pageRef.current.pos,
+      //     loading: false,
+      //   });
+      // }
+    });
+
+    if (pageRef.current.pos > 0) {
+      socket.emit("file-update-pos", pageRef.current);
+    }
+    pageRef.current = { id: Id, pos: CurrentPos };
+
+    if (socket._callbacks["$image-loaded"]) {
+      socket.emit("loadzip-image", {
+        Id,
+        fromPage: CurrentPos - 5 < 0 ? 0 : CurrentPos - 5,
+        toPage: 10,
+      });
+    }
+    setPageData({ content: [], page: CurrentPos, loading: true });
+
+    return () => {
+      delete socket._callbacks["$image-loaded"];
+      delete socket._callbacks["$m-finish"];
+    };
+  }, [setPageData, socket, Id, CurrentPos]);
+
+  useEffect(() => {
+    if (observer.current) {
+      observer.current.disconnect();
+      console.log("disconectAll");
+    }
+    if (webtoon) {
+      console.log("scoll a new");
+      scrollRef.current = true;
+      scrollInView(pageRef.current.pos, () => {
+        webtoonLoader(
+          observer,
+          Duration,
+          pageRef,
+          divRef,
+          loadImages,
+          setPageData,
+          contentRef,
+          loadingRef
+        );
+      });
+    }
+  }, [webtoon, setPageData, loadImages, Duration]);
+
+  let img = contentRef.current[pageData.page] || "";
+
+  console.log("render", pageData.loading);
   return (
-    <div
-      id="manga-viewer"
-      className="card bg-dark"
-      onKeyDown={handleKeyboard}
-      tabIndex="0"
-    >
+    <div id="manga-viewer" onKeyDown={handleKeyboard} tabIndex="0">
       <div className="viewer">
         <div
           className={"img-current " + (webtoon ? "webtoon-img" : "")}
           onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
           onContextMenu={onCancelContextM}
-          ref={imgContainerRef}
+          ref={divRef}
           tabIndex="0"
         >
           {!webtoon ? (
-            <img
-              src={
-                content[page] ? "data:img/jpeg;base64, " + content[page] : ""
-              }
-              alt=""
-            />
+            <img src={img && "data:img/jpeg;base64, " + img} alt="" />
           ) : (
-            Array(file.Duration)
+            Array(size)
               .fill()
               .map((_, i) => {
-                // if (!data) return "";
-                let data = content[i];
-                let img = data ? "data:img/jpeg;base64, " + data : "";
-                return (
-                  <img
-                    className={
-                      page === i ? "current-img" : !data ? "empty-img" : ""
-                    }
-                    key={i}
-                    id={i}
-                    src={img}
-                    alt=""
-                  />
-                );
+                let data = contentRef.current[i];
+                let img = (data && "data:img/jpeg;base64, " + data) || "";
+                let classN = (pageData.page === i && "current-img") || "";
+
+                return <img className={classN} key={i} id={i} src={img} alt="" />;
               })
           )}
         </div>
       </div>
       <div className="controls">
+        <span id="hide-player" onClick={onReturn}>
+          <i className="far fa-times-circle popup-msg" data-title="Close"></i>
+        </span>
         <span className="web-toon">
           <input
             type="checkbox"
@@ -293,7 +245,6 @@ const MangaViewer = ({ file }) => {
             id="webtoon"
             value={webtoon}
             onChange={() => {
-              firstObverser.current = true;
               setWebtoon(!webtoon);
             }}
           />
@@ -301,20 +252,34 @@ const MangaViewer = ({ file }) => {
             WebToon <i className="fas fa-check" />
           </label>
         </span>
-        <span className="prev-file">
+        <span className="prev-file" onClick={prevFile}>
           <i className="fa fa-backward"></i>
         </span>
         <span className="prev-page" onClick={prevPage}>
           <i className="fa fa-arrow-circle-left"></i>
         </span>
-        <span className="current-page" onClick={onProgressClick}>
-          {`${parseInt(page) + 1}/${size}`}
+        <span
+          className="current-page"
+          onClick={onProgressClick}
+          onKeyDown={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          {`${parseInt(pageData.page) + 1}/${size}`}
         </span>
         <span className="next-page" onClick={nextPage}>
           <i className="fa fa-arrow-circle-right"></i>
         </span>
-        <span className="next-page">
+        <span className="next-page" onClick={nextFile}>
           <i className="fa fa-forward"></i>
+        </span>
+        <span className="btn-fullscr" onClick={Fullscreen.action}>
+          <i className="fas fa-expand-arrows-alt popup-msg" data-title="Full Screen" />
+        </span>
+        <span>
+          <label className="p-sort" htmlFor="p-hide">
+            <i className="fas fa-list"></i>
+          </label>
         </span>
       </div>
     </div>

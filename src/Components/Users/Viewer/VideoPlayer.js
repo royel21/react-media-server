@@ -122,6 +122,7 @@ const VidePlayer = ({ configMedia, file, btnlist, socket }) => {
   KeyMap.PlayOrPause.action = playPause;
 
   useEffect(() => {
+    console.log("new File");
     player.current.volume = mConfig.volume;
     player.current.muted = mConfig.mute;
     socket.emit("video-config", { config: mConfig });
@@ -177,7 +178,7 @@ const VidePlayer = ({ configMedia, file, btnlist, socket }) => {
           <video
             id="player"
             ref={player}
-            src={`/api/videos/${file.Id || "0"}`}
+            src={`/api/viewer/${file.Id || "0"}`}
             preload="metadata"
             controls={false}
             onTimeUpdate={onProgress}
@@ -217,10 +218,7 @@ const VidePlayer = ({ configMedia, file, btnlist, socket }) => {
             </div>
             <div className="v-btns">
               <span id="hide-player" onClick={onReturn}>
-                <i
-                  className="far fa-times-circle popup-msg"
-                  data-title="Close"
-                ></i>
+                <i className="far fa-times-circle popup-msg" data-title="Close"></i>
               </span>
               {btnlist ? (
                 <span
@@ -250,9 +248,7 @@ const VidePlayer = ({ configMedia, file, btnlist, socket }) => {
                     checked={mConfig.pause}
                   />
                   <i
-                    className={`far fa-${
-                      mConfig.pause ? "play" : "pause"
-                    }-circle`}
+                    className={`far fa-${mConfig.pause ? "play" : "pause"}-circle`}
                     data-title="Pause"
                   ></i>
                 </label>
@@ -280,7 +276,7 @@ const VidePlayer = ({ configMedia, file, btnlist, socket }) => {
                 <i
                   className="fas fa-expand-arrows-alt popup-msg"
                   data-title="Full Screen"
-                ></i>
+                />
               </span>
               {btnlist ? (
                 <span>
@@ -308,10 +304,7 @@ const VidePlayer = ({ configMedia, file, btnlist, socket }) => {
                     checked={mConfig.mute}
                     onChange={onMute}
                   />
-                  <i
-                    className="fas fa-volume-up popup-msg"
-                    data-title="Mute"
-                  ></i>
+                  <i className="fas fa-volume-up popup-msg" data-title="Mute"></i>
                 </label>
               </span>
             </div>

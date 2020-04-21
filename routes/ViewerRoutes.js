@@ -17,8 +17,8 @@ getAttributes = (user, file) => {
       db.sqlze.literal(
         `IFNULL((Select LastPos from RecentFiles where FileId == ${file}.Id and RecentId == '${user.Recent.Id}'), 0)`
       ),
-      "CurrentPos"
-    ]
+      "CurrentPos",
+    ],
   ]);
 };
 
@@ -30,22 +30,22 @@ const getFiles = async (req, res, type) => {
     include: {
       model: db.file,
       attributes: getAttributes(user, "Files"),
-      order: [db.sqlze.literal("REPLACE(Name, '[','0')")]
-    }
+      order: [db.sqlze.literal("REPLACE(Name, '[','0')")],
+    },
   });
 
   res.send({
-    files: table.Files.map(f => f.dataValues),
-    config: user.UserConfig.dataValues.Config
+    files: table.Files.map((f) => f.dataValues),
+    config: user.UserConfig.dataValues.Config,
   });
 };
 
-Router.post("/video/", (req, res) => {
+Router.post("/file/", (req, res) => {
   let id = req.body.id;
 
   db.file
     .findOne({ where: { Id: id }, attributes: getAttributes(req.user, "File") })
-    .then(file => {
+    .then((file) => {
       if (file) {
         let config = req.user.UserConfig.dataValues.Config;
         res.send({ files: [], file: file.dataValues, config });
@@ -66,7 +66,7 @@ Router.post("/favorites/", (req, res) => {
 Router.get("/:id", (req, res) => {
   db.file
     .findOne({ attributes: ["FullPath", "Name", "Size"], where: { Id: req.params.id } })
-    .then(file => {
+    .then((file) => {
       if (file) {
         var total = file.Size;
         var range = req.headers.range;
@@ -94,18 +94,18 @@ Router.get("/:id", (req, res) => {
           "Content-Range": "bytes " + start + "-" + end + "/" + total,
           "Accept-Ranges": "bytes",
           "Content-Length": chunksize,
-          "Content-Type": "video/mp4"
+          "Content-Type": "video/mp4",
         });
 
         var stream = fs
           .createReadStream(path.join(file.FullPath, file.Name), {
             start: start,
-            end: end
+            end: end,
           })
-          .on("open", function() {
+          .on("open", function () {
             stream.pipe(res);
           })
-          .on("error", function(err) {
+          .on("error", function (err) {
             res.end(err);
           });
       } else {

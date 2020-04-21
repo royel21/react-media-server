@@ -4,7 +4,7 @@ import axios from "axios";
 import "./Login.css";
 import { useState } from "react";
 
-const Login = ({ setUser }) => {
+const Login = ({ setUser, history }) => {
   const [localUser, setLocalUser] = useState({ username: "", password: "" });
   const handleChange = (e) => {
     setLocalUser({ ...localUser, [e.target.name]: e.target.value });
@@ -14,6 +14,7 @@ const Login = ({ setUser }) => {
     e.preventDefault();
     axios.post("/api/users/login", localUser).then(({ data }) => {
       if (data.isAutenticated) {
+        history.replace("/");
         setUser({ ...data, isAutenticating: false });
       }
     });

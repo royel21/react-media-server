@@ -29,8 +29,6 @@ function App() {
         setUser({ ...resp.data, isAutenticating: false });
       });
     }
-
-    history.replace("/");
   }, [User.isAutenticated]);
   //handle socket connection
   if (User.isAutenticated && !socketRef.current) {
@@ -58,10 +56,7 @@ function App() {
           </SockectContextProvider>
         </UserContextProvider>
       ) : (
-        <Route
-          path="/*"
-          render={(props) => <Login {...props} setUser={setUser} />}
-        />
+        <Route path="/*" render={(props) => <Login {...props} setUser={setUser} />} />
       )}
     </Router>
   );

@@ -35,7 +35,7 @@ const Viewer = (props) => {
   let file = {};
 
   useEffect(() => {
-    Axios.post(`/api/videos/${type}`, { id }).then(({ data }) => {
+    Axios.post(`/api/viewer/${type}`, { id }).then(({ data }) => {
       if (data.fail) {
         console.log(data.msg);
       } else {
@@ -63,22 +63,6 @@ const Viewer = (props) => {
     if (fileIndex > -1 && fileIndex < data.length) {
       goToFile(data[fileIndex].Id);
     }
-  };
-
-  const updateFile = (f) => {
-    let data = { ...viewerData };
-    let ff = data.files.find((of) => of.Id === f.Id);
-    ff.CurrentPos = f.CurrentPos;
-    setViewerData(data);
-  };
-  const nextFile = (f) => {
-    if (f) updateFile(f);
-    prevOrNextFile(1);
-  };
-
-  const prevFile = (f) => {
-    if (f) updateFile(f);
-    prevOrNextFile(-1);
   };
 
   const handleClick = (e) => {
@@ -130,8 +114,27 @@ const Viewer = (props) => {
   }, [fileId, id, socket]);
 
   KeyMap.Fullscreen.action = setFullViewerScreen;
-  KeyMap.PrevFile.action = prevFile;
-  KeyMap.NextFile.action = nextFile;
+
+  if (fileId) {
+    const updateFile = (f) => {
+      let data = { ...viewerData };
+      let ff = data.files.find((of) => of.Id === f.Id);
+      ff.CurrentPos = f.CurrentPos;
+      setViewerData(data);
+    };
+    const nextFile = (f) => {
+      if (f) updateFile(f);
+      prevOrNextFile(1);
+    };
+
+    const prevFile = (f) => {
+      if (f) updateFile(f);
+      prevOrNextFile(-1);
+    };
+
+    KeyMap.PrevFile.action = prevFile;
+    KeyMap.NextFile.action = nextFile;
+  }
 
   return (
     <Fragment>
@@ -146,7 +149,7 @@ const Viewer = (props) => {
           tabIndex={0}
         >
           <div id="clock"></div>
-          {type.includes("manga") ? (
+          {file.Type.includes("Manga") ? (
             <MangaViewer
               configMedia={viewerData.config.manga}
               file={file}
@@ -161,11 +164,7 @@ const Viewer = (props) => {
             />
           )}
           {viewerData.files.length > 0 ? (
-            <PlayList
-              fileId={fileId}
-              setFile={goToFile}
-              files={viewerData.files}
-            />
+            <PlayList fileId={fileId} setFile={goToFile} files={viewerData.files} />
           ) : (
             ""
           )}

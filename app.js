@@ -20,7 +20,7 @@ app.use(express.static(__dirname + "/build"));
 const userRoutes = require("./routes/UserRoutes");
 const filesRoutes = require("./routes/FilesRoutes");
 const favoriteRoutes = require("./routes/FavoriteRoutes");
-const VideoRoute = require("./routes/VideoRouter");
+const ViewerRoutes = require("./routes/ViewerRoutes");
 
 // Administrator
 const UsersManagerRoute = require("./routes/admin/UsersManagerRoute");
@@ -43,6 +43,7 @@ app.use(passport.session());
 app.use("/api/users", userRoutes);
 
 app.use((req, res, next) => {
+  console.log(req.url);
   if (!/login|api\/users\/login/gi.test(req.url) && !req.user) {
     console.log("not user");
     return res.redirect("/login");
@@ -52,7 +53,7 @@ app.use((req, res, next) => {
 
 app.use("/api/files/favorites", favoriteRoutes);
 app.use("/api/files", filesRoutes);
-app.use("/api/videos", VideoRoute);
+app.use("/api/viewer", ViewerRoutes);
 
 app.use("/api/admin", (req, res, next) => {
   if (!req.user.Role.includes("Administrator")) {

@@ -7,8 +7,8 @@ const db = {};
 const Op = Sequelize.Op;
 const DataTypes = Sequelize.DataTypes;
 const sequelize = new Sequelize("sqlite:./" + dbPath, {
-  logging: false
-  // logging: console.log
+  logging: false,
+  logging: console.log,
 });
 
 db.Op = Op;
@@ -31,17 +31,17 @@ db.sqlze = sequelize;
 
 db.category.belongsToMany(db.file, { through: { model: db.fileCategory } });
 db.file.belongsToMany(db.category, {
-  through: { model: db.fileCategory, onDelete: "cascade" }
+  through: { model: db.fileCategory, onDelete: "cascade" },
 });
 
 db.favorite.belongsToMany(db.file, { through: { model: db.favoriteFile } });
 db.file.belongsToMany(db.favorite, {
-  through: { model: db.favoriteFile, onDelete: "cascade" }
+  through: { model: db.favoriteFile, onDelete: "cascade" },
 });
 
 db.recent.belongsToMany(db.file, { through: { model: db.recentFile } });
 db.file.belongsToMany(db.recent, {
-  through: { model: db.recentFile, onDelete: "cascade" }
+  through: { model: db.recentFile, onDelete: "cascade" },
 });
 
 db.directory.hasMany(db.file, { onDelete: "cascade" });
@@ -58,7 +58,7 @@ db.user.hasOne(db.userConfig, { onDelete: "cascade" });
 
 db.folder.hasMany(db.file);
 
-db.init = async force => {
+db.init = async (force) => {
   await sequelize.sync({ force });
   let admin = await db.user.findOne({ where: { Name: "Administrator" } });
 
@@ -69,7 +69,7 @@ db.init = async force => {
         Password: "Admin",
         Role: "Administrator",
         Recent: {
-          Name: "Administrator"
+          Name: "Administrator",
         },
         UserConfig: {
           Name: "Administrator",
@@ -78,12 +78,12 @@ db.init = async force => {
             items: 0,
             recentFolders: [],
             video: { KeysMap: {}, volume: 0.3, pause: true, mute: false },
-            manga: { KeysMap: {}, scaleX: 0.6, scaleY: 1, aniDuration: 300 }
-          }
-        }
+            manga: { KeysMap: {}, scaleX: 0.6, scaleY: 1, aniDuration: 300 },
+          },
+        },
       },
       {
-        include: [db.recent, db.favorite, db.userConfig]
+        include: [db.recent, db.favorite, db.userConfig],
       }
     );
   }

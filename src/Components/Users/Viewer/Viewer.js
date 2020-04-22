@@ -39,6 +39,7 @@ const Viewer = (props) => {
       if (data.fail) {
         console.log(data.msg);
       } else {
+        console.log(data);
         if (TypeList.includes(type)) {
           setViewerData({ ...data, isLoading: false });
         } else {
@@ -164,7 +165,11 @@ const Viewer = (props) => {
             />
           )}
           {viewerData.files.length > 0 ? (
-            <PlayList fileId={fileId} setFile={goToFile} files={viewerData.files} />
+            <PlayList
+              fileId={fileId}
+              setFile={goToFile}
+              files={viewerData.files}
+            />
           ) : (
             ""
           )}

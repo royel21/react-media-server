@@ -27,10 +27,10 @@ const getFiles = async (req, res, type) => {
   const id = req.body.id;
   let table = await db[type].findOne({
     where: { Id: id },
+    order: [db.sqlze.literal("REPLACE(`Files`.`Name`, '[','0')")],
     include: {
       model: db.file,
       attributes: getAttributes(user, "Files"),
-      order: [db.sqlze.literal("REPLACE(Name, '[','0')")],
     },
   });
 
@@ -65,7 +65,10 @@ Router.post("/favorites/", (req, res) => {
 
 Router.get("/:id", (req, res) => {
   db.file
-    .findOne({ attributes: ["FullPath", "Name", "Size"], where: { Id: req.params.id } })
+    .findOne({
+      attributes: ["FullPath", "Name", "Size"],
+      where: { Id: req.params.id },
+    })
     .then((file) => {
       if (file) {
         var total = file.Size;

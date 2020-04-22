@@ -39,6 +39,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
 
   const loadImages = useCallback(
     (pg, toPage, dir = 1) => {
+      console.time("t");
       loadingRef.current = true;
       let i = IndexOfUndefined(contentRef.current, pg, dir, Duration);
       console.log("i val:", i);
@@ -144,6 +145,8 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
       if (!data.error) {
         contentRef.current[data.page] = data.img;
         if (data.page === CurrentPos) {
+          console.log("page-reload", data.page, contentRef.current);
+          console.timeEnd("t");
           setPageData({
             page: pageRef.current.pos,
             loading: false,
@@ -169,6 +172,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
     pageRef.current = { id: Id, pos: CurrentPos };
 
     if (socket._callbacks["$image-loaded"]) {
+      console.time("t");
       socket.emit("loadzip-image", {
         Id,
         fromPage: CurrentPos - 5 < 0 ? 0 : CurrentPos - 5,
@@ -229,7 +233,9 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
                 let img = (data && "data:img/jpeg;base64, " + data) || "";
                 let classN = (pageData.page === i && "current-img") || "";
 
-                return <img className={classN} key={i} id={i} src={img} alt="" />;
+                return (
+                  <img className={classN} key={i} id={i} src={img} alt="" />
+                );
               })
           )}
         </div>
@@ -274,7 +280,10 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
           <i className="fa fa-forward"></i>
         </span>
         <span className="btn-fullscr" onClick={Fullscreen.action}>
-          <i className="fas fa-expand-arrows-alt popup-msg" data-title="Full Screen" />
+          <i
+            className="fas fa-expand-arrows-alt popup-msg"
+            data-title="Full Screen"
+          />
         </span>
         <span>
           <label className="p-sort" htmlFor="p-hide">

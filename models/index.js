@@ -8,7 +8,7 @@ const Op = Sequelize.Op;
 const DataTypes = Sequelize.DataTypes;
 const sequelize = new Sequelize("sqlite:./" + dbPath, {
   logging: false,
-  logging: console.log,
+  // logging: console.log,
 });
 
 db.Op = Op;

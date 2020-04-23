@@ -17,6 +17,16 @@ const IndexOfUndefined = function (arr, from, dir) {
   }
 };
 
+const toBase64 = (buff) => {
+  let t = "";
+  let n = new Uint8Array(buff);
+  let r = n.byteLength;
+  for (let i = 0; i < r; i++) {
+    t += String.fromCharCode(n[i]);
+  }
+  return btoa(t);
+};
+
 const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
   const history = useHistory();
   const { PrevFile, NextFile, Fullscreen } = KeyMap;
@@ -69,10 +79,12 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
       let pg = pageData.page - 1;
       if (pg > -1) {
         pageRef.current.pos = pg;
-        setPageData({ ...pageData, page: pg });
+        let loading = false;
         if (!contentRef.current[pg - 10] && !loadingRef.current) {
           loadImages(pg, 10, -1);
+          loading = true;
         }
+        setPageData({ loading, page: pg });
       } else {
         prevFile();
       }
@@ -83,10 +95,12 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
       let pg = pageData.page + 1;
       if (pg < size) {
         pageRef.current.pos = pg;
-        setPageData({ ...pageData, page: pg });
+        let loading = false;
         if (!contentRef.current[pg + 10] && !loadingRef.current) {
           loadImages(pg, 10);
+          loading = true;
         }
+        setPageData({ loading, page: pg });
       } else {
         nextFile();
       }
@@ -139,17 +153,23 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
     if (lastLoc) history.push(lastLoc);
   };
 
+  const saveFile = useCallback(() => {
+    console.log("save");
+    socket.emit("file-update-pos", pageRef.current);
+  }, [socket]);
+
   useEffect(() => {
+    saveFile();
     contentRef.current = [];
     socket.on("image-loaded", (data) => {
       if (!data.error) {
+        // contentRef.current[data.page] = toBase64(data.img);
         contentRef.current[data.page] = data.img;
         if (data.page === CurrentPos) {
-          console.log("page-reload", data.page, contentRef.current);
-          console.timeEnd("t");
+          console.log("page-reload", data.page);
           setPageData({
             page: pageRef.current.pos,
-            loading: false,
+            loading: true,
           });
         }
       }
@@ -157,18 +177,16 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
 
     socket.on("m-finish", () => {
       console.log("finish");
+      console.timeEnd("t");
       loadingRef.current = false;
       // if (!webtoon) {
-      //   setPageData({
-      //     page: pageRef.current.pos,
-      //     loading: false,
-      //   });
+      setPageData({
+        page: pageRef.current.pos,
+        loading: false,
+      });
       // }
     });
 
-    if (pageRef.current.pos > 0) {
-      socket.emit("file-update-pos", pageRef.current);
-    }
     pageRef.current = { id: Id, pos: CurrentPos };
 
     if (socket._callbacks["$image-loaded"]) {
@@ -180,8 +198,9 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
       });
     }
     setPageData({ content: [], page: CurrentPos, loading: true });
-
+    window.addEventListener("beforeunload", saveFile, { passive: true });
     return () => {
+      window.addEventListener("loadzip-image", saveFile);
       delete socket._callbacks["$image-loaded"];
       delete socket._callbacks["$m-finish"];
     };

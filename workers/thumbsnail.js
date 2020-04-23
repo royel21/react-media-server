@@ -29,15 +29,19 @@ var buff;
 module.exports.ZipCover = (file, coverP, exist) => {
   var zip = new StreamZip({
     file,
-    storeEntries: true
+    storeEntries: true,
   });
   return new Promise((resolve, reject) => {
     zip.on("ready", () => {
-      var entries = Object.values(zip.entries()).sort((a, b) => {
-        return String(a.name).localeCompare(String(b.name));
-      });
+      var entries = Object.values(zip.entries())
+        .sort((a, b) => {
+          return String(a.name).localeCompare(String(b.name));
+        })
+        .filter((entry) => {
+          return !entry.isDirectory;
+        });
 
-      var firstImg = entries.find(e => {
+      var firstImg = entries.find((e) => {
         return images.test(e.name.split(".").pop()) && e.size > 1024 * 30;
       });
 
@@ -51,7 +55,7 @@ module.exports.ZipCover = (file, coverP, exist) => {
         try {
           sharp(buff)
             .jpeg({
-              quality: 80
+              quality: 80,
             })
             .resize(240)
             .toFile(coverP, () => {
@@ -65,7 +69,7 @@ module.exports.ZipCover = (file, coverP, exist) => {
         }
       }
     });
-    zip.on("error", error => {
+    zip.on("error", (error) => {
       console.log(file, error);
       zip.close();
       resolve(0);

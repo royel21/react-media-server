@@ -11,6 +11,7 @@ module.exports.updateFileView = async (data) => {
 };
 
 module.exports.updateFilePos = async (data, user) => {
+  console.log("file-update", data, user && user.Name);
   let recent = await db.recentFile.findOrCreate({
     where: { FileId: data.id, RecentId: user.Recent.Id },
   });

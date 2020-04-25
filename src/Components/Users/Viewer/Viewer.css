@@ -41,18 +41,24 @@
 #play-list {
   position: absolute;
   right: 0;
+  bottom: 0;
   height: 100%;
-  width: 320px;
+  width: 190px;
   background-color: black;
   border-left: 2px solid;
   transition: 0.3s all;
-  z-index: 3;
+  z-index: 11;
   overflow: hidden;
+}
+
+#viewer.viewer-manga:not(:fullscreen) #play-list {
+  bottom: 34px;
 }
 
 #p-list {
   overflow-y: auto;
   height: calc(100% - 40px);
+  overflow-x: hidden;
 }
 
 #play-list .p-controls {
@@ -98,10 +104,11 @@
 
 #play-list #p-list .list-item {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   padding: 4px;
   border-bottom: 1px solid;
-  min-height: 82px;
+  min-height: 100px;
+  width: 178px;
   cursor: pointer;
   user-select: none;
 }
@@ -141,8 +148,8 @@
 }
 
 #play-list img {
-  max-width: 130px;
-  max-height: 75px;
+  max-width: 170px;
+  max-height: 240px;
 }
 
 #play-list #p-list::-webkit-scrollbar {

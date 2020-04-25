@@ -32,6 +32,13 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
   const { PrevFile, NextFile, Fullscreen } = KeyMap;
   let size = Duration;
   const socket = useContext(SocketContext);
+  //States
+  const [content, setContent] = useState([]);
+  const [webtoon, setWebtoon] = useState(false);
+  const [pageData, setPageData] = useState({
+    page: CurrentPos,
+    loading: true,
+  });
   //References
   const contentRef = useRef([]);
   const loadingRef = useRef(true);
@@ -39,12 +46,6 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
   const observer = useRef();
   const divRef = useRef();
   const scrollRef = useRef(false);
-  //States
-  const [webtoon, setWebtoon] = useState(false);
-  const [pageData, setPageData] = useState({
-    page: CurrentPos,
-    loading: true,
-  });
   //Copy content to ref
 
   const loadImages = useCallback(
@@ -166,11 +167,8 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
         // contentRef.current[data.page] = toBase64(data.img);
         contentRef.current[data.page] = data.img;
         if (data.page === CurrentPos) {
+          setContent([...contentRef.current]);
           console.log("page-reload", data.page);
-          setPageData({
-            page: pageRef.current.pos,
-            loading: true,
-          });
         }
       }
     });
@@ -180,10 +178,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
       console.timeEnd("t");
       loadingRef.current = false;
       // if (!webtoon) {
-      setPageData({
-        page: pageRef.current.pos,
-        loading: false,
-      });
+      setContent([...contentRef.current]);
       // }
     });
 
@@ -229,7 +224,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
     }
   }, [webtoon, setPageData, loadImages, Duration]);
 
-  let img = contentRef.current[pageData.page] || "";
+  let img = content[pageData.page] || "";
 
   console.log("render", pageData.loading);
   return (
@@ -252,9 +247,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
                 let img = (data && "data:img/jpeg;base64, " + data) || "";
                 let classN = (pageData.page === i && "current-img") || "";
 
-                return (
-                  <img className={classN} key={i} id={i} src={img} alt="" />
-                );
+                return <img className={classN} key={i} id={i} src={img} alt="" />;
               })
           )}
         </div>
@@ -299,10 +292,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
           <i className="fa fa-forward"></i>
         </span>
         <span className="btn-fullscr" onClick={Fullscreen.action}>
-          <i
-            className="fas fa-expand-arrows-alt popup-msg"
-            data-title="Full Screen"
-          />
+          <i className="fas fa-expand-arrows-alt popup-msg" data-title="Full Screen" />
         </span>
         <span>
           <label className="p-sort" htmlFor="p-hide">

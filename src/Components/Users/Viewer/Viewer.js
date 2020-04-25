@@ -144,6 +144,7 @@ const Viewer = (props) => {
       ) : (
         <div
           id="viewer"
+          className={"viewer" + (file.Type.includes("Manga") ? "-manga" : "-video")}
           onClick={handleClick}
           ref={viewRef}
           onKeyDown={handleKeyboard}
@@ -165,11 +166,7 @@ const Viewer = (props) => {
             />
           )}
           {viewerData.files.length > 0 ? (
-            <PlayList
-              fileId={fileId}
-              setFile={goToFile}
-              files={viewerData.files}
-            />
+            <PlayList fileId={fileId} setFile={goToFile} files={viewerData.files} />
           ) : (
             ""
           )}

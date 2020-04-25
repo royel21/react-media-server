@@ -16,7 +16,8 @@ module.exports.setDb = (_db) => {
 module.exports.loadZipImages = async (data, socket) => {
   let { Id, fromPage, toPage } = data;
   //get last user or create
-  console.log("data;", data);
+  console.time("data;", data);
+  console.time("manga");
   if (!users[socket.id]) {
     users[socket.id] = iUser;
   }
@@ -42,11 +43,7 @@ module.exports.loadZipImages = async (data, socket) => {
       let totalPage = fromPage + toPage;
       let size = user.entries.length;
 
-      for (
-        let i = fromPage < 0 ? 0 : fromPage;
-        i < totalPage && i < size;
-        i++
-      ) {
+      for (let i = fromPage < 0 ? 0 : fromPage; i < totalPage && i < size; i++) {
         let entry = user.entries[i];
         if (entry) {
           try {
@@ -61,6 +58,8 @@ module.exports.loadZipImages = async (data, socket) => {
       }
     }
     socket.emit("m-finish", { last: true });
+
+    console.timeEnd("manga");
   } else {
     let file = await db.file.findOne({
       attributes: ["FullPath", "Name"],
@@ -100,7 +99,7 @@ module.exports.loadZipImages = async (data, socket) => {
             });
           }
           socket.emit("m-finish", { last: true });
-          console.log("data send");
+          console.timeEnd("manga");
         });
 
         user.zip.on("error", (err) => {

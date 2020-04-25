@@ -36,10 +36,28 @@
   border-top-right-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
 }
-
+/* Pagination Styles */
 #pager {
   width: fit-content;
   padding: 0;
+}
+
+#pager #current-page {
+  min-width: 70px;
+  max-width: 85px;
+  text-align: center;
+  font-size: 14px;
+  padding: 0 4px;
+  line-height: 2;
+  font-weight: 700;
+}
+
+#pager #current-page input {
+  width: 95%;
+  height: 29px;
+  padding: 0 8px;
+  font-size: 15px;
+  color: #007bff;
 }
 
 #pager li:first-child {
@@ -61,26 +79,6 @@
 #pager li i {
   font-size: 20px;
   pointer-events: none;
-}
-
-#pager #current-page {
-  font-size: 14px;
-  padding: 0 4px;
-  line-height: 2;
-  font-weight: 700;
-}
-
-#pager #current-page {
-  width: 70px;
-  text-align: center;
-}
-
-#pager #current-page input {
-  width: 95%;
-  height: 29px;
-  padding: 0 8px;
-  font-size: 15px;
-  color: #007bff;
 }
 
 #pager #current-page input:focus {

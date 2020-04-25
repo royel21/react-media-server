@@ -20,7 +20,8 @@
   background-color: black;
 }
 
-#player-content .footer, #player-content .player {
+#player-content .footer,
+#player-content .player {
   position: relative;
   height: 100%;
 }
@@ -62,7 +63,8 @@
   align-items: center;
 }
 
-#player-content .footer, #player-content .player {
+#player-content .footer,
+#player-content .player {
   position: relative;
 }
 
@@ -111,6 +113,7 @@
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 1;
   transition: 0.5s all;
+  z-index: 10;
 }
 
 .v-controls .v-seeker {
@@ -118,7 +121,7 @@
   align-items: center;
 }
 
-.v-controls .v-seeker>span {
+.v-controls .v-seeker > span {
   display: inline-block;
   padding-left: 10px;
   line-height: 1.8;
@@ -136,7 +139,7 @@
   justify-content: center;
 }
 
-#player-container .v-btns>span {
+#player-container .v-btns > span {
   display: inline-block;
   margin: 0 4px;
   font-size: 24px;
@@ -163,17 +166,17 @@
   -webkit-app-region: no-drag;
 }
 
-#v-vol-control[value="0"]+label i:before {
+#v-vol-control[value="0"] + label i:before {
   content: "\f026";
 }
 
-#v-mute+.fa-volume-up {
+#v-mute + .fa-volume-up {
   display: inline-block;
   width: 30px;
   margin-left: 5px;
 }
 
-#player-content #v-mute:checked+i:before {
+#player-content #v-mute:checked + i:before {
   content: "\f6a9";
 }
 
@@ -206,7 +209,8 @@
   background-color: white;
 }
 
-:fullscreen #player-content video, :fullscreen #player-content .player {
+:fullscreen #player-content video,
+:fullscreen #player-content .player {
   height: 100%;
 }
 
@@ -262,7 +266,8 @@ input[type="range"]::-moz-range-thumb {
   margin: 0 10px;
 }
 
-#player-content .footer span, #player-content .footer {
+#player-content .footer span,
+#player-content .footer {
   height: max-content;
   font-size: 16px;
 }
@@ -292,13 +297,14 @@ input[type="range"]::-moz-range-thumb {
 #player-container #v-progress2 {
   position: absolute;
   opacity: 0;
-  top: 0;
+  bottom: 0;
   left: 0px;
   padding: 2px 8px;
-  border-bottom-right-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
   background-color: rgba(0, 0, 0, 0.8);
   opacity: 1;
   transition: 0.5s all;
+  font-size: 14px;
 }
 
 @media screen and (max-width: 1200px) {
@@ -315,7 +321,8 @@ input[type="range"]::-moz-range-thumb {
     padding: 0;
     border: none;
   }
-  #player-content .player, #player-content .player video {
+  #player-content .player,
+  #player-content .player video {
     height: 100%;
   }
   #player-container #v-vol-control {

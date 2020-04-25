@@ -56,7 +56,7 @@ db.user.hasMany(db.favorite, { onDelete: "cascade" });
 db.user.hasOne(db.recent, { onDelete: "cascade" });
 db.user.hasOne(db.userConfig, { onDelete: "cascade" });
 
-db.folder.hasMany(db.file);
+db.folder.hasMany(db.file, { onDelete: "cascade" });
 
 db.init = async (force) => {
   await sequelize.sync({ force });

@@ -1,8 +1,10 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useRef } from "react";
 import { formatTime } from "../Shares/utils";
 
-const PlayList = ({ files, setFile, fileId, hideList }) => {
+const PlayList = ({ files, setFile, fileId }) => {
   const [filter, setFilter] = useState("");
+  const observerRef = useRef();
+  const listRef = useRef();
   const filterPlayList = (e) => {
     setFilter(e.target.value);
   };
@@ -19,11 +21,47 @@ const PlayList = ({ files, setFile, fileId, hideList }) => {
   useEffect(() => {
     document.getElementById(fileId).scrollIntoView();
   }, [fileId]);
+
+  useEffect(() => {
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
+    let imgs = listRef.current.querySelectorAll("img");
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        for (let entry of entries) {
+          let img = entry.target;
+          if (entry.isIntersecting) {
+            img.src = img.dataset.src;
+          } else {
+            img.src = "";
+          }
+        }
+      },
+      {
+        root: listRef.current,
+        rootMargin: "500px",
+        threshold: 0,
+      }
+    );
+
+    imgs.forEach((lazyImg) => {
+      observerRef.current.observe(lazyImg);
+    });
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [files]);
+
   return (
     <Fragment>
       <input type="checkbox" id="p-hide" defaultChecked={true} />
       <div id="play-list">
-        <div id="p-list">
+        <div id="p-list" ref={listRef}>
           <ul className="list">
             {files
               .filter((f) => f.Name.includes(filter.toLocaleLowerCase()))
@@ -31,11 +69,13 @@ const PlayList = ({ files, setFile, fileId, hideList }) => {
                 <li
                   id={item.Id}
                   key={item.Id}
-                  className={"list-item " + (item.Id === fileId ? "active" : "")}
+                  className={
+                    "list-item" + (item.Id === fileId ? " active" : "") + ` ${item.Type}`
+                  }
                   onClick={selectFile}
                 >
                   <span className="cover">
-                    <img src={item.Cover} alt="" />
+                    <img data-src={item.Cover} src="" alt="" />
                     <span className="duration">
                       {item.Type.includes("Manga")
                         ? `${item.CurrentPos + 1}/${item.Duration}`

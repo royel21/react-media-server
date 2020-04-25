@@ -143,7 +143,7 @@ const VidePlayer = ({ configMedia, file, btnlist, socket }) => {
   const onPlayEnd = () => {
     if (KeyMap.NextFile.action) {
       let tout = setTimeout(() => {
-        KeyMap.NextFile.action({ Id: file.Id, CurrentPos: progress });
+        // KeyMap.NextFile.action({ Id: file.Id, CurrentPos: progress });
         clearTimeout(tout);
       }, 4000);
     }

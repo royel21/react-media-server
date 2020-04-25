@@ -64,10 +64,12 @@ html {
   display: none;
   position: absolute;
   right: 0;
-  z-index: 9;
+  bottom: 0;
   padding: 2px 7px;
   background-color: black;
-  border-bottom-left-radius: 0.25rem;
+  border-top-left-radius: 0.25rem;
+  z-index: 9;
+  font-size: 14px;
 }
 
 :fullscreen #clock {
@@ -266,6 +268,11 @@ input[type="range"]::-moz-range-thumb:active {
   padding: 4px 5px;
   cursor: pointer;
   align-self: center;
+  transition: 0.1s all;
+}
+
+#menu li:hover a {
+  border-bottom: 1px solid;
 }
 
 #menu .nav-item {
@@ -279,7 +286,6 @@ input[type="range"]::-moz-range-thumb:active {
 
 #menu .active:not(#logout) {
   border-bottom: 1px solid;
-  transition: 0.3s all;
 }
 
 #menu #show-config {

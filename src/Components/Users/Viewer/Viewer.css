@@ -1,7 +1,9 @@
 #user-content {
   overflow-x: hidden;
 }
+
 #viewer {
+  position: relative;
   display: flex;
   height: 100%;
   width: 100%;
@@ -25,6 +27,7 @@
   height: 100%;
   z-index: 2;
 }
+
 #viewer label {
   margin: 0;
 }
@@ -40,10 +43,10 @@
 
 #play-list {
   position: absolute;
+  top: 5px;
   right: 0;
   bottom: 0;
-  height: 100%;
-  width: 190px;
+  width: 200px;
   background-color: black;
   border-left: 2px solid;
   transition: 0.3s all;
@@ -70,15 +73,16 @@
   border-top: 1px solid;
 }
 
-#p-hide:checked + #play-list {
+#p-hide:checked+#play-list {
   width: 0;
   border: none;
 }
+
 #play-list label i {
   transition: 0.3s all;
 }
 
-#p-hide:checked + #play-list .p-controls .form-control {
+#p-hide:checked+#play-list .p-controls .form-control {
   display: none;
 }
 
@@ -128,6 +132,7 @@
 #play-list .cover {
   position: relative;
   pointer-events: none;
+  width: 100%;
 }
 
 #play-list .l-name {
@@ -148,8 +153,8 @@
 }
 
 #play-list img {
-  max-width: 170px;
-  max-height: 240px;
+  width: 100%;
+  max-height: 200px;
 }
 
 #play-list #p-list::-webkit-scrollbar {
@@ -167,4 +172,12 @@
 #p-items {
   display: inline-block;
   padding: 0 8px;
+}
+
+@media screen and (max-width: 600px) {
+  #p-list::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
 }

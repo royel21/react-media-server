@@ -7,13 +7,21 @@ const UserConfig = ({ User }) => {
   const [localConfig, setLocalConfig] = useState(config);
   const filePerPage = (e) => {
     let val = e.target.value;
-    val = val >= 0 ? val : 0;
-    val = val <= 501 ? val : 500;
+    if (/^\d+$/gi.test(val)) {
+      val = val >= 0 ? val : 0;
+      val = val <= 501 ? val : 500;
+    } else if ("" + val.length > 0) {
+      console.log("val:", val);
+      val = 0;
+    }
 
-    setLocalConfig({ order: localConfig.order, items: parseInt(val) });
+    setLocalConfig({ order: localConfig.order, items: val });
   };
 
   const applyChanges = () => {
+    if (localConfig.items === "") {
+      setLocalConfig({ order: localConfig.order, items: 0 });
+    }
     setConfig({ ...config, ...localConfig });
   };
   return (
@@ -52,7 +60,7 @@ const UserConfig = ({ User }) => {
               id="fperpage"
               min="0"
               max="500"
-              value={localConfig.items || 0}
+              value={localConfig.items}
               onChange={filePerPage}
             />
             <span id="fpp-tips">0 = auto, max 500</span>

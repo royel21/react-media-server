@@ -1,9 +1,8 @@
 #user-content .controls {
+  flex-shrink: 1;
   position: relative;
   display: flex;
   justify-content: space-between;
-  position: sticky;
-  bottom: 2px;
   padding: 4px;
   z-index: 1;
   pointer-events: none;

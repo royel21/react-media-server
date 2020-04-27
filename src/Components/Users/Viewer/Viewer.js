@@ -23,6 +23,7 @@ import MangaViewer from "./MangaViewer";
 const TypeList = ["folder", "favorite"];
 
 const Viewer = (props) => {
+  const [showFileList, setShowFileList] = useState(false);
   const socket = useContext(SocketContext);
   const viewRef = useRef(null);
   const { type, id, fileId } = useParams();
@@ -135,8 +136,12 @@ const Viewer = (props) => {
 
     KeyMap.PrevFile.action = prevFile;
     KeyMap.NextFile.action = nextFile;
+    KeyMap.ShowList.action = () => {
+      setShowFileList(!showFileList);
+    };
   }
 
+  console.log("showL", showFileList);
   return (
     <Fragment>
       {viewerData.isLoading ? (
@@ -166,7 +171,13 @@ const Viewer = (props) => {
             />
           )}
           {viewerData.files.length > 0 ? (
-            <PlayList fileId={fileId} setFile={goToFile} files={viewerData.files} />
+            <PlayList
+              fileId={fileId}
+              setFile={goToFile}
+              files={viewerData.files}
+              showFileList={showFileList}
+              setShowFileList={setShowFileList}
+            />
           ) : (
             ""
           )}

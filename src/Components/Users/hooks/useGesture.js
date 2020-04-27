@@ -1,3 +1,5 @@
+import { KeyMap } from "../../Shares/KeyMap";
+
 const initialData = {
   startX: 0,
   endPosX: 0,
@@ -11,23 +13,31 @@ var startClick = 0;
 var touching = false;
 var gestureDir = 0;
 var touchData = { ...initialData };
-const useGesture = (player, setFullscreen, playPause, mCfg, setMConfig) => {
+const { Fullscreen, ShowList } = KeyMap;
+
+const useGesture = (player, playPause, mCfg, setMConfig) => {
   //   const [touchData, setTouchData] = useState(initialData);
 
   const onTouchStart = (e) => {
     touching = true;
     let time = e.timeStamp;
+
     if (e.type !== "mousedown") {
       let { pageX, pageY } = e.touches[0];
       touchData = { time, startX: pageX, startY: pageY };
     } else {
       startClick++;
+      let pY = e.pageY;
       if (startClick === 1) {
         setTimeout(function () {
           if (startClick === 1) {
-            playPause();
+            if (pY > window.innerHeight * 0.75) {
+              ShowList.action();
+            } else {
+              playPause();
+            }
           } else {
-            setFullscreen();
+            Fullscreen.action();
           }
           startClick = 0;
         }, 200);
@@ -42,6 +52,7 @@ const useGesture = (player, setFullscreen, playPause, mCfg, setMConfig) => {
       let { startX, startY } = touchData;
       let deltaX = pageX - startX;
       let deltaY = pageY - startY;
+      console.log(pageY);
 
       if (gestureDir === 0 && (deltaX > 10 || deltaX < -10)) {
         gestureDir = 1;

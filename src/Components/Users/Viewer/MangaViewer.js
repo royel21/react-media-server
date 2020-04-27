@@ -6,6 +6,7 @@ import PageInput from "../../Shares/PageInput";
 import { KeyMap, handleKeyboard } from "../../Shares/KeyMap";
 import { useHistory } from "react-router-dom";
 import { scrollInView, webtoonLoader } from "./Webtoon";
+import useMangaGesture from "../hooks/useMangaGesture";
 
 const IndexOfUndefined = function (arr, from, dir) {
   var i = from;
@@ -17,15 +18,15 @@ const IndexOfUndefined = function (arr, from, dir) {
   }
 };
 
-const toBase64 = (buff) => {
-  let t = "";
-  let n = new Uint8Array(buff);
-  let r = n.byteLength;
-  for (let i = 0; i < r; i++) {
-    t += String.fromCharCode(n[i]);
-  }
-  return btoa(t);
-};
+// const toBase64 = (buff) => {
+//   let t = "";
+//   let n = new Uint8Array(buff);
+//   let r = n.byteLength;
+//   for (let i = 0; i < r; i++) {
+//     t += String.fromCharCode(n[i]);
+//   }
+//   return btoa(t);
+// };
 
 const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
   const history = useHistory();
@@ -53,7 +54,6 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
       console.time("t");
       loadingRef.current = true;
       let i = IndexOfUndefined(contentRef.current, pg, dir, Duration);
-      console.log("i val:", i);
       if (i >= Duration || i <= -1) return;
       if (dir < 0) {
         i = i - toPage;
@@ -66,14 +66,14 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
   );
   //Next File
   const prevFile = () => {
-    console.log("nextFile");
     PrevFile.action && PrevFile.action({ Id, CurrentPos: pageData.page });
   };
   //Next File
   const nextFile = () => {
-    console.log("nextFile");
     NextFile.action && NextFile.action({ Id, CurrentPos: pageData.page });
   };
+
+  const { onTouchStart, onTouchMove, onTouchEnd } = useMangaGesture(nextFile, prevFile);
 
   const prevPage = () => {
     if (!webtoon) {
@@ -123,17 +123,6 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
       }
       return pg;
     });
-  };
-
-  const handleMouseDown = (e) => {
-    if (!webtoon) {
-      if (e.button === 0) {
-        nextPage();
-      } else {
-        prevPage();
-      }
-    }
-    e.preventDefault();
   };
 
   const onCancelContextM = (e) => {
@@ -199,7 +188,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
       delete socket._callbacks["$image-loaded"];
       delete socket._callbacks["$m-finish"];
     };
-  }, [setPageData, socket, Id, CurrentPos]);
+  }, [setPageData, socket, Id, CurrentPos, saveFile]);
 
   useEffect(() => {
     if (observer.current) {
@@ -225,14 +214,19 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
   }, [webtoon, setPageData, loadImages, Duration]);
 
   let img = content[pageData.page] || "";
+  const progress = `${parseInt(pageData.page) + 1}/${size}`;
 
   console.log("render", pageData.loading);
   return (
     <div id="manga-viewer" onKeyDown={handleKeyboard} tabIndex="0">
+      <span className="fullscreen-progress">{progress}</span>
       <div className="viewer">
         <div
           className={"img-current " + (webtoon ? "webtoon-img" : "")}
-          onMouseDown={handleMouseDown}
+          onMouseDown={onTouchStart}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
           onContextMenu={onCancelContextM}
           ref={divRef}
           tabIndex="0"
@@ -247,9 +241,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
                 let img = (data && "data:img/jpeg;base64, " + data) || "";
                 let classN = (pageData.page === i && "current-img") || "";
 
-                return (
-                  <img className={classN} key={i} id={i} src={img} alt="" />
-                );
+                return <img className={classN} key={i} id={i} src={img} alt="" />;
               })
           )}
         </div>
@@ -285,7 +277,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
             e.stopPropagation();
           }}
         >
-          {`${parseInt(pageData.page) + 1}/${size}`}
+          {progress}
         </span>
         <span className="next-page" onClick={nextPage}>
           <i className="fa fa-arrow-circle-right"></i>
@@ -294,10 +286,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
           <i className="fa fa-forward"></i>
         </span>
         <span className="btn-fullscr" onClick={Fullscreen.action}>
-          <i
-            className="fas fa-expand-arrows-alt popup-msg"
-            data-title="Full Screen"
-          />
+          <i className="fas fa-expand-arrows-alt popup-msg" data-title="Full Screen" />
         </span>
         <span>
           <label className="p-sort" htmlFor="p-hide">

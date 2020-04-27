@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect, useRef } from "react";
 import { formatTime } from "../Shares/utils";
 
-const PlayList = ({ files, setFile, fileId }) => {
+const PlayList = ({ files, setFile, fileId, showFileList, setShowFileList }) => {
   const [filter, setFilter] = useState("");
   const observerRef = useRef();
   const listRef = useRef();
@@ -56,10 +56,16 @@ const PlayList = ({ files, setFile, fileId }) => {
       }
     };
   }, [files]);
-
   return (
     <Fragment>
-      <input type="checkbox" id="p-hide" defaultChecked={true} />
+      <input
+        type="checkbox"
+        id="p-hide"
+        checked={!showFileList}
+        onChange={() => {
+          setShowFileList(!showFileList);
+        }}
+      />
       <div id="play-list">
         <div id="p-list" ref={listRef}>
           <ul className="list">

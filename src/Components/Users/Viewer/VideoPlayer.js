@@ -10,7 +10,7 @@ import { KeyMap } from "../../Shares/KeyMap";
 import { useHistory } from "react-router-dom";
 import useGesture from "../hooks/useGesture";
 
-const VidePlayer = ({ configMedia, file, btnlist, socket }) => {
+const VidePlayer = ({ configMedia, file, btnlist, socket, setShowFileList }) => {
   const history = useHistory();
   // Context
   // Element References
@@ -134,10 +134,10 @@ const VidePlayer = ({ configMedia, file, btnlist, socket }) => {
 
   const { onTouchStart, onTouchEnd, onTouchMove } = useGesture(
     player,
-    KeyMap.Fullscreen.action,
     playPause,
     mConfig,
-    setMConfig
+    setMConfig,
+    setShowFileList
   );
 
   const onPlayEnd = () => {
@@ -167,7 +167,14 @@ const VidePlayer = ({ configMedia, file, btnlist, socket }) => {
 
   let progressVal = formatTime(progress) + "/" + formatTime(file.Duration);
   return (
-    <div id="player-container">
+    <div
+      id="player-container"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      onMouseDown={onTouchStart}
+      onMouseUp={onTouchEnd}
+      onTouchMove={onTouchMove}
+    >
       {isLoading ? <Loading /> : ""}
       <div
         id="player-content"
@@ -185,11 +192,6 @@ const VidePlayer = ({ configMedia, file, btnlist, socket }) => {
             onLoadedMetadata={onMeta}
             onContextMenu={hideMenu}
             autoPlay={!mConfig.pause}
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
-            onMouseDown={onTouchStart}
-            onMouseUp={onTouchEnd}
-            onTouchMove={onTouchMove}
             poster={file.Cover}
             loop={false}
             onEnded={onPlayEnd}
@@ -203,6 +205,7 @@ const VidePlayer = ({ configMedia, file, btnlist, socket }) => {
             onMouseEnter={controlFocus}
             onMouseLeave={controlFocus}
             style={{ opacity: !mConfig.pause ? "0" : "1" }}
+            onMouseDown={(e) => e.stopPropagation()}
           >
             <div className="v-seeker">
               <span id="v-progress">{progressVal}</span>
@@ -279,10 +282,8 @@ const VidePlayer = ({ configMedia, file, btnlist, socket }) => {
                 />
               </span>
               {btnlist ? (
-                <span>
-                  <label className="p-sort" htmlFor="p-hide">
-                    <i className="fas fa-list"></i>
-                  </label>
+                <span className="p-sort" onClick={KeyMap.ShowList.action}>
+                  <i className="fas fa-list"></i>
                 </span>
               ) : (
                 ""

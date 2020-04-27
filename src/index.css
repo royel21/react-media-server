@@ -22,15 +22,15 @@ html {
   position: relative;
   background-color: #14243d;
   background: radial-gradient(ellipse at center, #14243d 0%, #030611 100%);
-  height: 100vh;
-  min-height: 100vh;
+  height: 100%;
+  min-height: 100%;
 }
 
 #admin-content,
 .content {
   position: relative;
-  min-height: calc(100% - 32px);
-  height: calc(100% - 32px);
+  min-height: 100%;
+  height: 100%;
   overflow-y: auto;
 }
 
@@ -48,9 +48,6 @@ html {
 @media screen and (max-width: 450px) {
   ::-webkit-scrollbar {
     width: 0;
-  }
-  .content {
-    padding-bottom: 40px;
   }
 }
 
@@ -451,15 +448,14 @@ input[type="number"] {
 @media screen and (max-width: 750px) {
   #menu .fa-user-cog + span,
   #menu .nav-link span {
-    display: none;
+    font-size: 14px;
   }
 
-  #menu i {
-    font-size: 25px;
-    margin: 2px 5px;
-  }
+  .nav-item label,
   .nav-item .nav-link {
     padding: 4px;
+    display: inline-block;
+    text-align: center;
   }
 
   #menu #admin + label {
@@ -470,10 +466,12 @@ input[type="number"] {
     position: relative;
     top: 3px;
   }
-
+  #menu i.fa-user-cog {
+    margin: 0;
+  }
   #menu #p-config #user-config {
-    top: 53px;
-    right: 11%;
+    top: 67px;
+    right: 2%;
   }
 }
 

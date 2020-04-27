@@ -34,6 +34,12 @@ function App() {
   if (User.isAutenticated && !socketRef.current) {
     socketRef.current = socketIOClient("/");
     console.log("Create socket");
+    socketRef.current.on("connect", () => {
+      socketRef.current.emit("message", {
+        ww: window.innerHeight,
+        wd: document.body.offsetHeight,
+      });
+    });
   } else if (socketRef.current) {
     //close socket connection if logout
     socketRef.current.close();

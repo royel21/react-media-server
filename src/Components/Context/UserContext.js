@@ -3,6 +3,12 @@ import Axios from "axios";
 
 export const UserContext = createContext();
 
+function isPwa() {
+  return ["fullscreen", "standalone", "minimal-ui"].some(
+    (displayMode) => window.matchMedia("(display-mode: " + displayMode + ")").matches
+  );
+}
+
 const UserContextProvider = (props) => {
   const { User, setUser } = props;
   const [favorites, setFavorites] = useState(User.favorites);
@@ -12,7 +18,9 @@ const UserContextProvider = (props) => {
     e.preventDefault();
     Axios.post("/api/users/logout").then((resp) => {
       setUser({ isAutenticated: false });
-      props.history.push("/");
+      if (isPwa()) {
+        props.history.go(-(props.history.length - 2));
+      }
     });
   };
   return (

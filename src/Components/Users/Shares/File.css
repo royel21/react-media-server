@@ -1,18 +1,3 @@
-.files-list {
-  display: flex;
-  flex-wrap: wrap;
-  min-height: calc(100% - 47px);
-  align-content: flex-start;
-  padding-bottom: 30px;
-  padding-top: 5px;
-}
-
-.files-list.loading {
-  flex-wrap: initial;
-  justify-content: center;
-  align-items: center;
-}
-
 .file {
   position: relative;
   outline: none;
@@ -180,26 +165,11 @@
 }
 
 @media screen and (max-width: 420px) {
-  #fav-file-list #filter-control {
-    display: none;
-  }
-  .files-list {
-    padding-bottom: 70px;
-  }
   .file {
     width: 185px;
     min-width: 185px;
   }
   .file-info {
     width: 175px;
-  }
-}
-
-@media screen and (max-width: 370px) {
-  .files-list {
-    justify-content: center;
-  }
-  #filter-control {
-    display: none;
   }
 }

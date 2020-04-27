@@ -9,6 +9,8 @@ import Favorites from "./Favorites/Favorites";
 import Videos from "./Videos";
 import Viewer from "./Viewer/Viewer";
 
+import "./User.css";
+
 const UsersRoutes = () => {
   return (
     <Fragment>

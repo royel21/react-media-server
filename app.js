@@ -6,6 +6,9 @@ const session = require("express-session");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+
+require("dotenv").config();
+
 require("./helpers/passport")(passport);
 
 var app = express();
@@ -96,4 +99,4 @@ db.init().then(() => {
   return require("./modules/socketio-server")(server, sessionMeddle);
 });
 
-console.log(process.env.NODE_ENV);
+console.log(process.env.NODE_ENV, process.env.PORT);

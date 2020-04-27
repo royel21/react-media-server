@@ -9,7 +9,7 @@ import { scrollInView, webtoonLoader } from "./Webtoon";
 import useMangaGesture from "../hooks/useMangaGesture";
 
 const IndexOfUndefined = function (arr, from, dir) {
-  var i = from;
+  var i = from < 0 ? 0 : from;
   while (true) {
     if (!arr[i]) {
       return i;
@@ -54,6 +54,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
       console.time("t");
       loadingRef.current = true;
       let i = IndexOfUndefined(contentRef.current, pg, dir, Duration);
+      console.log("load-images", i);
       if (i >= Duration || i <= -1) return;
       if (dir < 0) {
         i = i - toPage;
@@ -73,7 +74,10 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
     NextFile.action && NextFile.action({ Id, CurrentPos: pageData.page });
   };
 
-  const { onTouchStart, onTouchMove, onTouchEnd } = useMangaGesture(nextFile, prevFile);
+  const { onTouchStart, onTouchMove, onTouchEnd } = useMangaGesture(
+    nextFile,
+    prevFile
+  );
 
   const prevPage = () => {
     if (!webtoon) {
@@ -113,7 +117,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
     PageInput(event.target, pageData.page, size, (nextPage) => {
       let pg = nextPage < 0 ? 0 : nextPage >= size ? size - 1 : nextPage;
       if (!loadingRef.current) {
-        loadImages(pg - 5, 10);
+        loadImages(pg - 5, 10, 1);
         setPageData({ page: pg, loading: false });
       }
       pageRef.current.pos = pg;
@@ -229,7 +233,6 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
           onTouchEnd={onTouchEnd}
           onContextMenu={onCancelContextM}
           ref={divRef}
-          tabIndex="0"
         >
           {!webtoon ? (
             <img src={img && "data:img/jpeg;base64, " + img} alt="" />
@@ -241,7 +244,9 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
                 let img = (data && "data:img/jpeg;base64, " + data) || "";
                 let classN = (pageData.page === i && "current-img") || "";
 
-                return <img className={classN} key={i} id={i} src={img} alt="" />;
+                return (
+                  <img className={classN} key={i} id={i} src={img} alt="" />
+                );
               })
           )}
         </div>
@@ -286,7 +291,10 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
           <i className="fa fa-forward"></i>
         </span>
         <span className="btn-fullscr" onClick={Fullscreen.action}>
-          <i className="fas fa-expand-arrows-alt popup-msg" data-title="Full Screen" />
+          <i
+            className="fas fa-expand-arrows-alt popup-msg"
+            data-title="Full Screen"
+          />
         </span>
         <span>
           <label className="p-sort" htmlFor="p-hide">

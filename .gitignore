@@ -14,7 +14,7 @@ modules/win-explorer/bin
 # production
 /images/
 /build
-files.db
+files*
 
 # misc
 .DS_Store

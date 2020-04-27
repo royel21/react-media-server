@@ -1,6 +1,6 @@
 #admin-content {
   padding: 10px;
-  overflow-y: auto;
+  min-height: calc(100% - 34px);
 }
 
 #admin-content #pager #last-page {
@@ -134,6 +134,7 @@ li.active .fa-edit {
 
 #admin-content #fl-manager .controls > span:last-child {
   pointer-events: none;
+  font-size: 20px;
 }
 
 #admin-content #admin-content .manager #clear-filter {
@@ -167,4 +168,11 @@ li.active .fa-edit {
 #admin-content #pager li i {
   font-size: 20px;
   pointer-events: none;
+}
+
+@media screen and (max-width: 700px) {
+  #root #admin-content {
+    min-height: calc(100% - 56px);
+    height: calc(100% - 56px);
+  }
 }

@@ -43,7 +43,7 @@
 
 #play-list {
   position: absolute;
-  top: 5px;
+  top: 0px;
   right: 0;
   bottom: 0;
   width: 200px;
@@ -73,7 +73,7 @@
   border-top: 1px solid;
 }
 
-#p-hide:checked+#play-list {
+#p-hide:checked + #play-list {
   width: 0;
   border: none;
 }
@@ -82,7 +82,7 @@
   transition: 0.3s all;
 }
 
-#p-hide:checked+#play-list .p-controls .form-control {
+#p-hide:checked + #play-list .p-controls .form-control {
   display: none;
 }
 

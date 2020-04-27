@@ -1,15 +1,6 @@
 {
   "verbose": false,
-  "ignore": [
-    "files.db",
-    "files.db-journal",
-    "public/covers/videos",
-    "public/covers/mangas",
-    "public/covers/folders",
-    "src/**/*",
-    "script.js",
-    "files copy.db"
-  ],
+  "ignore": ["files*", "images/covers/**/*.jpg", "src/**/*", "script.js"],
   "env": {
     "NODE_ENV": "production"
   }

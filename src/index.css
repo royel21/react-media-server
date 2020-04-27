@@ -24,6 +24,7 @@ html {
   background: radial-gradient(ellipse at center, #14243d 0%, #030611 100%);
   height: 100%;
   min-height: 100%;
+  padding-top: 34px;
 }
 
 #admin-content,
@@ -165,7 +166,8 @@ input[type="range"]::-webkit-slider-runnable-track {
   border: 0.4px solid #010101;
 }
 input[type="range"]::-webkit-slider-thumb {
-  box-shadow: 1.7px 1.7px 2px rgba(0, 0, 0, 0.6), 0px 0px 1.7px rgba(13, 13, 13, 0.6);
+  box-shadow: 1.7px 1.7px 2px rgba(0, 0, 0, 0.6),
+    0px 0px 1.7px rgba(13, 13, 13, 0.6);
   border: 0.2px solid #000000;
   height: 20px;
   width: 20px;
@@ -188,7 +190,8 @@ input[type="range"]::-moz-range-track {
   border: 0.4px solid #010101;
 }
 input[type="range"]::-moz-range-thumb {
-  box-shadow: 1.7px 1.7px 2px rgba(0, 0, 0, 0.6), 0px 0px 1.7px rgba(13, 13, 13, 0.6);
+  box-shadow: 1.7px 1.7px 2px rgba(0, 0, 0, 0.6),
+    0px 0px 1.7px rgba(13, 13, 13, 0.6);
   border: 0.2px solid #000000;
   height: 20px;
   width: 20px;
@@ -217,7 +220,8 @@ input[type="range"]::-ms-fill-upper {
   box-shadow: 2px 2px px #000000, 0px 0px 2px #0d0d0d;
 }
 input[type="range"]::-ms-thumb {
-  box-shadow: 1.7px 1.7px 2px rgba(0, 0, 0, 0.6), 0px 0px 1.7px rgba(13, 13, 13, 0.6);
+  box-shadow: 1.7px 1.7px 2px rgba(0, 0, 0, 0.6),
+    0px 0px 1.7px rgba(13, 13, 13, 0.6);
   border: 0.2px solid #000000;
   height: 20px;
   width: 20px;
@@ -243,7 +247,7 @@ input[type="range"]::-moz-range-thumb:active {
 
 /************************ Nabvar *****************/
 #menu {
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -445,6 +449,7 @@ input[type="number"] {
   background-color: rgba(252, 1, 1, 0.856);
 }
 /**********************************************************/
+
 @media screen and (max-width: 750px) {
   #menu .fa-user-cog + span,
   #menu .nav-link span {
@@ -475,6 +480,11 @@ input[type="number"] {
   }
 }
 
+@media screen and (max-width: 499px) {
+  #root {
+    padding-top: 56px;
+  }
+}
 @media screen and (max-width: 450px) {
   ::-webkit-scrollbar {
     width: 0;

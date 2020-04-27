@@ -18,25 +18,25 @@ const Navbar = () => {
             className="nav-link"
           >
             <i className="fas fa-users" />
-            <span> User Manager</span>
+            <span> Users</span>
           </NavLink>
         </li>
         <li className="nav-item">
           <NavLink to="/files" className="nav-link">
             <i className="fas fa-copy" />
-            <span> Files Manager</span>
+            <span> Files</span>
           </NavLink>
         </li>
         <li className="nav-item">
           <NavLink to="/folders" className="nav-link">
             <i className="fas fa-folder" />
-            <span> Folders Manager</span>
+            <span> Folders</span>
           </NavLink>
         </li>
         <li className="nav-item">
           <NavLink to="/disk" className="nav-link">
             <i className="fas fa-sitemap" />
-            <span> Disk Manager</span>
+            <span> Disks</span>
           </NavLink>
         </li>
       </ul>

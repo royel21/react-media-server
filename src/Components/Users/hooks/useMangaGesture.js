@@ -25,33 +25,23 @@ const useGesture = (nextFile, prevFile) => {
     if (e.type !== "mousedown") {
       // touchData = { time, startX: pageX, startY: pageY };
     } else {
-      startClick++;
-      if (startClick === 1) {
-        setTimeout(function () {
-          if (startClick === 1) {
-            let w = window.innerWidth;
-            if (pageY > window.innerHeight * 0.75) {
-              if (pageX < w * 0.25) {
-                prevFile();
-              } else if (pageX < w * 0.75) {
-                ShowList.action();
-              } else {
-                nextFile();
-              }
-            } else {
-              if (pageX < w * 0.25) {
-                SkipBack.action();
-              } else if (pageX < w * 0.75) {
-                Fullscreen.action();
-              } else {
-                SkipForward.action();
-              }
-            }
-          } else {
-            Fullscreen.action();
-          }
-          startClick = 0;
-        }, 200);
+      let w = window.innerWidth;
+      if (pageY > window.innerHeight * 0.75) {
+        if (pageX < w * 0.25) {
+          prevFile();
+        } else if (pageX < w * 0.75) {
+          ShowList.action();
+        } else {
+          nextFile();
+        }
+      } else {
+        if (pageX < w * 0.25) {
+          SkipBack.action();
+        } else if (pageX < w * 0.75) {
+          Fullscreen.action();
+        } else {
+          SkipForward.action();
+        }
       }
     }
   };

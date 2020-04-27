@@ -27,8 +27,7 @@ const UserConfig = ({ User }) => {
   return (
     <Fragment>
       <label htmlFor="show-config">
-        <i className="fas fa-user-cog" />
-        <span>{User.username}</span>
+        <i className="fas fa-user-cog" /> <span>{User.username}</span>
       </label>
       <input type="checkbox" name="" id="show-config" />
       <div id="user-config">

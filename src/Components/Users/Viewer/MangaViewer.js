@@ -224,13 +224,15 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
   return (
     <div id="manga-viewer" onKeyDown={handleKeyboard} tabIndex="0">
       <span className="fullscreen-progress">{progress}</span>
-      <div className="viewer">
+      <div
+        className="viewer"
+        onMouseDown={onTouchStart}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
         <div
           className={"img-current " + (webtoon ? "webtoon-img" : "")}
-          onMouseDown={onTouchStart}
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
           onContextMenu={onCancelContextM}
           ref={divRef}
         >

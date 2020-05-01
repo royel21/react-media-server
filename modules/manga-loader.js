@@ -42,11 +42,7 @@ module.exports.loadZipImages = async (data, socket) => {
       let totalPage = fromPage + toPage;
       let size = user.entries.length;
 
-      for (
-        let i = fromPage < 0 ? 0 : fromPage;
-        i < totalPage && i < size;
-        i++
-      ) {
+      for (let i = fromPage < 0 ? 0 : fromPage; i < totalPage && i < size; i++) {
         let entry = user.entries[i];
         if (entry) {
           try {

@@ -6,63 +6,62 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(10),
         primaryKey: true,
         unique: true,
-        allowNull: false
+        allowNull: false,
       },
       Name: {
-        type: DataTypes.STRING(150)
+        type: DataTypes.STRING(150),
       },
       Duration: {
         type: DataTypes.FLOAT(8, 2).UNSIGNED,
-        defaultValue: 0
+        defaultValue: 0,
       },
       FullPath: {
         type: DataTypes.STRING,
         defaultValue: "",
-        allowNull: false
+        allowNull: false,
       },
       Type: {
         type: DataTypes.STRING(25),
         defaultValue: "",
-        allowNull: false
+        allowNull: false,
       },
       Size: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
       },
       CreatedAt: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       ViewCount: {
         type: DataTypes.INTEGER,
-        defaultValue: 0
+        defaultValue: 0,
       },
       Cover: {
-        type: DataTypes.STRING
-      }
+        type: DataTypes.STRING,
+      },
     },
     {
       timestamps: false,
       hooks: {
-        beforeValidate: function(item, options) {
-          item.Id = Math.random()
-            .toString(36)
-            .slice(-5);
-          item.Cover = `/covers/${item.Type}/${item.Name.replace(/#|%/gi, "")}.jpg`;
+        beforeValidate: function (item, options) {
+          item.Id = Math.random().toString(36).slice(-5);
+          if (item.Name && item.Type)
+            item.Cover = `/covers/${item.Type}/${item.Name.replace(/#|%/gi, "")}.jpg`;
         },
         beforeBulkCreate(instances, options) {
           for (var item of instances) {
             item.Cover = `/covers/${item.Type}/${item.Name.replace(/#|%/gi, "")}.jpg`;
           }
-        }
-      }
+        },
+      },
     }
   );
 
-  File.findByName = name => {
+  File.findByName = (name) => {
     return File.findOne({
       where: {
-        Name: name
-      }
+        Name: name,
+      },
     });
   };
 

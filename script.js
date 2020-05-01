@@ -132,9 +132,27 @@
 //   await getDuration("E:\\Anime\\kiss x Sis\\Kiss x Sis OVA - 04.mp4");
 // };
 // work();
+
+// const db = require("./models");
+
+// const test = async () => {
+//   console.time("s");
+//   let file = await db.file.findAll({ limit: 1 });
+//   console.timeEnd("s");
+
+//   console.time("s2");
+//   let file2 = await db.file.findAll({
+//     limit: 1,
+//     include: [{ model: db.directory }, { model: db.folder }],
+//   });
+//   console.timeEnd("s2");
+//   console.log(file.Name, file.FullPath);
+//   console.log(file2.Name, file2.Directory.Name, file2.Folder.Name);
+// };
+// test();
 const winex = require("win-explorer");
 
-for (let f of winex.ListFilesRO("M:\\Mangas")) {
+for (let f of winex.ListFilesRO("E:\\Anime")) {
   f.Files = [];
   if (f.isDirectory) console.log(f);
 }

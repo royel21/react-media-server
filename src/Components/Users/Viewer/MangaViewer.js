@@ -48,7 +48,6 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
   const divRef = useRef();
   const scrollRef = useRef(false);
   //Copy content to ref
-
   const loadImages = useCallback(
     (pg, toPage, dir = 1) => {
       console.time("t");
@@ -67,17 +66,16 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
   );
   //Next File
   const prevFile = () => {
+    setContent([]);
     PrevFile.action && PrevFile.action({ Id, CurrentPos: pageData.page });
   };
   //Next File
   const nextFile = () => {
+    setContent([]);
     NextFile.action && NextFile.action({ Id, CurrentPos: pageData.page });
   };
 
-  const { onTouchStart, onTouchMove, onTouchEnd } = useMangaGesture(
-    nextFile,
-    prevFile
-  );
+  const { onTouchStart, onTouchMove, onTouchEnd } = useMangaGesture(nextFile, prevFile);
 
   const prevPage = () => {
     if (!webtoon) {
@@ -114,7 +112,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
 
   const onProgressClick = (event) => {
     event.stopPropagation();
-    PageInput(event.target, pageData.page, size, (nextPage) => {
+    PageInput(event.target, pageData.page + 1, size, (nextPage) => {
       let pg = nextPage < 0 ? 0 : nextPage >= size ? size - 1 : nextPage;
       if (!loadingRef.current) {
         loadImages(pg - 5, 10, 1);
@@ -246,9 +244,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
                 let img = (data && "data:img/jpeg;base64, " + data) || "";
                 let classN = (pageData.page === i && "current-img") || "";
 
-                return (
-                  <img className={classN} key={i} id={i} src={img} alt="" />
-                );
+                return <img className={classN} key={i} id={i} src={img} alt="" />;
               })
           )}
         </div>
@@ -293,10 +289,7 @@ const MangaViewer = ({ file: { Id, CurrentPos = 0, Duration } }) => {
           <i className="fa fa-forward"></i>
         </span>
         <span className="btn-fullscr" onClick={Fullscreen.action}>
-          <i
-            className="fas fa-expand-arrows-alt popup-msg"
-            data-title="Full Screen"
-          />
+          <i className="fas fa-expand-arrows-alt popup-msg" data-title="Full Screen" />
         </span>
         <span>
           <label className="p-sort" htmlFor="p-hide">

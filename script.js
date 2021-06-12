@@ -16,7 +16,7 @@
 /********************************** */
 
 // const directoryInfo = require("./modules/folders");
-const db = require("./models");
+// const db = require("./models");
 // let socket = {
 //   emit(event, data) {
 //     console.log(event, data);
@@ -35,53 +35,53 @@ const db = require("./models");
 //   }
 // };
 
-db.init().then(() => {
-  // playList();
-  // console.time("start");
-  // directoryInfo.scanDir({ Path: "E:\\Temp\\Mangas" }).then(() => {
-  //   console.timeEnd("start");
-  // });
-  // const page = 1;
-  // const items = 12;
-  // const filter = "";
-  // db.file
-  //   .findAndCountAll({
-  //     order: [db.sqlze.literal("REPLACE(File.Name, '[','0')")],
-  //     attribute: ["Id", "Name", "FullPath", "ViewCount"],
-  //     offset: ((page || 1) - 1) * items,
-  //     limit: items || 12,
-  //     where: {
-  //       name: {
-  //         [db.Op.like]: `%${filter | ""}%`
-  //       }
-  //     }
-  //   })
-  //   .then(files => {
-  //     let data = {
-  //       files: [],
-  //       totalPages: files.count * items,
-  //       totalFiles: files.count
-  //     };
-  //     data.files = files.rows.map(f => {
-  //       f.dataValues;
-  //     });
-  //     // res.send(data);
-  //     console.log(files);
-  //   })
-  //   .catch(err => {
-  //     console.log(files);
-  //   });
-  // directoryInfo.scanDir({ Path: "E:\\Anime\\Knight's & Magic" });
-  // directoryInfo.scanDir({ Path: "E:\\Series" });
-  // directoryInfo.scanDir({ Path: "E:\\Anime\\Masamune-kun no Revenge" });
-  // const req = {
-  //   body: {
-  //     type: "folder",
-  //     id: "lkvha"
-  //   }
-  // };
-  // playList(req);
-});
+// db.init().then(() => {
+// playList();
+// console.time("start");
+// directoryInfo.scanDir({ Path: "E:\\Temp\\Mangas" }).then(() => {
+//   console.timeEnd("start");
+// });
+// const page = 1;
+// const items = 12;
+// const filter = "";
+// db.file
+//   .findAndCountAll({
+//     order: [db.sqlze.literal("REPLACE(File.Name, '[','0')")],
+//     attribute: ["Id", "Name", "FullPath", "ViewCount"],
+//     offset: ((page || 1) - 1) * items,
+//     limit: items || 12,
+//     where: {
+//       name: {
+//         [db.Op.like]: `%${filter | ""}%`
+//       }
+//     }
+//   })
+//   .then(files => {
+//     let data = {
+//       files: [],
+//       totalPages: files.count * items,
+//       totalFiles: files.count
+//     };
+//     data.files = files.rows.map(f => {
+//       f.dataValues;
+//     });
+//     // res.send(data);
+//     console.log(files);
+//   })
+//   .catch(err => {
+//     console.log(files);
+//   });
+// directoryInfo.scanDir({ Path: "E:\\Anime\\Knight's & Magic" });
+// directoryInfo.scanDir({ Path: "E:\\Series" });
+// directoryInfo.scanDir({ Path: "E:\\Anime\\Masamune-kun no Revenge" });
+// const req = {
+//   body: {
+//     type: "folder",
+//     id: "lkvha"
+//   }
+// };
+// playList(req);
+// });
 
 // directoryInfo.diskLoader();
 
@@ -133,13 +133,35 @@ db.init().then(() => {
 // };
 // work();
 
-const fs = require("fs-extra");
-const path = require("path");
-let dir = "F://hentai";
+// const fs = require("fs-extra");
+// const path = require("path");
+// let dir = "F://hentai";
 
-let files = fs.readdirSync(dir);
-for (let f of files) {
-  let from = path.join(dir, f);
-  let to = path.join("H:\\hentai", f);
-  fs.copyFileSync(from, to);
-}
+// let files = fs.readdirSync(dir);
+// for (let f of files) {
+//   let from = path.join(dir, f);
+//   let to = path.join("H:\\hentai", f);
+//   fs.copyFileSync(from, to);
+// }
+
+const puppeteer = require("puppeteer");
+
+const puppet = async () => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setViewport({ width: 1200, height: 800 });
+  await page._client.send("Network.enable", {
+    maxResourceBufferSize: 1024 * 1204 * 100,
+    maxTotalBufferSize: 1024 * 1204 * 200,
+  });
+  await page.goto("https://kissmanga.com/");
+  await page.waitForNavigation();
+
+  const body = await page.content();
+  console.log(body);
+
+  await browser.close();
+};
+puppet().then(() => {
+  process.exit();
+});

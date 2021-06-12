@@ -1,59 +1,64 @@
 {
-  "name": "react-media-server",
-  "version": "1.0.0",
-  "description": "A react Multimedia Server",
-  "main": "app.js",
-  "scripts": {
-    "start": "nf start",
-    "client": "nf start -f Profile2",
-    "admin": "nf start -f Profile3",
-    "server": "node app.js",
-    "nodemon": "nodemon ./app.js",
-    "script": "node script"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/royel21/react-media-server.git"
-  },
-  "keywords": [
-    "video",
-    "manga",
-    "music",
-    "react",
-    "express",
-    "nodejs"
-  ],
-  "author": "rcstudio",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/royel21/react-media-server/issues"
-  },
-  "homepage": "https://github.com/royel21/react-media-server#readme",
+  "name": "media-server",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
+    "bootstrap": "^4.4.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "drivelist": "^8.0.10",
     "express": "^4.17.1",
-    "express-fileupload": "^1.1.6",
     "express-session": "^1.17.0",
+    "foreman": "^3.0.1",
     "fs-extra": "^9.0.0",
-    "jsonwebtoken": "^8.5.1",
-    "node-disk-info": "^1.0.3",
+    "history": "^4.10.1",
     "node-stream-zip": "^1.9.1",
-    "nodemon": "^2.0.2",
+    "nodemon": "^2.0.3",
     "passport": "^0.4.1",
-    "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "puppeteer": "^2.1.1",
     "react-icons": "^3.9.0",
     "react-spring": "^8.0.27",
-    "sequelize": "^5.21.5",
+    "sequelize": "^5.21.6",
     "sharp": "^0.25.2",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
     "sqlite3": "^4.1.1",
+    "styled-components": "^5.1.0",
     "win-explorer": "file:modules/win-explorer"
+  },
+  "scripts": {
+    "dev": "nf start",
+    "start": "react-scripts start",
+    "nodemon": "nodemon app.js",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "prod": "set NODE_ENV=production && node app"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "proxy": "http://localhost:3101",
+  "devDependencies": {
+    "node-gyp": "^6.1.0"
   }
 }

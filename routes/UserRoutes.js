@@ -1,18 +1,19 @@
 const Router = require("express").Router();
 
 const passport = require("passport");
-
-Router.get("/getuser", (req, res) => {
-  if (!req.user) return res.send({});
-
-  let user = req.user || { UserConfig: { dataValues: {} } };
+const sendUser = (res, user = { UserConfig: { dataValues: {} } }) => {
   return res.json({
+    Id: user.Id,
     role: user.Role || "",
     username: user.Name || "",
-    isAutenticated: req.user !== undefined,
+    isAutenticated: user !== undefined,
     favorites: user.Favorites || [],
-    Config: user.UserConfig.dataValues.Config
+    Config: user.UserConfig.dataValues.Config,
   });
+};
+Router.get("/getuser", (req, res) => {
+  if (!req.user) return res.send({});
+  sendUser(res, req.user);
 });
 
 Router.post("/login", (req, res, next) => {
@@ -20,12 +21,9 @@ Router.post("/login", (req, res, next) => {
     if (err) return next(err);
 
     if (user) {
-      return req.logIn(user, err => {
+      return req.logIn(user, (err) => {
         if (err) return next(err);
-        return res.json({
-          isAutenticated: true,
-          redirect: user.Role.includes("Administrator") ? "/admin" : "/"
-        });
+        return sendUser(res, user);
       });
     } else {
       return res.json({ isAutenticated: false, info });

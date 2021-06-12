@@ -3,122 +3,108 @@ const path = require("path");
 const fs = require("fs-extra");
 var db;
 var users = {};
-var lastId;
+const iUser = { lastId: "" };
 
-module.exports.removeZip = id => {
+module.exports.removeZip = (id) => {
   delete users[id];
 };
 
-module.exports.setSocket = _db => {
+module.exports.setDb = (_db) => {
   db = _db;
 };
 
-module.exports.loadZipImages = async (data, socket, currentUser) => {
+module.exports.loadZipImages = async (data, socket) => {
+  let { Id, fromPage, toPage } = data;
   //get last user or create
-  let user = users[socket.id]
-    ? users[socket.id]
-    : (users[socket.id] = { lastId: "", zip: {}, entries: [] });
+  console.log("data;", data);
+  if (!users[socket.id]) {
+    users[socket.id] = iUser;
+  }
 
-  if (user.lastId === data.id) {
+  let user = users[socket.id];
+
+  if (user.lastId === Id) {
     if (data.range) {
       for (let i of data.range) {
-        try {
-          let data = user.zip.entryDataSync(user.entries[i]).toString("base64");
-
-          socket.emit("loaded-zipedimage", {
-            page: i,
-            img: data
-          });
-        } catch (err) {
-          console.log(err);
+        let entry = user.entries[i];
+        if (entry) {
+          try {
+            socket.emit("image-loaded", {
+              page: i,
+              img: user.zip.entryDataSync(entry).toString("base64"),
+            });
+          } catch (err) {
+            console.log(err);
+          }
         }
       }
     } else {
-      for (
-        let i = data.page < 0 ? 0 : data.page;
-        i < data.page + data.pagetoload && i < user.entries.length;
-        i++
-      ) {
-        try {
-          let data = user.zip.entryDataSync(user.entries[i]).toString("base64");
+      let totalPage = fromPage + toPage;
+      let size = user.entries.length;
 
-          socket.emit("loaded-zipedimage", {
-            page: i,
-            img: data
-          });
-        } catch (err) {
-          console.log(err);
+      for (let i = fromPage < 0 ? 0 : fromPage; i < totalPage && i < size; i++) {
+        let entry = user.entries[i];
+        if (entry) {
+          try {
+            socket.emit("image-loaded", {
+              page: i,
+              img: user.zip.entryDataSync(entry).toString("base64"),
+            });
+          } catch (err) {
+            console.log(err);
+          }
         }
       }
     }
     socket.emit("m-finish", { last: true });
   } else {
-    user.lastId = data.id;
-    db.file
-      .findOne({
-        attributes: [
-          "FullPath",
-          "Name",
-          [
-            db.sqlze.literal(
-              "(Select LastPos from RecentFiles where FileId == File.Id and RecentId == '" +
-                currentUser.Recent.Id +
-                "')"
-            ),
-            "CurrentPos"
-          ]
-        ],
-        where: { Id: user.lastId }
-      })
-      .then(file => {
-        if (file) {
-          let filePath = path.resolve(file.FullPath, file.Name);
-          if (fs.existsSync(filePath)) {
-            zip = new StreamZip({
-              file: path.resolve(file.FullPath, file.Name),
-              storeEntries: true
-            });
-            let page = file.dataValues.CurrentPos - 5;
+    let file = await db.file.findOne({
+      attributes: ["FullPath", "Name"],
+      where: { Id },
+    });
+    if (file) {
+      user.lastId = Id;
+      let filePath = path.resolve(file.FullPath, file.Name);
+      if (fs.existsSync(filePath)) {
+        console.log("newZip");
+        user.zip = new StreamZip({
+          file: path.resolve(file.FullPath, file.Name),
+          storeEntries: true,
+        });
 
-            zip.on("ready", () => {
-              let entries = Object.values(zip.entries())
-                .sort((a, b) => {
-                  return String(a.name).localeCompare(String(b.name));
-                })
-                .filter(entry => {
-                  return !entry.isDirectory;
-                });
-
-              user.entries = entries;
-              user.zip = zip;
-              socket.emit("m-info", {
-                total: entries.length,
-                name: file.Name,
-                page: file.dataValues.CurrentPos || 0
-              });
-
-              for (
-                let i = page < 0 ? 0 : page;
-                i < page + data.pagetoload && i < entries.length;
-                i++
-              ) {
-                socket.emit("loaded-zipedimage", {
-                  page: i,
-                  img: zip.entryDataSync(entries[i]).toString("base64")
-                });
-              }
-              socket.emit("m-finish", { last: true });
-              console.log("data send");
+        user.zip.on("ready", () => {
+          let entries = Object.values(user.zip.entries())
+            .sort((a, b) => {
+              return String(a.name).localeCompare(String(b.name));
+            })
+            .filter((entry) => {
+              return !entry.isDirectory;
             });
 
-            zip.on("error", err => {
-              socket.emit("loaded-zipedimage", { error: "some error" });
-              console.log(err);
+          user.entries = entries;
+
+          let totalPage = fromPage + toPage;
+
+          for (
+            let i = fromPage < 0 ? 0 : fromPage;
+            i < totalPage && i < entries.length;
+            i++
+          ) {
+            socket.emit("image-loaded", {
+              page: i,
+              img: user.zip.entryDataSync(entries[i]).toString("base64"),
             });
-          } else {
-            socket.emit("manga-error", { error: "File Not Found" });
           }
-        }
-      });
+          socket.emit("m-finish", { last: true });
+        });
+
+        user.zip.on("error", (err) => {
+          socket.emit("image-loaded", { error: "some error" });
+          console.log(err);
+        });
+      } else {
+        socket.emit("manga-error", { error: "File Not Found" });
+      }
+    }
   }
 };

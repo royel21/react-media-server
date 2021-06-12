@@ -1,0 +1,178 @@
+#admin-content {
+  padding: 10px;
+  min-height: calc(100% - 34px);
+}
+
+#admin-content #pager #last-page {
+  line-height: 1.8;
+}
+
+#admin-content .loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#admin-content > div {
+  position: relative;
+  margin: 0 5px 0 5px;
+  height: 99.5%;
+  border: 1px solid;
+  overflow-y: auto;
+}
+
+#admin-content .controls {
+  display: flex;
+  padding-top: 5px;
+  justify-content: center;
+  border-bottom: 1px solid;
+  user-select: none;
+}
+#admin-content h3 {
+  user-select: none;
+  margin: 2px;
+}
+
+#t-control span:first-child {
+  position: absolute;
+  left: 5px;
+  top: 5px;
+}
+
+#admin-content.manager span {
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+}
+#tab-disk ul {
+  padding-left: 40px;
+}
+.modal-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 99;
+}
+
+#admin-content .nav * {
+  max-height: 50px;
+}
+
+#admin-content .manager span:active i {
+  transform: scale(1.2);
+}
+.manager .fa-edit,
+.manager .fa-trash-alt {
+  pointer-events: none;
+}
+
+.fa-trash-alt {
+  color: #ff0909f1;
+}
+
+.fa-sync,
+.fa-edit {
+  color: #007bff;
+}
+
+li.active .fa-edit {
+  color: white;
+}
+
+.table {
+  margin: 0;
+}
+
+.table thead {
+  user-select: none;
+}
+
+.table th,
+.table td {
+  padding: 0.5rem 1rem;
+}
+
+.table td:only-child {
+  text-align: center;
+}
+
+.table td:first-child,
+.table th:first-child {
+  width: 100px;
+  padding: 0.4rem 0.8rem;
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* Directory Style */
+.table .fa,
+.table .far,
+.table .fas {
+  cursor: pointer;
+  font-size: 20px;
+  user-select: none;
+}
+
+.table span:active .fa,
+.table span:active .far,
+.table span:active .fas {
+  transform: scale(1.2);
+}
+
+#admin-content #fl-manager .controls {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  position: sticky;
+  bottom: 0px;
+  padding: 4px;
+  z-index: 1;
+}
+
+#admin-content #fl-manager .controls > span:last-child {
+  pointer-events: none;
+  font-size: 20px;
+}
+
+#admin-content #admin-content .manager #clear-filter {
+  line-height: 1.6;
+}
+
+.pagination {
+  margin: 0;
+}
+
+#admin-content #fl-manager .controls * {
+  max-height: 31px;
+}
+
+.controls .input-group-text {
+  padding: 0 0.5rem;
+}
+
+#filter-control {
+  position: relative;
+  width: 180px;
+}
+
+#admin-content #pager li:last-child,
+#admin-content .filter-file {
+  padding: 2px 5px;
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+#admin-content #pager li i {
+  font-size: 20px;
+  pointer-events: none;
+}
+
+@media screen and (max-width: 700px) {
+  #root #admin-content {
+    min-height: calc(100% - 56px);
+    height: calc(100% - 56px);
+  }
+}

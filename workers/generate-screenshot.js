@@ -2,18 +2,27 @@ const { exec, execFileSync } = require("child_process");
 const db = require("../models");
 const path = require("path");
 const fs = require("fs-extra");
-const thumbnails = require("../modules/thumbsnail");
+const thumbnails = require("./thumbsnail");
 
 var ffmpeg = "ffmpeg";
 var ffprobe = "ffprobe";
 
-var vCover = path.resolve("./public");
+var vCover = path.resolve("./images");
 
 const getVideoDuration = async (vPath) => {
   try {
     let tempVal = execFileSync(
       ffprobe,
-      ["-i", vPath, "-show_entries", "format=duration", "-v", "quiet", "-of", "csv=p=0"],
+      [
+        "-i",
+        vPath,
+        "-show_entries",
+        "format=duration",
+        "-v",
+        "quiet",
+        "-of",
+        "csv=p=0",
+      ],
       {
         timeout: 1000 * 60 * 10,
       }

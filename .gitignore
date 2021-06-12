@@ -2,10 +2,6 @@
 
 # dependencies
 /node_modules
-/react-client/node_modules
-/react-admin/node_modules
-/react-client/package-lock.json
-/react-admin/package-lock.json
 modules/win-explorer/node_modules
 modules/win-explorer/package-lock.json
 modules/win-explorer/.vscode
@@ -16,10 +12,9 @@ modules/win-explorer/bin
 /coverage
 
 # production
-/react-client/build
-/react-admin/build
-/public/covers/
-files.db
+/images/
+/build
+files*
 
 # misc
 .DS_Store

@@ -1,0 +1,34 @@
+#notfound {
+  display: flex;
+  color: white;
+  position: relative;
+  background-color: #14243d;
+  background: radial-gradient(ellipse at center, #14243d 0%, #030611 100%);
+  height: 100vh;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#notfound h2 {
+  font-size: 40px;
+  color: red;
+}
+#notfound p {
+  padding-top: 20px;
+  max-width: 70%;
+  margin: 0 auto;
+  font-size: 18px;
+}
+#notfound #return {
+  display: inline-block;
+  color: white;
+  padding: 5px 10px;
+  font-size: 25px;
+  text-decoration: none;
+  background-color: green;
+  border-radius: 0.25rem;
+}
+#notfound #return:hover {
+  transform: scale(1.1);
+}

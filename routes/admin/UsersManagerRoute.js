@@ -4,22 +4,22 @@ const KeysMap = require("./KeysMap");
 const db = require("../../models");
 
 Router.get("/", (req, res) => {
-  db.user.findAll({ order: ["Name"] }).then(users => {
+  db.user.findAll({ order: ["Name"] }).then((users) => {
     return res.send({
-      users: users.map(u => {
+      users: users.map((u) => {
         return { ...u.dataValues, Password: "" };
-      })
+      }),
     });
   });
 });
 
-const validate = async req => {
+const validate = async (req) => {
   let users = await db.user.findAll();
-  let user = users.find(u => u.Id === req.body.Id);
+  let user = users.find((u) => u.Id === req.body.Id);
   if (
     (req.body.Role.includes("User") &&
       user.Role.includes("Admin") &&
-      users.filter(a => a.Role.includes("Administrator")).length === 1) ||
+      users.filter((a) => a.Role.includes("Administrator")).length === 1) ||
     req.body.Role.includes("Admin")
   ) {
     return { isValid: false };
@@ -29,7 +29,6 @@ const validate = async req => {
 };
 
 const addEdit = async (req, res) => {
-  console.log("users:", req.user);
   let { Id } = req.body;
   if (!Id) {
     let { Name } = req.body;
@@ -38,10 +37,10 @@ const addEdit = async (req, res) => {
       CreatedAt: new Date(),
       Favorites: [
         { Name: "Mangas", Type: "Manga" },
-        { Name: "Videos", Type: "Video" }
+        { Name: "Videos", Type: "Video" },
       ],
       Recent: {
-        Name
+        Name,
       },
       UserConfig: {
         Name,
@@ -50,18 +49,18 @@ const addEdit = async (req, res) => {
           items: 0,
           recentFolders: [],
           video: { KeysMap, volume: 0.3, pause: true, mute: false },
-          manga: { KeysMap, scaleX: 0.6, scaleY: 1, aniDuration: 300 }
-        }
-      }
+          manga: { KeysMap, scaleX: 0.6, scaleY: 1, aniDuration: 300 },
+        },
+      },
     };
     delete user.Id;
     let newUser = await db.user.create(user, {
-      include: [db.recent, db.favorite, db.userConfig]
+      include: [db.recent, db.favorite, db.userConfig],
     });
 
     return res.send({
       user: { ...newUser.dataValues, Password: "" },
-      fail: false
+      fail: false,
     });
   } else {
     let valid = await validate(req);
@@ -75,27 +74,27 @@ const addEdit = async (req, res) => {
       } else {
         return res.send({
           fail: false,
-          msg: `Could't update User ${req.body.Name}, Was not found`
+          msg: `Could't update User ${req.body.Name}, Was not found`,
         });
       }
     } else {
       return res.send({
         msg: "Can't change Privileges to the only administrator",
-        fail: true
+        fail: true,
       });
     }
   }
 };
 
 Router.post("/add-edit", (req, res) => {
-  addEdit(req, res).catch(err => {
+  addEdit(req, res).catch((err) => {
     let error = (err.errors && err.errors[0]) || err;
     console.log(error);
     return res.send({ fail: true, msg: "error" });
   });
 });
 
-const remove = async req => {
+const remove = async (req) => {
   let valid = await validate(req);
   if (valid.isValid) {
     if (valid.user) {
@@ -111,10 +110,10 @@ const remove = async req => {
 
 Router.delete("/remove", (req, res) => {
   remove(req)
-    .then(result => {
+    .then((result) => {
       return res.send(result);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       return res.send({ removed: false, msg: "Server Error 500" });
     });
